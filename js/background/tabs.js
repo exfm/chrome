@@ -1,15 +1,15 @@
-// Keep references to tabs created 
-// key is tab id
-var tabInstances = {};
-
 // Tab object that interacts with and controls
 // all tabs that scan found possible music on
-function Tab(sender, response){
+function Tab(sender, response, save){
     this.id = sender.tab.id;
     this.sender = sender;
     this.response = response;
     this.showPageActionIcon();
-    tabInstances[this.id] = this;
+    if(save === true){
+        var obj = {};
+        obj["tab" + this.id] = this;
+        chrome.storage.local.set(obj);
+    }
 }
 
 // Show page action icon
@@ -21,17 +21,48 @@ Tab.prototype.showPageActionIcon = function(){
 // Page action icon on this
 // tab was clicked
 Tab.prototype.onPageActionClicked = function(){
-    this.insertPlayer();
+    this.insertCSS();
 }
 
-// Insert player script into page
-Tab.prototype.insertPlayer = function(){
+// Insert player css into page
+Tab.prototype.insertCSS = function(){
+    chrome.tabs.insertCSS(
+        this.id,
+        {
+            file: "css/player.css"
+        },
+        this.insertPlayqueue.bind(this)
+    );
+}
+
+// Insert playqueue script into page
+Tab.prototype.insertPlayqueue = function(){
     chrome.tabs.executeScript(
         this.id,
         {
-            file: "js/content-script/player.js"
+            file: "js/content-script/playqueue.js"
+        },
+        this.insertMain.bind(this)
+    );
+}
+
+// Insert main script into page
+Tab.prototype.insertMain = function(){
+    chrome.tabs.executeScript(
+        this.id,
+        {
+            file: "js/content-script/main.js"
         },
         this.deepScan.bind(this)
+    );
+}
+
+Tab.prototype.onCaptureVisibleTab = function(dataUrl){
+    chrome.tabs.sendMessage(this.id,
+        {
+            "type": "blur",
+            "dataUrl": dataUrl
+        }
     );
 }
 
@@ -47,7 +78,8 @@ Tab.prototype.deepScan = function(){
 
 // Show playlist on tab
 Tab.prototype.showPlaylist = function(){
-    console.log('show', this.playlist);
+    console.log('showPlaylist', this.playlist);
+    var html = 
     chrome.tabs.sendMessage(this.id,
         {
             "type": "playlist",

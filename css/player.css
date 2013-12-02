@@ -1,0 +1,32 @@
+body {
+    /* -webkit-filter: blur(10px); */
+}
+
+.blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-repeat: no-repeat;
+    -webkit-filter: blur(20px);
+    z-index: 9999999999;
+}
+
+.exfm-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999999999;
+    background-color: rgba(0,0,0,.9);
+}
+.exfm-controls {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 50px;
+    background-color: white;
+}

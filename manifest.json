@@ -23,6 +23,8 @@
         [
             "tabs",
             "notifications",
+            "storage",
+            "unlimitedStorage",
             "http://api.tumblr.com/*",
             "http://*/",
             "https://soundcloud.com/*"
