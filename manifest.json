@@ -1,0 +1,40 @@
+{
+    "name": "Exfm",
+    "manifest_version": 2,
+    "version": "4.0.0",
+    "description": "The best way to find and share new music",
+    "icons": 
+        {
+            "128": "images/icon128.png"
+        },
+    "background": 
+        {
+            "persistent": false,
+            "scripts": [
+                "js/background/listeners.js",
+                "js/background/tabs.js"
+            ]
+        },
+    "permissions": 
+        [
+            "tabs",
+            "notifications"
+        ],
+    "page_action": 
+        {
+            "default_title": "Listen to page with Exfm",
+            "default_icon":
+                {
+                    "19": "images/icon19.png",
+                    "38": "images/icon38.png"
+                }
+        },
+    "homepage_url": "http://ex.fm",
+    "content_scripts": [
+        {
+            "matches": ["http://*/*", "https://*/*"],
+            "js": ["js/content-script/scan.js"],
+            "run_at": "document_end"
+        }
+    ]
+}
