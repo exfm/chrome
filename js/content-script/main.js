@@ -10,7 +10,6 @@ function Main(){
         }
     )
     this.render();
-    console.log(this.playQueue);
 }
 
 // render the container overlay
@@ -24,7 +23,6 @@ Main.prototype.render = function(){
 Main.prototype.renderPlaylist = function(){
     this.playQueue.add(this.playlist);
     this.playQueue.play(0);
-    //this.container.appendChild(html);
 }
 
 var main = new Main();
@@ -47,6 +45,10 @@ function onMessage(e, sender){
     if(e.type === 'playlist'){
         main.playlist = e.playlist;
         main.renderPlaylist();
+    }
+    if(e.type === 'soundcloudKey'){
+        main.playQueue.soundcloud_key = e.soundcloudKey;
+        console.log(this.playQueue);
     }
 }
 chrome.runtime.onMessage.addListener(this.onMessage);

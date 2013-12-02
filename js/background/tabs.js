@@ -73,6 +73,17 @@ Tab.prototype.deepScan = function(){
     console.log('deep scan');
     if(this.response.isTumblr === true){
         var tumblr = new Tumblr(this);
+        return;
+    }
+    if(this.response.isSoundcloud === true){
+        chrome.tabs.sendMessage(this.id,
+            {
+                "type": "soundcloudKey",
+                "soundcloudKey": keys.SOUNDCLOUD_KEY
+            }
+        );
+        var soundcloud = new Soundcloud(this);
+        return;
     }
 }
 

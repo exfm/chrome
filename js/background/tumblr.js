@@ -16,7 +16,7 @@ Tumblr.prototype.request = function(){
     xhr.send();
 }
 
-// respone from Tumblr API
+// response from Tumblr API
 Tumblr.prototype.response = function(e){
     if(e.target.readyState === 4){
         if(e.target.status === 200){
@@ -36,6 +36,9 @@ Tumblr.prototype.parse = function(json){
         for(var i = 0; i < len; i++){
             var post = posts[i];
             var song = new Song();
+            song.type = "tumblr";
+            song.originalType = post.audio_type;
+            song.originalSource = post.source_url;
             song.title = post.track_name;
             song.artist = post.artist;
             song.album = post.album;
@@ -44,7 +47,6 @@ Tumblr.prototype.parse = function(json){
             song.link = post.post_url;
             song.serviceId = post.id;
             song.timestamp = post.timestamp;
-            song.source = post.source_url;
             if(!post.track_name){
                 song.title = post.slug.replace(/-/g, ' ');
             }

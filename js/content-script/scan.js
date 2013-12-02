@@ -2,12 +2,13 @@ function Scan(){
     this.response = {
         "url": location.href,
         "hostname": location.hostname,
+        "showPageActionIcon": false,
         "isTumblr": false,
         "isTumblrDashboard": false,
-        "showPageActionIcon": false
+        "isSoundcloud": false
     }
     this.tumblr();
-    console.log(this.response);
+    this.soundcloud();
     chrome.runtime.sendMessage(null, 
         {
             'type': 'scanDone',
@@ -20,7 +21,6 @@ function Scan(){
 // 1. Look for .tumblr.com url 
 // 2. Look for tumblr.com/dashboard
 // 3. Look for 'follow' iframe
-
 Scan.prototype.tumblr = function(){
     if(location.href.indexOf('tumblr.com') !== -1){
         if(location.href.indexOf('tumblr.com/dashboard') !== -1){
@@ -40,6 +40,15 @@ Scan.prototype.tumblr = function(){
             this.response.showPageActionIcon = true;
             return;
         }
+    }
+}
+
+// Are we on a soundcloud page?
+Scan.prototype.soundcloud = function(){
+    if(location.href.indexOf('soundcloud.com') !== -1){
+        this.response.isSoundcloud = true;
+        this.response.showPageActionIcon = true;
+        return;
     }
 }
 

@@ -16,7 +16,8 @@
                 "js/background/listeners.js",
                 "js/background/tabs.js",
                 "js/background/song.js",
-                "js/background/tumblr.js"
+                "js/background/tumblr.js",
+                "js/background/soundcloud.js"
             ]
         },
     "permissions": 
