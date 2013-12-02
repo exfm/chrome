@@ -23,7 +23,9 @@
         [
             "tabs",
             "notifications",
-            "http://api.tumblr.com/*"
+            "http://api.tumblr.com/*",
+            "http://*/",
+            "https://soundcloud.com/*"
         ],
     "page_action": 
         {

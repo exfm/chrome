@@ -17,7 +17,7 @@ chrome.runtime.onMessage.addListener(this.onMessage);
 // get a ref to tab and do a deep scan for songs
 function onPageActionClicked(sender){
     var tab = tabInstances[sender.id];
-    tab.deepScan();
+    tab.onPageActionClicked();
 }
 chrome.pageAction.onClicked.addListener(this.onPageActionClicked);
 
