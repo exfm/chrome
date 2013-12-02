@@ -1,6 +1,7 @@
 function Scan(){
     this.response = {
         "url": location.href,
+        "hostname": location.hostname,
         "isTumblr": false,
         "isTumblrDashboard": false,
         "showPageActionIcon": false
@@ -18,7 +19,7 @@ function Scan(){
 // Are we on a tumblr page?
 // 1. Look for .tumblr.com url 
 // 2. Look for tumblr.com/dashboard
-// 3. Look for 'follow' iframer 
+// 3. Look for 'follow' iframe
 
 Scan.prototype.tumblr = function(){
     if(location.href.indexOf('tumblr.com') !== -1){

@@ -20,14 +20,14 @@ Tab.prototype.showPageActionIcon = function(){
 
 // Page action was clicked
 // Deep scan page to get actual songs
+// determined by what type of page scan gave us
 Tab.prototype.deepScan = function(){
     if(this.response.isTumblr === true){
-        this.tumblr();
+        var tumblr = new Tumblr(this);
     }
 }
 
-// Use the tumblr api to get songs
-Tab.prototype.tumblr = function(){
-    console.log(this);
+// Show playlist on tab
+Tab.prototype.showPlaylist = function(){
+    console.log('show', this.playlist);
 }
-

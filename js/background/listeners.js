@@ -10,10 +10,7 @@ function onMessage(e, sender){
         }
     }
 }
-
 chrome.runtime.onMessage.addListener(this.onMessage);
-
-
 
 
 // Page action was clicked
@@ -22,17 +19,12 @@ function onPageActionClicked(sender){
     var tab = tabInstances[sender.id];
     tab.deepScan();
 }
-
 chrome.pageAction.onClicked.addListener(this.onPageActionClicked);
-
 
 
 // tab was removed
 // remove it from tabInstances
 function onTabRemoved(tabId){
-    console.log('onTabRemoved', tabId); 
     delete tabInstances[tabId];
-    console.log(tabInstances);
 }
-
 chrome.tabs.onRemoved.addListener(this.onTabRemoved);
