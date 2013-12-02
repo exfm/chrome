@@ -11,14 +11,19 @@
         {
             "persistent": false,
             "scripts": [
+                "js/background/constants.js",
+                "js/background/keys.js",
                 "js/background/listeners.js",
-                "js/background/tabs.js"
+                "js/background/tabs.js",
+                "js/background/song.js",
+                "js/background/tumblr.js"
             ]
         },
     "permissions": 
         [
             "tabs",
-            "notifications"
+            "notifications",
+            "http://api.tumblr.com/*"
         ],
     "page_action": 
         {
