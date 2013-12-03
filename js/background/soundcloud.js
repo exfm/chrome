@@ -1,6 +1,12 @@
 // New Soundcloud object
 function Soundcloud(tab){
     this.tab = tab;
+    chrome.tabs.sendMessage(this.tab.id,
+        {
+            "type": "soundcloudKey",
+            "soundcloudKey": keys.SOUNDCLOUD_KEY
+        }
+    );
     this.requestUrl = constants.SOUNDCLOUD_RESOLVE; 
     this.requestUrl += this.tab.response.url;
     this.requestUrl += "&client_id=" + keys.SOUNDCLOUD_KEY;
@@ -28,7 +34,6 @@ Soundcloud.prototype.response = function(e){
 }
 
 // parse response from Soundcloud API
-// Build playlist of Song objects
 // If it's a user, get user json from API
 Soundcloud.prototype.parse = function(json){
     if(json.kind === "playlist"){
@@ -43,6 +48,7 @@ Soundcloud.prototype.parse = function(json){
     }
 }
 
+// Build playlist of Song objects
 Soundcloud.prototype.buildPlaylist = function(list, album){
     var playlist = [];
     var len = list.length;

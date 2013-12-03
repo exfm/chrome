@@ -70,19 +70,16 @@ Tab.prototype.onCaptureVisibleTab = function(dataUrl){
 // Deep scan page to get actual songs
 // determined by what type of page scan gave us
 Tab.prototype.deepScan = function(){
-    console.log('deep scan');
     if(this.response.isTumblr === true){
         var tumblr = new Tumblr(this);
         return;
     }
     if(this.response.isSoundcloud === true){
-        chrome.tabs.sendMessage(this.id,
-            {
-                "type": "soundcloudKey",
-                "soundcloudKey": keys.SOUNDCLOUD_KEY
-            }
-        );
         var soundcloud = new Soundcloud(this);
+        return;
+    }
+    if(this.response.isBandcamp === true){
+        var bandcamp = new Bandcamp(this);
         return;
     }
 }
@@ -90,11 +87,20 @@ Tab.prototype.deepScan = function(){
 // Show playlist on tab
 Tab.prototype.showPlaylist = function(){
     console.log('showPlaylist', this.playlist);
-    var html = 
     chrome.tabs.sendMessage(this.id,
         {
             "type": "playlist",
             "playlist": this.playlist
+        }
+    );
+}
+
+// No songs found on page
+// after deep scan
+Tab.prototype.noSongs = function(){
+    chrome.tabs.sendMessage(this.id,
+        {
+            "type": "noSongs"
         }
     );
 }

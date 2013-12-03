@@ -5,10 +5,12 @@ function Scan(){
         "showPageActionIcon": false,
         "isTumblr": false,
         "isTumblrDashboard": false,
-        "isSoundcloud": false
+        "isSoundcloud": false,
+        "isBandcamp": false
     }
     this.tumblr();
     this.soundcloud();
+    this.bandcamp();
     chrome.runtime.sendMessage(null, 
         {
             'type': 'scanDone',
@@ -44,9 +46,20 @@ Scan.prototype.tumblr = function(){
 }
 
 // Are we on a soundcloud page?
+// 1. Look for .soundcloud.com url 
 Scan.prototype.soundcloud = function(){
     if(location.href.indexOf('soundcloud.com') !== -1){
         this.response.isSoundcloud = true;
+        this.response.showPageActionIcon = true;
+        return;
+    }
+}
+
+// Are we on a bandcamp page?
+// 1. Look for .bandcamp.com url  
+Scan.prototype.bandcamp = function(){
+    if(location.href.indexOf('bandcamp.com') !== -1){
+        this.response.isBandcamp = true;
         this.response.showPageActionIcon = true;
         return;
     }
