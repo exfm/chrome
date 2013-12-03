@@ -32,7 +32,8 @@
             "http://api.tumblr.com/*",
             "http://*/",
             "https://soundcloud.com/*",
-            "https://archive.org/*"
+            "https://archive.org/*",
+            "https://www.rdio.com/*"
         ],
     "page_action": 
         {
@@ -54,5 +55,6 @@
             "js": ["js/content-script/scan.js"],
             "run_at": "document_end"
         }
-    ]
+    ],
+    "options_page": "html/options.html"
 }
