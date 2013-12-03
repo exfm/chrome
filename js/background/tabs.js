@@ -55,9 +55,11 @@ Tab.prototype.insertMain = function(){
         },
         this.deepScan.bind(this)
     );
+    chrome.tabs.captureVisibleTab(null, {'format': 'png'}, this.onCaptureVisibleTab.bind(this));
 }
 
 Tab.prototype.onCaptureVisibleTab = function(dataUrl){
+	console.log('captured');
     chrome.tabs.sendMessage(this.id,
         {
             "type": "blur",

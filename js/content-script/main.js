@@ -14,9 +14,19 @@ function Main(){
 
 // render the container overlay
 Main.prototype.render = function(){
+	document.body.classList.add('exfm-overlay');
     this.container = document.createElement('div');
     this.container.className = 'exfm-container';
     document.body.appendChild(this.container);
+    this.renderBottom();
+}
+
+// render the container overlay
+Main.prototype.renderBottom = function(){
+    this.botom = document.createElement('div');
+    this.botom.className = 'exfm-bottom';
+    this.container.appendChild(this.botom);
+    this.botom.innerHTML = "hello there";
 }
 
 
@@ -76,14 +86,17 @@ Main.prototype.getOpenGraphContent = function(name){
 
 var main = new Main();
 
-/*
-Player.prototype.addBlur = function(dataUrl){
+Main.prototype.addBlur = function(dataUrl){
     var div = document.createElement("div");
-    div.className = "blur";
+    div.className = "exfm-blur";
     div.style.backgroundImage = "url(" + dataUrl + ")";
     document.body.appendChild(div);
-}
+    /*
+setTimeout(function(){
+    	div.className = 'exfm-blur exfm-blur-now';
+    }, 100);
 */
+}
 
 // Messages received from background script
 function onMessage(e, sender, responseCallback){
