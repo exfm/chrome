@@ -126,11 +126,11 @@ Main.prototype.getMp3Links = function(){
 }
 
 // loop through iframes searching for soundcloud embeds
-Main.prototype.getSoundcloudEmbeds = function(){
+Main.prototype.getIframes = function(regex){
     var list = [];
     var iframes = document.getElementsByTagName("iframe");
     var len = iframes.length, i;
-    var playerRegex = new RegExp('soundcloud\.com\/player\/?(.*)');
+    var playerRegex = new RegExp(regex);
     for(i = 0; i < len; i++){
         var iframe = iframes[i];
         var src = iframe.getAttribute("src");
@@ -188,9 +188,9 @@ function onMessage(e, sender, responseCallback){
         var mp3Links = main.getMp3Links();;
         responseCallback(mp3Links);
     }
-    if(e.type === 'getSoundcloudEmbeds'){
-        var soundcloudEmbeds = main.getSoundcloudEmbeds();
-        responseCallback(soundcloudEmbeds);
+    if(e.type === 'getIframes'){
+        var iframes = main.getIframes();
+        responseCallback(iframes);
     }
 }
 chrome.runtime.onMessage.addListener(this.onMessage);

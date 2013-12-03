@@ -97,6 +97,7 @@ Tab.prototype.deepScan = function(){
     }
     if(this.response.isBandcamp === true){
         var bandcamp = new Bandcamp(this);
+        bandcamp.getPageVar();
         return;
     }
     if(this.response.isLiveMusicArchive === true){
@@ -110,6 +111,11 @@ Tab.prototype.deepScan = function(){
     if(this.response.hasSoundcloudEmbeds === true){
         var soundcloud = new Soundcloud(this);
         soundcloud.hasEmbeds();
+        return;
+    }
+    if(this.response.hasBandcampEmbeds === true){
+        var bandcamp = new Bandcamp(this);
+        bandcamp.hasEmbeds();
         return;
     }
 }

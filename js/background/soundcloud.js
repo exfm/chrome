@@ -24,9 +24,7 @@ Soundcloud.prototype.resolve = function(url){
 Soundcloud.prototype.response = function(e){
     if(e.target.readyState === 4){
         if(e.target.status === 200){
-            console.log(e.target);
             var json = JSON.parse(e.target.response);
-            console.log(json);
             this.parse(json);
         }
     }
@@ -72,8 +70,6 @@ Soundcloud.prototype.buildPlaylist = function(list, album){
                 song.link = this.tab.response.url;
                 song.originalSource = track.permalink_url;
             }
-            
-            console.log(this.tab.response);
             playlist.push(song);
         }
     }
@@ -98,7 +94,6 @@ Soundcloud.prototype.userResponse = function(e){
     if(e.target.readyState === 4){
         if(e.target.status === 200){
             var json = JSON.parse(e.target.response);
-            console.log(json);
             this.buildPlaylist(json, null);
         }
     }
@@ -107,10 +102,10 @@ Soundcloud.prototype.userResponse = function(e){
 // embeds on page
 // get them from content script
 Soundcloud.prototype.hasEmbeds = function(){
-    console.log('has embeds');
     chrome.tabs.sendMessage(this.tab.id,
         {
-            "type": "getSoundcloudEmbeds"
+            "type": "getIframes",
+            "regex": "soundcloud\.com\/player\/?(.*)"
         },
         this.gotEmbeds.bind(this)
     );
@@ -118,13 +113,11 @@ Soundcloud.prototype.hasEmbeds = function(){
 
 // got embeds
 Soundcloud.prototype.gotEmbeds = function(list){
-    console.log('list', list);
     var len = list.length;
     for(var i = 0; i < len; i++){
         var src = list[i];
         var obj = this.getQueryParams(src);
         if(obj.url){
-            console.log(obj.url);
             this.resolve(obj.url);
         }
     }

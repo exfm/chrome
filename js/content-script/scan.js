@@ -14,7 +14,8 @@ function Scan(){
        this.bandcamp() ||
        this.liveMusicArchive() ||
        this.mp3Links() ||
-       this.soundcloudEmbeds()
+       this.soundcloudEmbeds() ||
+       this.bandcampEmbeds()
     ){
         this.done();
         return;
@@ -127,6 +128,23 @@ Scan.prototype.soundcloudEmbeds = function(){
         var src = iframe.getAttribute("src");
         if (src && playerRegex.test(src)){
             this.response.hasSoundcloudEmbeds = true;
+            this.response.showPageActionIcon = true;
+            return true;
+        }
+    } 
+    return false;
+}
+
+// Do we have bandcamp embeds on page?  
+Scan.prototype.bandcampEmbeds = function(){
+    var iframes = document.getElementsByTagName("iframe");
+    var len = iframes.length, i;
+    var playerRegex = new RegExp('bandcamp.com/EmbeddedPlayer');
+    for(i = 0; i < len; i++){
+        var iframe = iframes[i];
+        var src = iframe.getAttribute("src");
+        if (src && playerRegex.test(src)){
+            this.response.hasBandcampEmbeds = true;
             this.response.showPageActionIcon = true;
             return true;
         }
