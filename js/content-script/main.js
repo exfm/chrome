@@ -125,6 +125,22 @@ Main.prototype.getMp3Links = function(){
     return list;
 }
 
+// loop through iframes searching for soundcloud embeds
+Main.prototype.getSoundcloudEmbeds = function(){
+    var list = [];
+    var iframes = document.getElementsByTagName("iframe");
+    var len = iframes.length, i;
+    var playerRegex = new RegExp('soundcloud\.com\/player\/?(.*)');
+    for(i = 0; i < len; i++){
+        var iframe = iframes[i];
+        var src = iframe.getAttribute("src");
+        if (src && playerRegex.test(src)){
+            list.push(src);
+        }
+    } 
+    return list;
+}
+
 // fix relative path for urls
 Main.prototype.fixRelativePath = function(str){
     if (str.indexOf("://") == -1){
@@ -171,6 +187,10 @@ function onMessage(e, sender, responseCallback){
     if(e.type === 'getMp3Links'){
         var mp3Links = main.getMp3Links();;
         responseCallback(mp3Links);
+    }
+    if(e.type === 'getSoundcloudEmbeds'){
+        var soundcloudEmbeds = main.getSoundcloudEmbeds();
+        responseCallback(soundcloudEmbeds);
     }
 }
 chrome.runtime.onMessage.addListener(this.onMessage);

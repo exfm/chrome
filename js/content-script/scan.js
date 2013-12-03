@@ -13,7 +13,8 @@ function Scan(){
        this.soundcloud() ||
        this.bandcamp() ||
        this.liveMusicArchive() ||
-       this.mp3Links()
+       this.mp3Links() ||
+       this.soundcloudEmbeds()
     ){
         this.done();
         return;
@@ -80,7 +81,7 @@ Scan.prototype.bandcamp = function(){
 }
 
 // Are we on a Live Music Archive page?
-// 1. Look for .arhcive.org url  
+// 1. Look for .archive.org url  
 Scan.prototype.liveMusicArchive = function(){
     if(location.href.indexOf('archive.org') !== -1){
         this.response.isLiveMusicArchive = true;
@@ -111,6 +112,23 @@ Scan.prototype.mp3Links = function(){
                 this.response.showPageActionIcon = true;
                 return true;
             }
+        }
+    } 
+    return false;
+}
+
+// Do we have soundcloud embeds on page?  
+Scan.prototype.soundcloudEmbeds = function(){
+    var iframes = document.getElementsByTagName("iframe");
+    var len = iframes.length, i;
+    var playerRegex = new RegExp('soundcloud\.com\/player\/?(.*)');
+    for(i = 0; i < len; i++){
+        var iframe = iframes[i];
+        var src = iframe.getAttribute("src");
+        if (src && playerRegex.test(src)){
+            this.response.hasSoundcloudEmbeds = true;
+            this.response.showPageActionIcon = true;
+            return true;
         }
     } 
     return false;

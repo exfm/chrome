@@ -7,17 +7,16 @@ function Soundcloud(tab){
             "soundcloudKey": keys.SOUNDCLOUD_KEY
         }
     );
-    this.requestUrl = constants.SOUNDCLOUD_RESOLVE; 
-    this.requestUrl += this.tab.response.url;
-    this.requestUrl += "&client_id=" + keys.SOUNDCLOUD_KEY;
-    this.resolve();
 }
 
 // resolve url to json from Soundcloud API
-Soundcloud.prototype.resolve = function(){
+Soundcloud.prototype.resolve = function(url){
+    var requestUrl = constants.SOUNDCLOUD_RESOLVE; 
+    requestUrl += url;
+    requestUrl += "&client_id=" + keys.SOUNDCLOUD_KEY;
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = this.response.bind(this); 
-    xhr.open("GET", this.requestUrl, true);
+    xhr.open("GET", requestUrl, true);
     xhr.send();
 }
 
@@ -62,11 +61,19 @@ Soundcloud.prototype.buildPlaylist = function(list, album){
             song.album = album;
             song.artwork = track.artwork_url;
             song.url = track.stream_url;
-            song.link = track.permalink_url;
             song.serviceId = track.id;
             song.timestamp = new Date(track.created_at).getTime();
             song.purchaseUrl = track.purchase_url;
             song.duration = track.duration;
+            if(this.tab.response.isSoundcloud === true){
+                song.link = track.permalink_url;
+            }
+            else{
+                song.link = this.tab.response.url;
+                song.originalSource = track.permalink_url;
+            }
+            
+            console.log(this.tab.response);
             playlist.push(song);
         }
     }
@@ -95,4 +102,46 @@ Soundcloud.prototype.userResponse = function(e){
             this.buildPlaylist(json, null);
         }
     }
+}
+
+// embeds on page
+// get them from content script
+Soundcloud.prototype.hasEmbeds = function(){
+    console.log('has embeds');
+    chrome.tabs.sendMessage(this.tab.id,
+        {
+            "type": "getSoundcloudEmbeds"
+        },
+        this.gotEmbeds.bind(this)
+    );
+}
+
+// got embeds
+Soundcloud.prototype.gotEmbeds = function(list){
+    console.log('list', list);
+    var len = list.length;
+    for(var i = 0; i < len; i++){
+        var src = list[i];
+        var obj = this.getQueryParams(src);
+        if(obj.url){
+            console.log(obj.url);
+            this.resolve(obj.url);
+        }
+    }
+}
+
+// parse params from src string
+Soundcloud.prototype.getQueryParams = function(str){
+    var obj = {};
+    try {
+        var splits = str.split("?");
+        var paramString = splits[1];
+        var params = paramString.split("&");
+        for (var i = 0; i < params.length; i++){
+            var param = params[i];
+            var keyValue = param.split("=");
+            obj[keyValue[0]] = keyValue[1];
+        }
+    } catch(e){}
+    return obj;
 }
