@@ -6,11 +6,13 @@ function Scan(){
         "isTumblr": false,
         "isTumblrDashboard": false,
         "isSoundcloud": false,
-        "isBandcamp": false
+        "isBandcamp": false,
+        "isLiveMusicArchive": false
     }
     this.tumblr();
     this.soundcloud();
     this.bandcamp();
+    this.liveMusicArchive();
     chrome.runtime.sendMessage(null, 
         {
             'type': 'scanDone',
@@ -60,6 +62,16 @@ Scan.prototype.soundcloud = function(){
 Scan.prototype.bandcamp = function(){
     if(location.href.indexOf('bandcamp.com') !== -1){
         this.response.isBandcamp = true;
+        this.response.showPageActionIcon = true;
+        return;
+    }
+}
+
+// Are we on a Live Music Archive page?
+// 1. Look for .arhcive.org url  
+Scan.prototype.liveMusicArchive = function(){
+    if(location.href.indexOf('archive.org') !== -1){
+        this.response.isLiveMusicArchive = true;
         this.response.showPageActionIcon = true;
         return;
     }

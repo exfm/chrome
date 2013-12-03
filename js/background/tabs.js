@@ -82,6 +82,10 @@ Tab.prototype.deepScan = function(){
         var bandcamp = new Bandcamp(this);
         return;
     }
+    if(this.response.isLiveMusicArchive === true){
+        var liveMusicArchive = new LiveMusicArchive(this);
+        return;
+    }
 }
 
 // Show playlist on tab

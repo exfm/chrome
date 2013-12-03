@@ -55,4 +55,7 @@ Tumblr.prototype.parse = function(json){
         this.tab.playlist = playlist;
         this.tab.showPlaylist();
     }
+    else{
+        this.tab.noSongs();
+    }
 }

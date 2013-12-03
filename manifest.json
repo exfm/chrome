@@ -18,7 +18,8 @@
                 "js/background/song.js",
                 "js/background/tumblr.js",
                 "js/background/soundcloud.js",
-                "js/background/bandcamp.js"
+                "js/background/bandcamp.js",
+                "js/background/livemusicarchive.js"
             ]
         },
     "permissions": 
@@ -29,7 +30,8 @@
             "unlimitedStorage",
             "http://api.tumblr.com/*",
             "http://*/",
-            "https://soundcloud.com/*"
+            "https://soundcloud.com/*",
+            "https://archive.org/*"
         ],
     "page_action": 
         {
