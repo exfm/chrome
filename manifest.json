@@ -19,7 +19,8 @@
                 "js/background/tumblr.js",
                 "js/background/soundcloud.js",
                 "js/background/bandcamp.js",
-                "js/background/livemusicarchive.js"
+                "js/background/livemusicarchive.js",
+                "js/background/mp3links.js"
             ]
         },
     "permissions": 
@@ -45,7 +46,11 @@
     "homepage_url": "http://ex.fm",
     "content_scripts": [
         {
-            "matches": ["http://*/*", "https://*/*"],
+            "matches": [
+                "http://*/*",
+                "https://soundcloud.com/*",
+                "https://archive.org/*"
+            ],
             "js": ["js/content-script/scan.js"],
             "run_at": "document_end"
         }

@@ -14,19 +14,22 @@ function Main(){
 
 // render the container overlay
 Main.prototype.render = function(){
-	document.body.classList.add('exfm-overlay');
+	document.body.classList.add('exfm-overlay', 'exfm-blur-now');
+	this.blur = document.createElement("div");
+    this.blur.className = "exfm-blur";
+    document.body.appendChild(this.blur);
     this.container = document.createElement('div');
-    this.container.className = 'exfm-container';
+    this.container.classList.add('exfm-container');
     document.body.appendChild(this.container);
-    this.renderBottom();
+    //
 }
 
 // render the container overlay
 Main.prototype.renderBottom = function(){
-    this.botom = document.createElement('div');
-    this.botom.className = 'exfm-bottom';
-    this.container.appendChild(this.botom);
-    this.botom.innerHTML = "hello there";
+    this.bottom = document.createElement('div');
+    this.bottom.className = 'exfm-bottom';
+    this.container.appendChild(this.bottom);
+    this.bottom.innerHTML = "hello there";
 }
 
 
@@ -84,23 +87,66 @@ Main.prototype.getOpenGraphContent = function(name){
     return null;
 }
 
+// add blur image as background
+Main.prototype.addBlur = function(dataUrl){
+    this.blur.style.backgroundImage = "url(" + dataUrl + ")";
+    document.body.classList.remove('exfm-blur-now');
+    this.renderBottom();
+}
+
+// loop through anchors searching for mp3 links
+Main.prototype.getMp3Links = function(){
+    var list = [];
+    var anchors = document.getElementsByTagName("a");
+    var len = anchors.length, i;
+    for(i = 0; i < len; i++){
+        var anchor = anchors[i];
+        var href = anchor.getAttribute("href");
+        if(href !== undefined &&
+           href !== 'undefined' &&
+           href !== '' &&
+           href !== null &&
+           href !== 'null'
+        ){
+            var lastIndex = href.lastIndexOf('.');
+            var sub = href.substr(lastIndex, 4);
+            var hrefLen = href.length;
+            if (sub === '.mp3' && (hrefLen - lastIndex) == 4){
+                var text = anchor.innerText
+                list.push(
+                    {
+                        'href': this.fixRelativePath(href),
+                        'text': text
+                    }
+                )
+            }
+        }
+    } 
+    return list;
+}
+
+// fix relative path for urls
+Main.prototype.fixRelativePath = function(str){
+    if (str.indexOf("://") == -1){
+        if (str[0] == "/"){
+            return location.origin + str;
+        } else {
+            if (str[str.length - 1] == "/"){
+                return location.href + str;
+            } else {
+                return location.href +"/" + str;
+            }
+        }
+    }
+    return str;
+}
+
 var main = new Main();
 
-Main.prototype.addBlur = function(dataUrl){
-    var div = document.createElement("div");
-    div.className = "exfm-blur";
-    div.style.backgroundImage = "url(" + dataUrl + ")";
-    document.body.appendChild(div);
-    /*
-setTimeout(function(){
-    	div.className = 'exfm-blur exfm-blur-now';
-    }, 100);
-*/
-}
 
 // Messages received from background script
 function onMessage(e, sender, responseCallback){
-    console.log('onMessage', e, sender);
+    console.log('onMessage', e, e.type);
     if(e.type === 'blur'){
         main.addBlur(e.dataUrl);
     }
@@ -121,6 +167,10 @@ function onMessage(e, sender, responseCallback){
     if(e.type === 'getOpenGraphContent'){
         var content = main.getOpenGraphContent(e.name);
         responseCallback(content);
+    }
+    if(e.type === 'getMp3Links'){
+        var mp3Links = main.getMp3Links();;
+        responseCallback(mp3Links);
     }
 }
 chrome.runtime.onMessage.addListener(this.onMessage);

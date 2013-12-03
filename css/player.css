@@ -1,8 +1,9 @@
 body.exfm-overlay {
 	overflow: hidden;
-    /* -webkit-filter: blur(10px); */
 }
-
+body.exfm-blur-now {
+    -webkit-filter: blur(10px);
+}
 .exfm-blur {
     position: fixed;
    /*
@@ -18,8 +19,8 @@ body.exfm-overlay {
     /* -webkit-transform: scale(2); */
     background-repeat: no-repeat;
     background-size: cover;
-    z-index: 999999999;
-    -webkit-filter: blur(10px);
+    z-index: 9999999999;
+    /* -webkit-filter: blur(10px); */
 }
 
 .exfm-blur-now {
@@ -32,7 +33,7 @@ body.exfm-overlay {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 9999999999;
+    z-index: 99999999999;
 }
 .exfm-bottom {
 	position: absolute;

@@ -35,6 +35,7 @@ Tab.prototype.insertCSS = function(){
     );
 }
 
+
 // Insert playqueue script into page
 Tab.prototype.insertPlayqueue = function(){
     chrome.tabs.executeScript(
@@ -53,20 +54,33 @@ Tab.prototype.insertMain = function(){
         {
             file: "js/content-script/main.js"
         },
-        this.deepScan.bind(this)
+        this.captureVisibleTab.bind(this)
     );
-    chrome.tabs.captureVisibleTab(null, {'format': 'png'}, this.onCaptureVisibleTab.bind(this));
+}
+
+Tab.prototype.captureVisibleTab = function(){
+    setTimeout(function(){
+        chrome.tabs.captureVisibleTab(null, 
+        {
+            'format': 'png'
+        }, 
+        this.onCaptureVisibleTab.bind(this)
+    );
+    }.bind(this), 1000)
+    
 }
 
 Tab.prototype.onCaptureVisibleTab = function(dataUrl){
-	console.log('captured');
+	console.log('captured', this);
     chrome.tabs.sendMessage(this.id,
         {
             "type": "blur",
             "dataUrl": dataUrl
         }
     );
+    this.deepScan();
 }
+
 
 // Page action was clicked
 // Deep scan page to get actual songs
@@ -86,6 +100,10 @@ Tab.prototype.deepScan = function(){
     }
     if(this.response.isLiveMusicArchive === true){
         var liveMusicArchive = new LiveMusicArchive(this);
+        return;
+    }
+    if(this.response.hasMp3Links === true){
+        var mp3Links = new Mp3Links(this);
         return;
     }
 }

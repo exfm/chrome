@@ -12,4 +12,5 @@ function Song(){
     this.originalType = null;
     this.originalSource = null;
     this.duration = null;
+    this.serviceId = null;
 }

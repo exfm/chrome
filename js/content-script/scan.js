@@ -9,10 +9,19 @@ function Scan(){
         "isBandcamp": false,
         "isLiveMusicArchive": false
     }
-    this.tumblr();
-    this.soundcloud();
-    this.bandcamp();
-    this.liveMusicArchive();
+    if(this.tumblr() || 
+       this.soundcloud() ||
+       this.bandcamp() ||
+       this.liveMusicArchive() ||
+       this.mp3Links()
+    ){
+        this.done();
+        return;
+    }
+}
+
+// send response to background script
+Scan.prototype.done = function(){
     chrome.runtime.sendMessage(null, 
         {
             'type': 'scanDone',
@@ -30,21 +39,22 @@ Scan.prototype.tumblr = function(){
         if(location.href.indexOf('tumblr.com/dashboard') !== -1){
             this.response.isTumblrDashboard = true;
             this.response.showPageActionIcon = true;
-            return;
+            return true;
         }
         else{
             this.response.isTumblr = true;
             this.response.showPageActionIcon = true;
-            return;
+            return true;
         }
     }
     else{
         if(document.getElementById("tumblr_controls") !== null){
             this.response.isTumblr = true;
             this.response.showPageActionIcon = true;
-            return;
+            return true;
         }
     }
+    return false;
 }
 
 // Are we on a soundcloud page?
@@ -53,8 +63,9 @@ Scan.prototype.soundcloud = function(){
     if(location.href.indexOf('soundcloud.com') !== -1){
         this.response.isSoundcloud = true;
         this.response.showPageActionIcon = true;
-        return;
+        return true;
     }
+    return false;
 }
 
 // Are we on a bandcamp page?
@@ -63,8 +74,9 @@ Scan.prototype.bandcamp = function(){
     if(location.href.indexOf('bandcamp.com') !== -1){
         this.response.isBandcamp = true;
         this.response.showPageActionIcon = true;
-        return;
+        return true;
     }
+    return false;
 }
 
 // Are we on a Live Music Archive page?
@@ -73,8 +85,35 @@ Scan.prototype.liveMusicArchive = function(){
     if(location.href.indexOf('archive.org') !== -1){
         this.response.isLiveMusicArchive = true;
         this.response.showPageActionIcon = true;
-        return;
+        return true;
     }
+    return false;
+}
+
+// Do we have .mp3 links on page?  
+Scan.prototype.mp3Links = function(){
+    var anchors = document.getElementsByTagName("a");
+    var len = anchors.length, i;
+    for(i = 0; i < len; i++){
+        var anchor = anchors[i];
+        var href = anchor.getAttribute("href");
+        if(href !== undefined &&
+           href !== 'undefined' &&
+           href !== '' &&
+           href !== null &&
+           href !== 'null'
+        ){
+            var lastIndex = href.lastIndexOf('.');
+            var sub = href.substr(lastIndex, 4);
+            var hrefLen = href.length;
+            if (sub === '.mp3' && (hrefLen - lastIndex) == 4){
+                this.response.hasMp3Links = true;
+                this.response.showPageActionIcon = true;
+                return true;
+            }
+        }
+    } 
+    return false;
 }
 
 var scan = new Scan();
