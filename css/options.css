@@ -4,6 +4,11 @@ html, body {
     font-family: sans-serif;
     color: #39404e;
     background: #fff;
+    -webkit-font-smoothing: antialiased;
+}
+@font-face {
+    font-family:'services';
+    src:url('../fonts/services.ttf') format('truetype');
 }
 .clearfix:after {
     clear: both;
@@ -75,6 +80,11 @@ html, body {
     height: 60px;
     background-color: #ccc;
     border-radius: 50%;
+    font-family: services;
+    text-align: center;
+    line-height: 60px;
+    font-size: 30px;
+    color: #fff;
 }
 .auth-button {
     float: right;
