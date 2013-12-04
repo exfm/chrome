@@ -1,0 +1,79 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+.clearfix:after {
+    clear: both;
+    display: table;
+    content: '';
+}
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    background-color: #FAFAFA;
+}
+.right {
+    position: absolute;
+    top: 0;
+    left: 250px;
+    right: 0;
+    bottom: 0;
+}
+.logo {
+    margin: 15px;
+    font-size: 20px;
+}
+.title {
+    font-size: 28px;
+    margin: 30px 0 10px 30px;
+    font-weight: bold;
+}
+.description {
+    font-size: 20px;
+    margin: 0 0 20px 30px;
+}
+.service {
+    width: 500px;
+    margin-bottom: 20px;
+}
+.service-logo {
+    float: left;
+    margin: 0 20px 10px 30px;
+    width: 60px;
+    height: 60px;
+    background-color: gray;
+    border-radius: 50%;
+}
+.auth-button {
+    float: right;
+    background-color: #FFFFFF;
+    border: 1px solid #38A5FA;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #38A5FA;
+    cursor: pointer;
+    -webkit-user-select: none;
+}
+.auth-button.connect {
+    background-color: #38A5FA;
+    color: #FFFFFF;
+}
+.service-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+.service-description {
+    margin-top: 5px;
+}

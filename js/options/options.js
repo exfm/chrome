@@ -1,74 +1,92 @@
 function Options(){
-    $('.service').on('click', this.onServiceClick.bind(this));
+    this.services = [
+        'tumblr',
+        'rdio'
+    ]
+    this.getAuthStatus();
 }
 
-Options.prototype.onServiceClick = function(e){
-    var service = e.target.dataset.service;
-    var oAuthVersion = e.target.dataset.oauth_version;
-    console.log('service', service);
-    chrome.storage.sync.get(
-        service + 'Auth',
-        this.checkAuth.bind(this, service, oAuthVersion)
-    );
+// check to see what services
+// user is authed for
+Options.prototype.getAuthStatus = function(){
+    for(var i in this.services){
+        var service = this.services[i];
+        chrome.storage.sync.get(
+            service + 'Auth',
+            this.gotAuthStatus.bind(this, service)
+        );
+    }
+    $('.auth-button').on('click', this.onServiceClick.bind(this));
 }
 
-Options.prototype.checkAuth = function(service, oAuthVersion, oauthObj){
-    console.log('checkAuth', service, oauthObj);
-    if(oauthObj[service + 'Auth']){
+// got auth status for services
+// update UI accordingly
+Options.prototype.gotAuthStatus = function(service, oAuthObj){
+    console.log(service, oAuthObj);
+    if(oAuthObj[service + 'Auth']){
         console.log('we got it');
+        $('#' + service + '-auth-button')
+            .text('Disconnect')
     }
     else{
-        var capitalService = service.toUpperCase();
-        var authorize = new Authorize(
-            {
-                'key': keys[capitalService].KEY,
-                'secret': keys[capitalService].SECRET,
-                'requestTokenUrl': constants[capitalService].REQUEST_URL,
-                'userAuthorizationURL': constants[capitalService].AUTHORIZE_URL,
-                'accessTokenURL': constants[capitalService].ACCESS_URL,
-                'callbackUrl': keys[capitalService].OAUTH_CALLBACK,
-                'callback': this.authDone,
-                'service': service
-            }
-        );
-        if(oAuthVersion === "1"){
-            authorize.requestToken();
-        }
-        if(oAuthVersion === "2"){
-            authorize.openAuthDialog();
-        }
+        $('#' + service + '-auth-button')
+            .addClass('connect')
+            .text('Connect')
     }
 }
 
-Options.prototype.authDone = function(success, oauthObj, service){
-    console.log('authDone', oauthObj, service);
+// auth button clicked
+// if service is connected, disconnect it by 
+// clearing storage
+// If not connected yet, start oauth flow
+Options.prototype.onServiceClick = function(e){
+    var service = e.target.dataset.service;
+    if($(e.target).hasClass('connect')){
+        var oAuthVersion = e.target.dataset.oauth_version;
+        this.connect(service, oAuthVersion);
+    }
+    else{
+        console.log('disconnect')
+    }
+}
+
+// start oauth flow
+Options.prototype.connect = function(service, oAuthVersion){
+    var capitalService = service.toUpperCase();
+    var authorize = new Authorize(
+        {
+            'key': keys[capitalService].KEY,
+            'secret': keys[capitalService].SECRET,
+            'requestTokenUrl': constants[capitalService].REQUEST_URL,
+            'userAuthorizationURL': constants[capitalService].AUTHORIZE_URL,
+            'accessTokenURL': constants[capitalService].ACCESS_URL,
+            'callbackUrl': keys[capitalService].OAUTH_CALLBACK,
+            'callback': this.authDone,
+            'service': service
+        }
+    );
+    if(oAuthVersion === "1"){
+        authorize.requestToken();
+    }
+    if(oAuthVersion === "2"){
+        authorize.openAuthDialog();
+    }
+}
+
+// oauth flow done
+// If successfull save credentials in stoarge
+Options.prototype.authDone = function(success, oAuthObj, service){
+    console.log('authDone', oAuthObj, service);
     if(success === true){
         var obj = {};
-        obj[service + 'Auth'] = oauthObj;
+        obj[service + 'Auth'] = oAuthObj;
         chrome.storage.sync.set(obj);
     }
     else{
-        //alert("There was a problem. Please try again.");
+        alert("There was a problem. Please try again.");
     }
 }
-
-    /*
- var authorize = new Authorize(
-        {
-            'key': keys.RDIO_KEY,
-            'secret': keys.RDIO_SECRET,
-            'requestTokenUrl': constants.RDIO_REQUEST_URL,
-            'userAuthorizationURL': constants.RDIO_AUTHORIZE_URL,
-            'accessTokenURL': constants.RDIO_ACCESS_URL,
-            'callbackUrl': "http://dankantor.com"
-            
-        }
-    );
-*/
    
-
-
-
 function init(){
     var options = new Options();
 }
