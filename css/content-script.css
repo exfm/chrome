@@ -1,0 +1,21 @@
+body.exfm-overlay {
+	overflow: hidden;
+}
+body.exfm-blur {
+    -webkit-filter: blur(20px);
+}
+.exfm-hidden {
+    display: none;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+.exfm-iframe {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99999999999;
+    background-color: rgba(0,0,0,.9);
+}

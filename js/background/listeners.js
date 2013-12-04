@@ -18,6 +18,13 @@ function onMessage(e, sender){
                 }
             );
         break;
+        case 'deepScan':
+            chrome.storage.local.get("tab" + sender.id, function(savedTab){
+                var props = savedTab["tab" + sender.id];
+                var tab = new Tab(props.sender, props.response, false);
+                tab.deepScan();
+            });
+        break;
         default:
         break
     }

@@ -1,7 +1,8 @@
 // Player
 
 function Main(){
-    this.playlist = [];
+    /*
+this.playlist = [];
     this.audio = new Audio();
     this.playQueue = new PlayQueue(
         {
@@ -9,19 +10,29 @@ function Main(){
             'use_local_storage': false
         }
     )
+*/
     this.render();
 }
 
 // render the container overlay
 Main.prototype.render = function(){
-	document.body.classList.add('exfm-overlay', 'exfm-blur-now');
+	/*
+document.body.classList.add('exfm-overlay', 'exfm-blur-now');
 	this.blur = document.createElement("div");
     this.blur.className = "exfm-blur";
     document.body.appendChild(this.blur);
     this.container = document.createElement('div');
     this.container.classList.add('exfm-container');
     document.body.appendChild(this.container);
-    //
+*/
+    document.body.classList.add('exfm-overlay');
+    this.container = document.createElement("iframe");
+    this.container.setAttribute('width', '100%');
+    this.container.setAttribute('height', '100%');
+    this.container.setAttribute('frameborder', 'none');
+    this.container.setAttribute('src', 'chrome-extension://llnipdgkjcaopbfgodajodpjnfbidjhg/templates/player.html');
+    this.container.className = "exfm-iframe";
+    document.body.appendChild(this.container);
 }
 
 // render the container overlay
@@ -34,8 +45,8 @@ Main.prototype.renderBottom = function(){
 
 
 Main.prototype.renderPlaylist = function(){
-    this.playQueue.add(this.playlist);
-    this.playQueue.play(0);
+    //this.playQueue.add(this.playlist);
+    //this.playQueue.play(0);
 }
 
 Main.prototype.renderNoSongs = function(){
@@ -89,9 +100,9 @@ Main.prototype.getOpenGraphContent = function(name){
 
 // add blur image as background
 Main.prototype.addBlur = function(dataUrl){
-    this.blur.style.backgroundImage = "url(" + dataUrl + ")";
-    document.body.classList.remove('exfm-blur-now');
-    this.renderBottom();
+    //this.blur.style.backgroundImage = "url(" + dataUrl + ")";
+    //document.body.classList.remove('exfm-blur-now');
+    //this.renderBottom();
 }
 
 // loop through anchors searching for mp3 links
@@ -171,7 +182,6 @@ Main.prototype.confirmAuth = function(service, url){
 }
 
 var main = new Main();
-
 
 // Messages received from background script
 function onMessage(e, sender, responseCallback){

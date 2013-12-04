@@ -58,5 +58,8 @@
             "run_at": "document_end"
         }
     ],
-    "options_page": "html/options.html"
+    "options_page": "html/options.html",
+    "web_accessible_resources": [
+        "html/player.html"
+      ]
 }
