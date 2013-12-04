@@ -1,15 +1,15 @@
 function Options(){
-    $('#tumblr').on('click', this.onServiceClick.bind(this));
-    $('#rdio').on('click', this.onServiceClick.bind(this));
+    $('.service').on('click', this.onServiceClick.bind(this));
 }
 
 Options.prototype.onServiceClick = function(e){
     var service = e.target.dataset.service;
+    var oAuthVersion = e.target.dataset.oauth_version;
     console.log('service', service);
-    chrome.storage.sync.get(service + 'Auth', this.checkAuth.bind(this, service));
+    chrome.storage.sync.get(service + 'Auth', this.checkAuth.bind(this, service, oAuthVersion));
 }
 
-Options.prototype.checkAuth = function(service, oauthObj){
+Options.prototype.checkAuth = function(service, oAuthVersion, oauthObj){
     console.log('checkAuth', service, oauthObj);
     if(oauthObj[service + 'Auth']){
         console.log('we got it');
@@ -18,17 +18,22 @@ Options.prototype.checkAuth = function(service, oauthObj){
         var capitalService = service.toUpperCase();
         var authorize = new Authorize(
             {
-                'key': keys.TUMBLR_KEY,
-                'secret': keys.TUMBLR_SECRET,
+                'key': keys[capitalService].KEY,
+                'secret': keys[capitalService].SECRET,
                 'requestTokenUrl': constants[capitalService].REQUEST_URL,
                 'userAuthorizationURL': constants[capitalService].AUTHORIZE_URL,
                 'accessTokenURL': constants[capitalService].ACCESS_URL,
-                'callbackUrl': "http://oauth.extension.fm/tumblr",
+                'callbackUrl': keys[capitalService].OAUTH_CALLBACK,
                 'callback': this.authDone,
                 'service': service
             }
         );
-         authorize.requestToken();
+        if(oAuthVersion === "1"){
+            authorize.requestToken();
+        }
+        if(oAuthVersion === "2"){
+            authorize.openAuthDialog();
+        }
     }
 }
 
@@ -40,7 +45,7 @@ Options.prototype.authDone = function(success, oauthObj, service){
         chrome.storage.sync.set(obj);
     }
     else{
-        alert("There was a problem. Please try again.");
+        //alert("There was a problem. Please try again.");
     }
 }
 

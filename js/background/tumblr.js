@@ -3,7 +3,7 @@ function Tumblr(tab){
     this.tab = tab;
     this.requestUrl = constants.TUMBLR.POSTS; 
     this.requestUrl += this.tab.response.hostname;
-    this.requestUrl += "/posts?api_key=" + keys.TUMBLR_KEY;
+    this.requestUrl += "/posts?api_key=" + keys.TUMBLR.KEY;
     this.requestUrl += "&type=audio";
     this.request();
 }

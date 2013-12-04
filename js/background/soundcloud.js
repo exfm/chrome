@@ -4,16 +4,16 @@ function Soundcloud(tab){
     chrome.tabs.sendMessage(this.tab.id,
         {
             "type": "soundcloudKey",
-            "soundcloudKey": keys.SOUNDCLOUD_KEY
+            "soundcloudKey": keys.SOUNDCLOUD.KEY
         }
     );
 }
 
 // resolve url to json from Soundcloud API
 Soundcloud.prototype.resolve = function(url){
-    var requestUrl = constants.SOUNDCLOUD_RESOLVE; 
+    var requestUrl = constants.SOUNDCLOUD.RESOLVE; 
     requestUrl += url;
-    requestUrl += "&client_id=" + keys.SOUNDCLOUD_KEY;
+    requestUrl += "&client_id=" + keys.SOUNDCLOUD.KEY;
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = this.response.bind(this); 
     xhr.open("GET", requestUrl, true);
@@ -80,9 +80,9 @@ Soundcloud.prototype.buildPlaylist = function(list, album){
 
 // get user json from Soundcloud API
 Soundcloud.prototype.requestUser = function(json){
-    var requestUrl = constants.SOUNDCLOUD_USERS; 
+    var requestUrl = constants.SOUNDCLOUD.USERS; 
     requestUrl += this.user.id + "/tracks.json";
-    requestUrl += "?client_id=" + keys.SOUNDCLOUD_KEY;
+    requestUrl += "?client_id=" + keys.SOUNDCLOUD.KEY;
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = this.userResponse.bind(this); 
     xhr.open("GET", requestUrl, true);

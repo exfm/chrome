@@ -1,5 +1,4 @@
 function Authorize(opts){
-    console.log(opts);
     this.callback = opts.callback;
     this.service = opts.service;
     this.consumer = 
@@ -20,6 +19,7 @@ function Authorize(opts){
 
 // Get a request token
 Authorize.prototype.requestToken = function(){
+    console.log('echo', this.consumer.serviceProvider.echoURL);
     var message = 
         {
             'method': "post", 
@@ -45,7 +45,7 @@ Authorize.prototype.requestToken = function(){
 
 // Got the request token
 Authorize.prototype.gotRequestToken = function(xhr){
-    console.log(xhr);
+    console.log('gotRequestToken', xhr);
     if(xhr.status === 200){
         var results = OAuth.decodeForm(xhr.responseText);
         this.oauthToken = OAuth.getParameter(results, "oauth_token");
@@ -126,4 +126,19 @@ Authorize.prototype.gotAccessToken = function(xhr){
     } else {
         this.callback(false);
     }
+}
+
+// Oauth 2 
+// Open the auth dialog
+Authorize.prototype.openAuthDialog = function(){
+    var url = this.consumer.serviceProvider.userAuthorizationURL;
+    url += "?client_id="+this.consumer.consumerKey;
+    url += "&redirect_uri="+this.consumer.serviceProvider.echoURL;
+    url += "&response_type=code_and_token&scope=non-expiring";
+    chrome.tabs.create(
+        {
+            'url': url
+        }
+    );
+    //https://soundcloud.com/connect?state=SoundCloud_Dialog_7dfac&client_id=leL50hzZ1H8tAdKCLSCnw&redirect_uri=http://oauth.extension.fm/soundcloud&response_type=code_and_token&scope=non-expiring
 }
