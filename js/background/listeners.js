@@ -4,10 +4,22 @@
 // Create a new Tab object
 function onMessage(e, sender){
     console.log('onMessage', e, sender);
-    if(e.type === 'scanDone'){
-        if(e.response.showPageActionIcon === true){
-            var tab = new Tab(sender, e.response, true);
-        }
+    var type = e.type;
+    switch(type){
+        case 'scanDone':
+            if(e.response.showPageActionIcon === true){
+                var tab = new Tab(sender, e.response, true);
+            }
+        break;
+        case 'openTab':
+            chrome.tabs.create(
+                {
+                    'url': e.url
+                }
+            );
+        break;
+        default:
+        break
     }
 }
 chrome.runtime.onMessage.addListener(this.onMessage);

@@ -2,6 +2,7 @@ var constants = {
     'TUMBLR': 
         {
             'POSTS': "http://api.tumblr.com/v2/blog/",
+            'DASHBOARD': "http://api.tumblr.com/v2/user/dashboard",
             'REQUEST_URL': "http://www.tumblr.com/oauth/request_token",
             'AUTHORIZE_URL': "http://www.tumblr.com/oauth/authorize",
             'ACCESS_URL': "http://www.tumblr.com/oauth/access_token"

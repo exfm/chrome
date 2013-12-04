@@ -88,6 +88,12 @@ Tab.prototype.onCaptureVisibleTab = function(dataUrl){
 Tab.prototype.deepScan = function(){
     if(this.response.isTumblr === true){
         var tumblr = new Tumblr(this);
+        tumblr.getPosts();
+        return;
+    }
+    if(this.response.isTumblrDashboard === true){
+        var tumblr = new Tumblr(this);
+        tumblr.getDashboard();
         return;
     }
     if(this.response.isSoundcloud === true){

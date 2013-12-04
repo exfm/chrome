@@ -1,19 +1,65 @@
 // New Tumblr object
 function Tumblr(tab){
     this.tab = tab;
-    this.requestUrl = constants.TUMBLR.POSTS; 
-    this.requestUrl += this.tab.response.hostname;
-    this.requestUrl += "/posts?api_key=" + keys.TUMBLR.KEY;
-    this.requestUrl += "&type=audio";
-    this.request();
 }
 
 // request audio posts from Tumblr API
-Tumblr.prototype.request = function(){
+Tumblr.prototype.getPosts = function(){
+    var requestUrl = constants.TUMBLR.POSTS; 
+    requestUrl += this.tab.response.hostname;
+    requestUrl += "/posts?api_key=" + keys.TUMBLR.KEY;
+    requestUrl += "&type=audio";
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = this.response.bind(this); 
-    xhr.open("GET", this.requestUrl, true);
+    xhr.open("GET", requestUrl, true);
     xhr.send();
+}
+
+// request audio posts from Dashboard
+Tumblr.prototype.getDashboard = function(){
+    chrome.storage.sync.get(
+        'tumblrAuth',
+        this.checkAuth.bind(this)
+    );
+}
+
+// check to see if user has auth
+// if so, make signed request to dashboard
+// if not, prompt for user to auth
+Tumblr.prototype.checkAuth = function(oAuthObj){
+    if(oAuthObj['tumblrAuth']){
+        var requestUrl = constants.TUMBLR.DASHBOARD + "?type=audio"; 
+        var message = 
+            {
+				method: "post", 
+				action: requestUrl, 
+				parameters: []
+			}
+        var requestBody = OAuth.formEncode(message.parameters);
+        OAuth.completeRequest(message, 
+            {
+    			'consumerKey': keys.TUMBLR.KEY, 
+    			'consumerSecret': keys.TUMBLR.SECRET, 
+    			'token': oAuthObj['tumblrAuth'].oauth_token,
+                'tokenSecret': oAuthObj['tumblrAuth'].oauth_token_secret
+            }
+        );
+        var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = this.response.bind(this); 
+        xhr.open(message.method, requestUrl, true);
+        xhr.setRequestHeader("Authorization", authorizationHeader);
+        xhr.send();
+    }
+    else{
+        chrome.tabs.sendMessage(this.tab.id,
+            {
+                "type": "needAuth",
+                "service": "Tumblr",
+                "url": chrome.extension.getURL("html/options.html")
+            }
+        );
+    }
 }
 
 // response from Tumblr API
@@ -50,6 +96,7 @@ Tumblr.prototype.parse = function(json){
             if(!post.track_name){
                 song.title = post.slug.replace(/-/g, ' ');
             }
+            song.postAuthor = post.blog_name;
             playlist.push(song);
         }
         this.tab.playlist = playlist;

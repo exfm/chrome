@@ -20,7 +20,9 @@
                 "js/background/soundcloud.js",
                 "js/background/bandcamp.js",
                 "js/background/livemusicarchive.js",
-                "js/background/mp3links.js"
+                "js/background/mp3links.js",
+                "js/oauth/oauth.js",
+                "js/oauth/sha1.js"
             ]
         },
     "permissions": 

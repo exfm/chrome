@@ -157,40 +157,61 @@ Main.prototype.fixRelativePath = function(str){
     return str;
 }
 
+// show confirm dialog 
+// if confirmed, open url
+Main.prototype.confirmAuth = function(service, url){
+    if(confirm('Please connect Exfm <-> ' + service + ' to continue')){
+        chrome.runtime.sendMessage(null, 
+            {
+                "type": 'openTab',
+                "url": url
+            }
+        )
+    }
+}
+
 var main = new Main();
 
 
 // Messages received from background script
 function onMessage(e, sender, responseCallback){
     console.log('onMessage', e, e.type);
-    if(e.type === 'blur'){
-        main.addBlur(e.dataUrl);
-    }
-    if(e.type === 'playlist'){
-        main.playlist = e.playlist;
-        main.renderPlaylist();
-    }
-    if(e.type === 'noSongs'){
-        main.renderNoSongs();
-    }
-    if(e.type === 'soundcloudKey'){
-        main.playQueue.soundcloud_key = e.soundcloudKey;
-    }
-    if(e.type === 'getPageVar'){
-        var tracks = main.getPageVar(e.pageVar);
-        responseCallback(tracks);
-    }
-    if(e.type === 'getOpenGraphContent'){
-        var content = main.getOpenGraphContent(e.name);
-        responseCallback(content);
-    }
-    if(e.type === 'getMp3Links'){
-        var mp3Links = main.getMp3Links();;
-        responseCallback(mp3Links);
-    }
-    if(e.type === 'getIframes'){
-        var iframes = main.getIframes();
-        responseCallback(iframes);
+    var type = e.type;
+    switch(type){
+        case 'blur':
+            main.addBlur(e.dataUrl);
+        break;
+        case 'playlist':
+            main.playlist = e.playlist;
+            main.renderPlaylist();
+        break;
+        case 'noSongs':
+            main.renderNoSongs();
+        break;
+        case 'soundcloudKey':
+            main.playQueue.soundcloud_key = e.soundcloudKey;
+        break;
+        case 'getPageVar':
+            var tracks = main.getPageVar(e.pageVar);
+            responseCallback(tracks);
+        break;
+        case 'getOpenGraphContent':
+            var content = main.getOpenGraphContent(e.name);
+            responseCallback(content);
+        break;
+        case 'getMp3Links':
+            var mp3Links = main.getMp3Links();;
+            responseCallback(mp3Links);
+        break;
+        case 'getIframes': 
+            var iframes = main.getIframes();
+            responseCallback(iframes);
+        break;
+        case 'needAuth':
+            main.confirmAuth(e.service, e.url);
+        break;
+        default:
+        break;
     }
 }
 chrome.runtime.onMessage.addListener(this.onMessage);

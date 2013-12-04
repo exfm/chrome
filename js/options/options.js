@@ -6,7 +6,10 @@ Options.prototype.onServiceClick = function(e){
     var service = e.target.dataset.service;
     var oAuthVersion = e.target.dataset.oauth_version;
     console.log('service', service);
-    chrome.storage.sync.get(service + 'Auth', this.checkAuth.bind(this, service, oAuthVersion));
+    chrome.storage.sync.get(
+        service + 'Auth',
+        this.checkAuth.bind(this, service, oAuthVersion)
+    );
 }
 
 Options.prototype.checkAuth = function(service, oAuthVersion, oauthObj){
