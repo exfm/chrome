@@ -26,12 +26,16 @@ Options.prototype.gotAuthStatus = function(service, oAuthObj){
     if(oAuthObj[service + 'Auth']){
         $('#' + service + '-auth-button')
             .removeClass('connect')
-            .text('Disconnect')
+            .text('Disconnect');
+        $('#service-logo-' + service)
+            .addClass('connected');
     }
     else{
         $('#' + service + '-auth-button')
             .addClass('connect')
-            .text('Connect')
+            .text('Connect');
+        $('#service-logo-' + service)
+            .removeClass('connected');
     }
 }
 
