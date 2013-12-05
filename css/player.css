@@ -3,6 +3,20 @@ html, body {
     padding: 0;
     color: white;
 }
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,.9);
+    overflow: hidden;
+    -webkit-transform-origin: top right;
+    -webkit-transition: -webkit-transform .2s linear;
+}
+.container.minimized {
+    -webkit-transform: scale(.2);
+}
 .minimize {
     position: absolute;
     top: 15px;
@@ -18,6 +32,91 @@ html, body {
     color: black;
     cursor: pointer;
 }
+.playlist {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.playlist-item {
+    height: 50px;
+}
+.playlist-item.selected {
+    color: #0DA6F2;
+}
+.playlist-item-song {
+    font-size: 16px;
+    margin: 4px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 300px;
+}
+.playlist-item-artist {
+    font-size: 13px;
+    margin: 4px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 300px;
+}
+.current-song {
+    position: absolute;
+    top: 100px;
+    left: 400px;
+    right: 100px;
+}
+.artwork {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 300px;
+    height: 300px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: gray;
+}
+.song-title {
+    position: absolute;
+    top: 20px;
+    left: 340px;
+    right: 20px;
+    font-size: 30px;
+    color: white;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.artist {
+    position: absolute;
+    top: 70px;
+    left: 340px;
+    right: 20px;
+    font-size: 30px;
+    color: white;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.album {
+    position: absolute;
+    top: 120px;
+    left: 340px;
+    right: 20px;
+    font-size: 30px;
+    color: white;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.controls {
+    position: absolute;
+    top: 180px;
+    left: 340px;
+}
 .control {
     width: 50px;
     height: 50px;
@@ -29,15 +128,32 @@ html, body {
     font-size: 24px;
     font-weight: bold;
     float: left;
-    margin: 30px 5px 0 5px;
+    margin: 0 5px;
 }
-.song-title {
+.progress-back {
     position: absolute;
-    top: 200px;
-    left: 50%;
-    width: 500px;
-    margin-left: -250px;
-    font-size: 50px;
-    color: white;
-    text-align: center;
+    top: 260px;
+    left: 340px;
+    right: 20px;
+    height: 4px;
+    background: #000000;
+    border-radius: 2px;
+    overflow: hidden;
+}
+.progress {
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    height: 2px;
+    border-radius: 1px;
+    width: 100%;
+    background: #0DA6F2;
+    -webkit-transform: translateX(-101%);
+}
+.current-time {
+    position: absolute;
+    top: 280px;
+    left: 340px;
+    color: #0DA6F2;
+    font-size: 21px;
 }

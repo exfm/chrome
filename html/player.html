@@ -3,17 +3,42 @@
         <link rel="stylesheet" href="../css/player.css" type="text/css" media="screen" />
     </head>
     <body>
-        <div class="minimize" id="minimize">X</div>
-        <div id="prev" class="prev control"><<</div>
-        <div id="play-pause" class="play-pause control">></div>
-        <div id="next" class="next control">>></div>
-        <div id="song-title" class="song-title"></div>
-        <template id="song">
-            <div>Hi from a template</div>
+        <div id="container" class="container">
+            <div class="minimize" id="minimize">X</div>
+            <div class="playlist" id="playlist">
+                
+            </div>
+            <div class="current-song">
+                <div id="artwork" class="artwork"></div>
+                <div id="song-title" class="song-title"></div>
+                <div id="artist" class="artist"></div>
+                <div id="album" class="album"></div>
+                
+                <div class="controls">
+                    <div id="prev" class="prev control"><<</div>
+                    <div id="play-pause" class="play-pause control">></div>
+                    <div id="next" class="next control">>></div>
+                </div>
+                <div class="progress-back" id="progress-back">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <div class="current-time" id="current-time">
+                    <span class="time-count" id="time-count">0:00</span> / 
+                    <span class="time-duration" id="time-duration">0:00</span>
+                </div>
+                
+            </div>
+        </div>
+        <template id="playlist-item-template">
+            <div class="playlist-item">
+                <div class="playlist-item-song"></div>
+                <div class="playlist-item-artist"></div>
+            </div>
         </template>
-        <script type="text/javascript" src="../js/options/jquery-2.0.3.js"></script>
+        <script type="text/javascript" src="../js/libs/jquery-2.0.3.js"></script>
         <script type="text/javascript" src="../js/player/listeners.js"></script>
         <script type="text/javascript" src="../js/player/playqueue.js"></script>
+        <script type="text/javascript" src="../js/player/progress-bar.js"></script>
         <script type="text/javascript" src="../js/player/main.js"></script>
     </body>
 </html>
