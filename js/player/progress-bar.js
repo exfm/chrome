@@ -202,7 +202,7 @@ ProgressBar.prototype.reset = function(){
     this.currentTimeText = "0:00";
     this.durationText = "0:00"; 
     this.thumbLeft = 0;
-    this.frontWidth = -100;
+    this.frontWidth = -101;
     this.percentageWidth = -100;
     this.requestAnimationFrame(this.draw);
 }

@@ -125,7 +125,7 @@ html, body {
     border-radius: 1px;
     width: 100%;
     background: #0DA6F2;
-    -webkit-transform: translateX(-100%);
+    -webkit-transform: translateX(-101%);
 }
 .current-time {
     position: absolute;
