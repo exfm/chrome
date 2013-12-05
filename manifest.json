@@ -58,5 +58,26 @@
             "run_at": "document_end"
         }
     ],
-    "options_page": "html/options.html"
+    "options_page": "html/options.html",
+    "web_accessible_resources": [
+        "html/player.html",
+        "js/options/jquery-2.0.3.js",
+        "js/player/main.js",
+        "js/player/playqueue.js",
+        "js/player/listeners.js"
+      ],
+    "commands": {
+        "minimize-player": {
+          "suggested_key": {
+            "default": "Alt+P"
+          },
+          "description": "Toggle minimize player"
+        },
+        "play-pause": {
+          "suggested_key": {
+            "default": "MediaPlayPause"
+          },
+          "description": "Toggle play/pause"
+        }
+    }
 }

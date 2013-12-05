@@ -1,61 +1,43 @@
-body.exfm-overlay {
-	overflow: hidden;
+html, body {
+    margin: 0;
+    padding: 0;
+    color: white;
 }
-body.exfm-blur-now {
-    -webkit-filter: blur(10px);
-}
-.exfm-blur {
-    position: fixed;
-   /*
- top: -500px;
-    left: -500px;
-    right: -500px;
-    bottom: -500px;
-*/
-	top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    /* -webkit-transform: scale(2); */
-    background-repeat: no-repeat;
-    background-size: cover;
-    z-index: 9999999999;
-    /* -webkit-filter: blur(10px); */
-}
-
-.exfm-blur-now {
-    -webkit-filter: blur(10px);
-}
-
-.exfm-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 99999999999;
-}
-.exfm-bottom {
-	position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 100px;
-	background-color: rgba(0,0,0,.7);
-	color: white;
-	font-size: 24px;
-}
-.exfm-controls {
+.minimize {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 15px;
+    right: 15px;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    background-color: white;
+    line-height: 30px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+}
+.control {
+    width: 50px;
     height: 50px;
     background-color: white;
+    color: black;
+    line-height: 50px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
+    float: left;
+    margin: 30px 5px 0 5px;
 }
-.exfm-hidden {
-    display: none;
-    visibility: hidden;
-    width: 0;
-    height: 0;
+.song-title {
+    position: absolute;
+    top: 200px;
+    left: 50%;
+    width: 500px;
+    margin-left: -250px;
+    font-size: 50px;
+    color: white;
+    text-align: center;
 }
