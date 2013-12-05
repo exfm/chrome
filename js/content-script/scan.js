@@ -286,8 +286,10 @@ Scan.prototype.insertPlayer = function(url){
 
 // minimize the iframe player
 Scan.prototype.minimizePlayer = function(){
-    this.container.classList.toggle('exfm-minimize');
-    document.body.classList.toggle('exfm-overlay');
+    if(this.container){
+        this.container.classList.toggle('exfm-minimize');
+        document.body.classList.toggle('exfm-overlay');
+    }
 }
 
 var scan = new Scan();
