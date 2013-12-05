@@ -24,14 +24,14 @@ function Main(){
     );
     this.cacheElements();
     this.addListeners();
-    chrome.runtime.sendMessage(null, 
+    chrome.runtime.sendMessage(null,
         {
             "type": 'deepScan'
         }
     )
 }
 
-// cache elements 
+// cache elements
 Main.prototype.cacheElements = function(){
     this.containerEl = $('#container');
     this.currentSongTitleEl = $('#song-title');
@@ -41,28 +41,28 @@ Main.prototype.cacheElements = function(){
     this.playlistEl = $('#playlist');
 }
 
-// add listeners 
+// add listeners
 Main.prototype.addListeners = function(){
     this.playQueue.addEventListener(
-        "loading", 
-        this.updateCurrentSong.bind(this), 
+        "loading",
+        this.updateCurrentSong.bind(this),
         false
     );
     $('#minimize').on('click', function(){
-        chrome.runtime.sendMessage(null, 
+        chrome.runtime.sendMessage(null,
             {
                 "type": 'toggleMinimize'
             }
-        )   
+        )
     });
     $('#play-pause').on('click', function(){
-        this.playQueue.playPause();  
+        this.playQueue.playPause();
     }.bind(this));
     $('#prev').on('click', function(){
-        this.playQueue.previous();  
+        this.playQueue.previous();
     }.bind(this));
     $('#next').on('click', function(){
-        this.playQueue.next();  
+        this.playQueue.next();
     }.bind(this));
 }
 
@@ -91,7 +91,7 @@ Main.prototype.gotPlaylist = function(list){
         clone.querySelector('.playlist-item-song').innerText = song.title || 'Unknow Title';
         clone.querySelector('.playlist-item-artist').innerText = song.artist || '';
         items.push(clone);
-    }    
+    }
     this.playlistEl.html(items);
     this.playQueue.add(list);
     this.playQueue.play(0);
@@ -102,7 +102,7 @@ Main.prototype.toggleMinimize = function(){
     if(this.containerEl.hasClass('minimized')){
         this.containerEl
             .one('webkitTransitionEnd', function(e){
-                chrome.runtime.sendMessage(null, 
+                chrome.runtime.sendMessage(null,
                     {
                         "type": 'maximizeEnd'
                     }
@@ -113,7 +113,7 @@ Main.prototype.toggleMinimize = function(){
     else{
         this.containerEl
             .one('webkitTransitionEnd', function(e){
-                chrome.runtime.sendMessage(null, 
+                chrome.runtime.sendMessage(null,
                     {
                         "type": 'minimizeEnd'
                     }
@@ -122,9 +122,26 @@ Main.prototype.toggleMinimize = function(){
             .addClass('minimized');
     }
 }
+
+
+Main.prototype.capturedTab = function(dataUrl) {
+
+    var img = new Image();
+    $(img).addClass('captured-tab');
+
+    img.onload = function(){
+        $('#container').prepend(img);
+        setTimeout(function(){
+            $('body').addClass('show');
+        }, 250);
+    }
+    img.src = dataUrl;
+
+};
+
 var main;
 $(document).ready(
     function(){
-        main = new Main();       
+        main = new Main();
     }
 )
