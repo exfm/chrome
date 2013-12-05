@@ -37,6 +37,10 @@ Options.prototype.gotAuthStatus = function(service, oAuthObj){
         $('#service-logo-' + service)
             .removeClass('connected');
     }
+    if(service === 'rdio'){
+        var rdio = new Rdio();
+        rdio.getPlaylists(oAuthObj);
+    }
 }
 
 // auth button clicked
@@ -93,9 +97,23 @@ Options.prototype.authDone = function(success, oAuthObj, service){
             obj,
             this.getAuthStatus.bind(this)
         );
+        this.authConnected(service, oAuthObj);
     }
     else{
         alert("There was a problem. Please try again.");
+    }
+}
+
+// auth was successfull
+// do service specific stuff
+Options.prototype.authConnected = function(service, oAuthObj){
+    switch(service){
+        case 'rdio':
+            var rdio = new Rdio();
+            rdio.getPlaylists(oAuthObj);
+        break
+        default:
+        break;
     }
 }
    

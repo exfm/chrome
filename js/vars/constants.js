@@ -6,7 +6,7 @@ var constants = {
             'REQUEST_URL': "http://www.tumblr.com/oauth/request_token",
             'AUTHORIZE_URL': "http://www.tumblr.com/oauth/authorize",
             'ACCESS_URL': "http://www.tumblr.com/oauth/access_token",
-            'PARAMETER_TYPE': 'post'
+            'PARAMETER_TYPE': "post"
         },
     'SOUNDCLOUD':
         {
@@ -21,6 +21,7 @@ var constants = {
             'REQUEST_URL': "http://api.rdio.com/oauth/request_token",
             'AUTHORIZE_URL': "https://www.rdio.com/oauth/authorize",
             'ACCESS_URL': "http://api.rdio.com/oauth/access_token",
-            'PARAMETER_TYPE': 'get'
+            'PARAMETER_TYPE': "get",
+            'API_URL': "http://api.rdio.com/1/"
         }
 }

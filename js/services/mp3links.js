@@ -1,4 +1,4 @@
-// New Bandcamp object
+// New Mp3Links object
 function Mp3Links(tab){
     this.tab = tab;
     chrome.tabs.sendMessage(this.tab.id,
