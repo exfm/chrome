@@ -1,6 +1,14 @@
 html, body {
     margin: 0;
     padding: 0;
+    font-family: sans-serif;
+    color: #39404e;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+}
+@font-face {
+    font-family:'services';
+    src:url('../fonts/services.ttf') format('truetype');
 }
 .clearfix:after {
     clear: both;
@@ -19,15 +27,20 @@ html, body {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 250px;
+    width: 320px;
     background-color: #FAFAFA;
+    box-shadow: -4px 0 #e3e4e4 inset;
 }
 .right {
     position: absolute;
     top: 0;
-    left: 250px;
+    left: 320px;
     right: 0;
     bottom: 0;
+    padding: 0 0 0 45px;
+}
+.right-container {
+    width: 480px;
 }
 .logo {
     margin: 15px;
@@ -35,36 +48,60 @@ html, body {
 }
 .title {
     font-size: 28px;
-    margin: 30px 0 10px 30px;
+    margin: 30px 0 0 0;
     font-weight: bold;
+    font-size: 24px;
 }
 .description {
-    font-size: 20px;
-    margin: 0 0 20px 30px;
+    font-size: 18px;
+    margin: 0 0 30px 0;
+    line-height: 26px;
+}
+.services {
+    border-top: 1px solid #e3e4e4;
 }
 .service {
-    width: 500px;
-    margin-bottom: 20px;
+    padding-top: 20px;
+}
+.service-info {
+    border-bottom: 1px solid #e3e4e4;
+    padding-bottom: 15px;
+    float: left;
+    width: 400px;
+    min-height: 75px;
+}
+.connected .service-logo {
+    background: #29a5ff;
 }
 .service-logo {
     float: left;
-    margin: 0 20px 10px 30px;
+    margin: 0 20px 10px 0;
     width: 60px;
     height: 60px;
-    background-color: gray;
+    background-color: #ccc;
     border-radius: 50%;
+    font-family: services;
+    text-align: center;
+    line-height: 60px;
+    font-size: 30px;
+    color: #fff;
 }
 .auth-button {
     float: right;
     background-color: #FFFFFF;
     border: 1px solid #38A5FA;
-    width: 100px;
     height: 30px;
     line-height: 30px;
     text-align: center;
     color: #38A5FA;
     cursor: pointer;
     -webkit-user-select: none;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 0 12px;
+    width: auto;
 }
 .auth-button.connect {
     background-color: #38A5FA;
@@ -76,4 +113,6 @@ html, body {
 }
 .service-description {
     margin-top: 5px;
+    line-height: 20px;
+    font-size: 14px;
 }
