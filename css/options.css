@@ -101,7 +101,7 @@ html, body {
     font-weight: bold;
     letter-spacing: 1px;
     padding: 0 12px;
-    width: auto;
+    min-width: 89px;
 }
 .auth-button.connect {
     background-color: #38A5FA;
