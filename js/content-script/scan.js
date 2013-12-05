@@ -72,11 +72,19 @@ Scan.prototype.soundcloud = function(){
 
 // Are we on a bandcamp page?
 // 1. Look for .bandcamp.com url  
+// 2. Look for .hidden-access
 Scan.prototype.bandcamp = function(){
     if(location.href.indexOf('bandcamp.com') !== -1){
         this.response.isBandcamp = true;
         this.response.showPageActionIcon = true;
         return true;
+    }
+    if(document.querySelector('.hidden-access')){
+        if(document.querySelector('.hidden-access').innerText === 'Bandcamp'){
+            this.response.isBandcamp = true;
+            this.response.showPageActionIcon = true;
+            return true;
+        }
     }
     return false;
 }
