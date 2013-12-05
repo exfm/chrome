@@ -40,10 +40,7 @@ html, body {
     -webkit-transform: translate3d(0, 0, 0);
 }
 
-.show .current-song {
-    -webkit-transform: translate3d(0, 0, 0);
-    opacity: 1;
-}
+
 
 .show .captured-tab {
     opacity: 0.25;
@@ -113,9 +110,6 @@ html, body {
     top: 100px;
     left: 400px;
     right: 100px;
-    -webkit-transition: 0.4s ease-out 0.2s;
-    -webkit-transform: translate3d(0, 0, 500px);
-    opacity: 0;
 }
 .artwork {
     position: absolute;
