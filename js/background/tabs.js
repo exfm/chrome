@@ -29,14 +29,15 @@ Tab.prototype.insertCSS = function(){
     chrome.tabs.insertCSS(
         this.id,
         {
-            file: "css/player.css"
+            file: "css/content-script.css"
         },
-        this.insertPlayqueue.bind(this)
+        this.insertPlayer.bind(this)
     );
 }
 
 
 // Insert playqueue script into page
+/*
 Tab.prototype.insertPlayqueue = function(){
     chrome.tabs.executeScript(
         this.id,
@@ -46,15 +47,15 @@ Tab.prototype.insertPlayqueue = function(){
         this.insertMain.bind(this)
     );
 }
+*/
 
 // Insert main script into page
-Tab.prototype.insertMain = function(){
-    chrome.tabs.executeScript(
-        this.id,
+Tab.prototype.insertPlayer = function(){
+    chrome.tabs.sendMessage(this.id,
         {
-            file: "js/content-script/main.js"
-        },
-        this.captureVisibleTab.bind(this)
+            "type": "insertPlayer",
+            "url": chrome.extension.getURL('html/player.html')
+        }
     );
 }
 
