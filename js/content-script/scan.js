@@ -7,7 +7,10 @@ function Scan(){
         "isTumblrDashboard": false,
         "isSoundcloud": false,
         "isBandcamp": false,
-        "isLiveMusicArchive": false
+        "isLiveMusicArchive": false,
+        "hasMp3Links": false,
+        "hasSoundcloudEmbeds": false,
+        "hasBandcampEmbeds": false
     }
     if(this.tumblr() || 
        this.soundcloud() ||
