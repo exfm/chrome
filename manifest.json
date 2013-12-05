@@ -11,16 +11,16 @@
         {
             "persistent": false,
             "scripts": [
-                "js/background/constants.js",
-                "js/background/keys.js",
+                "js/vars/constants.js",
+                "js/vars/keys.js",
                 "js/background/listeners.js",
                 "js/background/tabs.js",
                 "js/background/song.js",
-                "js/background/tumblr.js",
-                "js/background/soundcloud.js",
-                "js/background/bandcamp.js",
-                "js/background/livemusicarchive.js",
-                "js/background/mp3links.js",
+                "js/services/tumblr.js",
+                "js/services/soundcloud.js",
+                "js/services/bandcamp.js",
+                "js/services/livemusicarchive.js",
+                "js/services/mp3links.js",
                 "js/oauth/oauth.js",
                 "js/oauth/sha1.js"
             ]
