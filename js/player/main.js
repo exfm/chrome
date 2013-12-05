@@ -37,7 +37,8 @@ Main.prototype.cacheElements = function(){
     this.currentSongTitleEl = $('#song-title');
     this.currentArtistEl = $('#artist');
     this.currentAlbumEl = $('#album');
-    this.currentSongArtwork = $('#artwork');
+    this.currentSongArtworkEl = $('#artwork');
+    this.playlistEl = $('#playlist');
 }
 
 // add listeners 
@@ -72,20 +73,28 @@ Main.prototype.updateCurrentSong = function(e){
     this.currentArtistEl.text(e.target.song.artist || '');
     this.currentAlbumEl.text(e.target.song.album || '');
     var artwork = e.target.song.artwork || '';
-    this.currentSongArtwork.css(
+    this.currentSongArtworkEl.css(
         'background-image',
         'url(' + artwork + ')'
     );
+    $('.playlist-item').removeClass('selected');
+    $($('.playlist-item')[e.target.queueNumber]).addClass('selected');
 }
 
 // Got the playlist from background
 Main.prototype.gotPlaylist = function(list){
+    var items = [];
+    var playlistItem = document.getElementById('playlist-item-template').content;
+    for(var i in list){
+        var song = list[i];
+        var clone = playlistItem.cloneNode(true);
+        clone.querySelector('.playlist-item-song').innerText = song.title || 'Unknow Title';
+        clone.querySelector('.playlist-item-artist').innerText = song.artist || '';
+        items.push(clone);
+    }    
+    this.playlistEl.html(items);
     this.playQueue.add(list);
     this.playQueue.play(0);
-    
-    
-    //var template = document.getElementById('song');
-    //document.body.appendChild(template.content.cloneNode(true));
 }
 
 // Toggle minimize state

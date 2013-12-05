@@ -38,7 +38,30 @@ html, body {
     left: 0;
     bottom: 0;
     width: 300px;
-    background-color: blue;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.playlist-item {
+    height: 50px;
+}
+.playlist-item.selected {
+    color: #0DA6F2;
+}
+.playlist-item-song {
+    font-size: 16px;
+    margin: 4px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 300px;
+}
+.playlist-item-artist {
+    font-size: 13px;
+    margin: 4px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 300px;
 }
 .current-song {
     position: absolute;
