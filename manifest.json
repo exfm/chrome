@@ -61,7 +61,7 @@
     "options_page": "html/options.html",
     "web_accessible_resources": [
         "html/player.html",
-        "js/options/jquery-2.0.3.js",
+        "js/libs/jquery-2.0.3.js",
         "js/player/main.js",
         "js/player/playqueue.js",
         "js/player/progress-bar.js",
