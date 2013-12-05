@@ -22,19 +22,38 @@ function Main(){
             'duration': '#time-duration'
         }
     );
+    this.cacheElements();
+    this.addListeners();
     chrome.runtime.sendMessage(null, 
         {
             "type": 'deepScan'
         }
     )
-    this.cacheElements();
+}
+
+// cache elements 
+Main.prototype.cacheElements = function(){
+    this.containerEl = $('#container');
+    this.currentSongTitleEl = $('#song-title');
+    this.currentArtistEl = $('#artist');
+    this.currentAlbumEl = $('#album');
+    this.currentSongArtwork = $('#artwork');
+}
+
+// add listeners 
+Main.prototype.addListeners = function(){
+    this.playQueue.addEventListener(
+        "loading", 
+        this.updateCurrentSong.bind(this), 
+        false
+    );
     $('#minimize').on('click', function(){
         chrome.runtime.sendMessage(null, 
             {
                 "type": 'toggleMinimize'
             }
         )   
-    })
+    });
     $('#play-pause').on('click', function(){
         this.playQueue.playPause();  
     }.bind(this));
@@ -43,26 +62,27 @@ function Main(){
     }.bind(this));
     $('#next').on('click', function(){
         this.playQueue.next();  
-    }.bind(this))
+    }.bind(this));
 }
 
-// cache elements 
-Main.prototype.cacheElements = function(){
-    this.containerEl = $('#container');
+// update the current song UI with metadata
+Main.prototype.updateCurrentSong = function(e){
+    console.log(e);
+    this.currentSongTitleEl.text(e.target.song.title || 'Unknown Title');
+    this.currentArtistEl.text(e.target.song.artist || '');
+    this.currentAlbumEl.text(e.target.song.album || '');
+    var artwork = e.target.song.artwork || '';
+    this.currentSongArtwork.css(
+        'background-image',
+        'url(' + artwork + ')'
+    );
 }
 
 // Got the playlist from background
 Main.prototype.gotPlaylist = function(list){
     this.playQueue.add(list);
     this.playQueue.play(0);
-    this.playQueue.addEventListener(
-        "playing", 
-        function(e){
-            console.log(e);
-            $('#song-title').text(e.target.song.title);
-        }.bind(this), 
-        false
-    );
+    
     
     //var template = document.getElementById('song');
     //document.body.appendChild(template.content.cloneNode(true));
