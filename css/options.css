@@ -70,7 +70,7 @@ html, body {
     width: 400px;
     min-height: 75px;
 }
-.connected .service-logo {
+.service-logo.connected  {
     background: #29a5ff;
 }
 .service-logo {

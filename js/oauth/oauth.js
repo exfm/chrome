@@ -288,12 +288,14 @@ OAuth.setProperties(OAuth, // utility functions
     getAuthorizationHeader: function getAuthorizationHeader(realm, parameters) {
         var header = 'OAuth realm="' + OAuth.percentEncode(realm) + '"';
         var list = OAuth.getParameterList(parameters);
+        //console.log('list', list);
         for (var p = 0; p < list.length; ++p) {
             var parameter = list[p];
             var name = parameter[0];
-            if (name.indexOf("oauth_") == 0) {
+            //if (name.indexOf("oauth_") == 0) {
+                //console.log(name);
                 header += ', ' + OAuth.percentEncode(name) + '="' + OAuth.percentEncode(parameter[1]) + '"';
-            }
+            //}
         }
         return header;
     }
