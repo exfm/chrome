@@ -1,6 +1,7 @@
 function Authorize(opts){
     this.callback = opts.callback;
     this.service = opts.service;
+    this.parameterType = opts.parameterType;
     this.consumer = 
         {
             'consumerKey': opts.key,
@@ -19,14 +20,24 @@ function Authorize(opts){
 
 // Get a request token
 Authorize.prototype.requestToken = function(){
+    var url = this.consumer.serviceProvider.requestTokenURL;
+    var parameters = [];
+    var requestBody = null;
+    if(this.parameterType === 'get'){
+        url += '?oauth_callback=' + this.consumer.serviceProvider.echoURL;
+    };
+    if(this.parameterType === 'post'){
+        parameters = {
+            'oauth_callback': this.consumer.serviceProvider.echoURL
+        }
+        requestBody = OAuth.formEncode(parameters);
+    };
     var message = 
         {
             'method': "POST", 
-            'action': this.consumer.serviceProvider.requestTokenURL + '?oauth_callback=' + this.consumer.serviceProvider.echoURL, 
-    		'parameters': []
+            'action': url, 
+    		'parameters': parameters
         }
-    //var requestBody = OAuth.formEncode(message.parameters);
-    //console.log(requestBody);
     OAuth.completeRequest(message, this.consumer);
     var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters);
 	$.ajax(
@@ -37,7 +48,8 @@ Authorize.prototype.requestToken = function(){
 	            x.setRequestHeader("Authorization", authorizationHeader);
             },
             'complete': this.gotRequestToken.bind(this),
-            'cache': false
+            'cache': false,
+            'data': requestBody
         }
     );
 }

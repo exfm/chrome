@@ -3,6 +3,7 @@ function Options(){
         'tumblr',
         'rdio'
     ]
+    $('.auth-button').on('click', this.onServiceClick.bind(this));
     this.getAuthStatus();
 }
 
@@ -16,7 +17,6 @@ Options.prototype.getAuthStatus = function(){
             this.gotAuthStatus.bind(this, service)
         );
     }
-    $('.auth-button').on('click', this.onServiceClick.bind(this));
 }
 
 // got auth status for services
@@ -24,8 +24,8 @@ Options.prototype.getAuthStatus = function(){
 Options.prototype.gotAuthStatus = function(service, oAuthObj){
     console.log(service, oAuthObj);
     if(oAuthObj[service + 'Auth']){
-        console.log('we got it');
         $('#' + service + '-auth-button')
+            .removeClass('connect')
             .text('Disconnect')
     }
     else{
@@ -46,7 +46,11 @@ Options.prototype.onServiceClick = function(e){
         this.connect(service, oAuthVersion);
     }
     else{
-        console.log('disconnect')
+        console.log('disconnect');
+        chrome.storage.sync.remove(
+            service + 'Auth',
+            this.getAuthStatus.bind(this)
+        );
     }
 }
 
@@ -61,8 +65,9 @@ Options.prototype.connect = function(service, oAuthVersion){
             'userAuthorizationURL': constants[capitalService].AUTHORIZE_URL,
             'accessTokenURL': constants[capitalService].ACCESS_URL,
             'callbackUrl': keys[capitalService].OAUTH_CALLBACK,
-            'callback': this.authDone,
-            'service': service
+            'callback': this.authDone.bind(this),
+            'service': service,
+            'parameterType': constants[capitalService].PARAMETER_TYPE
         }
     );
     if(oAuthVersion === "1"){
@@ -80,7 +85,10 @@ Options.prototype.authDone = function(success, oAuthObj, service){
     if(success === true){
         var obj = {};
         obj[service + 'Auth'] = oAuthObj;
-        chrome.storage.sync.set(obj);
+        chrome.storage.sync.set(
+            obj,
+            this.getAuthStatus.bind(this)
+        );
     }
     else{
         alert("There was a problem. Please try again.");
