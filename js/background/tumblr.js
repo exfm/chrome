@@ -81,23 +81,25 @@ Tumblr.prototype.parse = function(json){
         var playlist = [];
         for(var i = 0; i < len; i++){
             var post = posts[i];
-            var song = new Song();
-            song.type = "tumblr";
-            song.originalType = post.audio_type;
-            song.originalSource = post.source_url;
-            song.title = post.track_name;
-            song.artist = post.artist;
-            song.album = post.album;
-            song.artwork = post.album_art;
-            song.url = post.audio_url;
-            song.link = post.post_url;
-            song.serviceId = post.id;
-            song.timestamp = post.timestamp;
-            if(!post.track_name){
-                song.title = post.slug.replace(/-/g, ' ');
+            if(post.audio_type !== 'spotify'){
+                var song = new Song();
+                song.type = "tumblr";
+                song.originalType = post.audio_type;
+                song.originalSource = post.source_url;
+                song.title = post.track_name;
+                song.artist = post.artist;
+                song.album = post.album;
+                song.artwork = post.album_art;
+                song.url = post.audio_url;
+                song.link = post.post_url;
+                song.serviceId = post.id;
+                song.timestamp = post.timestamp;
+                if(!post.track_name){
+                    song.title = post.slug.replace(/-/g, ' ');
+                }
+                song.postAuthor = post.blog_name;
+                playlist.push(song);
             }
-            song.postAuthor = post.blog_name;
-            playlist.push(song);
         }
         this.tab.playlist = playlist;
         this.tab.showPlaylist();
