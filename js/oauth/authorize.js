@@ -19,14 +19,14 @@ function Authorize(opts){
 
 // Get a request token
 Authorize.prototype.requestToken = function(){
-    console.log('echo', this.consumer.serviceProvider.echoURL);
     var message = 
         {
-            'method': "post", 
-            'action': this.consumer.serviceProvider.requestTokenURL, 
-    		'parameters': [["oauth_callback", this.consumer.serviceProvider.echoURL]]
+            'method': "POST", 
+            'action': this.consumer.serviceProvider.requestTokenURL + '?oauth_callback=' + this.consumer.serviceProvider.echoURL, 
+    		'parameters': []
         }
-    var requestBody = OAuth.formEncode(message.parameters);
+    //var requestBody = OAuth.formEncode(message.parameters);
+    //console.log(requestBody);
     OAuth.completeRequest(message, this.consumer);
     var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters);
 	$.ajax(
@@ -37,8 +37,7 @@ Authorize.prototype.requestToken = function(){
 	            x.setRequestHeader("Authorization", authorizationHeader);
             },
             'complete': this.gotRequestToken.bind(this),
-            'cache': false, 
-            'data': requestBody
+            'cache': false
         }
     );
 }
@@ -84,9 +83,9 @@ Authorize.prototype.requestAccessToken = function(){
     console.log('this.oauthVerifier', this.oauthVerifier);
     var message = 
         {
-		    'method': "post", 
-            'action': this.consumer.serviceProvider.accessTokenURL, 
-            'parameters': [["oauth_verifier", this.oauthVerifier]]
+		    'method': "POST", 
+            'action': this.consumer.serviceProvider.accessTokenURL + '?oauth_verifier=' + this.oauthVerifier, 
+            'parameters':[]
         }
     var requestBody = OAuth.formEncode(message.parameters);
     OAuth.completeRequest(
