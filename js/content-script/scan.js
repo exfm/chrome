@@ -287,8 +287,16 @@ Scan.prototype.insertPlayer = function(url){
 // minimize the iframe player
 Scan.prototype.minimizePlayer = function(){
     if(this.container){
-        this.container.classList.toggle('exfm-minimize');
-        document.body.classList.toggle('exfm-overlay');
+        this.container.classList.add('exfm-minimize');
+        document.body.classList.remove('exfm-overlay');
+    }
+}
+
+// maximize the iframe player
+Scan.prototype.maximizePlayer = function(){
+    if(this.container){
+        this.container.classList.remove('exfm-minimize');
+        document.body.classList.add('exfm-overlay');
     }
 }
 
@@ -299,21 +307,6 @@ function onMessage(e, sender, responseCallback){
     //console.log('onMessage', e, e.type);
     var type = e.type;
     switch(type){
-        /*
-case 'blur':
-            main.addBlur(e.dataUrl);
-        break;
-        case 'playlist':
-            main.playlist = e.playlist;
-            main.renderPlaylist();
-        break;
-        case 'noSongs':
-            main.renderNoSongs();
-        break;
-        case 'soundcloudKey':
-            main.playQueue.soundcloud_key = e.soundcloudKey;
-        break;
-*/
         case 'insertPlayer':
             scan.insertPlayer(e.url);
         break;
@@ -336,8 +329,11 @@ case 'blur':
         case 'needAuth':
             scan.confirmAuth(e.service, e.url);
         break;
-        case 'minimize':
+        case 'minimizeEnd':
             scan.minimizePlayer();
+        break;
+        case 'maximizeEnd':
+            scan.maximizePlayer();
         break;
         default:
         break;

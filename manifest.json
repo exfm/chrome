@@ -64,6 +64,7 @@
         "js/options/jquery-2.0.3.js",
         "js/player/main.js",
         "js/player/playqueue.js",
+        "js/player/progress-bar.js",
         "js/player/listeners.js"
       ],
     "commands": {

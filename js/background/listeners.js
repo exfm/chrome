@@ -25,10 +25,24 @@ function onMessage(e, sender){
                 tab.deepScan();
             });
         break;
-        case 'minimize': 
+        case 'toggleMinimize': 
             chrome.tabs.sendMessage(sender.tab.id,
                 {
-                    "type": "minimize"
+                    "type": "toggleMinimize"
+                }
+            );
+        break;
+        case 'minimizeEnd': 
+            chrome.tabs.sendMessage(sender.tab.id,
+                {
+                    "type": "minimizeEnd"
+                }
+            );
+        break;
+        case 'maximizeEnd': 
+            chrome.tabs.sendMessage(sender.tab.id,
+                {
+                    "type": "maximizeEnd"
                 }
             );
         break;
@@ -65,7 +79,7 @@ chrome.commands.onCommand.addListener(function(command) {
         chrome.tabs.getSelected(null, function(tab){
             chrome.tabs.sendMessage(tab.id,
                 {
-                    "type": "minimize"
+                    "type": "toggleMinimize"
                 }
             );
         })

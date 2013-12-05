@@ -13,15 +13,25 @@ function Main(){
         'originalType', 'originalSource', 'duration',
         'serviceId', 'postAuthor'
     ];
+    this.progressBar = new ProgressBar(
+        {
+            'playQueue': this.playQueue,
+            'back': '#progress-back',
+            'front': '#progress',
+            'count': '#time-count',
+            'duration': '#time-duration'
+        }
+    );
     chrome.runtime.sendMessage(null, 
         {
             "type": 'deepScan'
         }
     )
+    this.cacheElements();
     $('#minimize').on('click', function(){
         chrome.runtime.sendMessage(null, 
             {
-                "type": 'minimize'
+                "type": 'toggleMinimize'
             }
         )   
     })
@@ -36,6 +46,12 @@ function Main(){
     }.bind(this))
 }
 
+// cache elements 
+Main.prototype.cacheElements = function(){
+    this.containerEl = $('#container');
+}
+
+// Got the playlist from background
 Main.prototype.gotPlaylist = function(list){
     this.playQueue.add(list);
     this.playQueue.play(0);
@@ -48,13 +64,38 @@ Main.prototype.gotPlaylist = function(list){
         false
     );
     
-    var template = document.getElementById('song');
-    document.body.appendChild(template.content.cloneNode(true));
+    //var template = document.getElementById('song');
+    //document.body.appendChild(template.content.cloneNode(true));
+}
+
+// Toggle minimize state
+Main.prototype.toggleMinimize = function(){
+    if(this.containerEl.hasClass('minimized')){
+        this.containerEl
+            .one('webkitTransitionEnd', function(e){
+                chrome.runtime.sendMessage(null, 
+                    {
+                        "type": 'maximizeEnd'
+                    }
+                )
+            }.bind(this))
+            .removeClass('minimized');
+    }
+    else{
+        this.containerEl
+            .one('webkitTransitionEnd', function(e){
+                chrome.runtime.sendMessage(null, 
+                    {
+                        "type": 'minimizeEnd'
+                    }
+                )
+            }.bind(this))
+            .addClass('minimized');
+    }
 }
 var main;
 $(document).ready(
     function(){
-        console.log('ready');
         main = new Main();       
     }
 )
