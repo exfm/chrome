@@ -14,7 +14,7 @@
                     <div class="description">Link services to Exfm</div>
                     <div class="services">
                         <div class="service clearfix">
-                            <div class="service-logo service-tumblr">t</div>
+                            <div class="service-logo service-tumblr" id="service-logo-tumblr">t</div>
                             <div class="service-info">
                                 <div id="tumblr-auth-button" class="auth-button" data-service="tumblr" data-oauth_version="1"></div>
                                 <div class="service-title">Tumblr</div>
@@ -22,7 +22,7 @@
                             </div>
                         </div>
                         <div class="service clearfix">
-                            <div class="service-logo service-rdio">r</div>
+                            <div class="service-logo service-rdio" id="service-logo-rdio">r</div>
                             <div class="service-info">
                                 <div id="rdio-auth-button" class="auth-button" data-service="rdio" data-oauth_version="1"></div>
                                 <div class="service-title">Rdio</div>
@@ -33,12 +33,13 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript" src="../js/options/jquery-2.0.3.js"></script>
-        <script type="text/javascript" src="../js/background/keys.js"></script>
-        <script type="text/javascript" src="../js/background/constants.js"></script>
+        <script type="text/javascript" src="../js/libs/jquery-2.0.3.js"></script>
+        <script type="text/javascript" src="../js/vars/keys.js"></script>
+        <script type="text/javascript" src="../js/vars/constants.js"></script>
         <script type="text/javascript" src="../js/oauth/sha1.js"></script>
         <script type="text/javascript" src="../js/oauth/oauth.js"></script>
         <script type="text/javascript" src="../js/oauth/authorize.js"></script>
+        <script type="text/javascript" src="../js/services/rdio.js"></script>
         <script type="text/javascript" src="../js/options/options.js"></script>
     </body>
 </html>

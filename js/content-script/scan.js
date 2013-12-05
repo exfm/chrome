@@ -7,7 +7,10 @@ function Scan(){
         "isTumblrDashboard": false,
         "isSoundcloud": false,
         "isBandcamp": false,
-        "isLiveMusicArchive": false
+        "isLiveMusicArchive": false,
+        "hasMp3Links": false,
+        "hasSoundcloudEmbeds": false,
+        "hasBandcampEmbeds": false
     }
     if(this.tumblr() || 
        this.soundcloud() ||
@@ -72,11 +75,19 @@ Scan.prototype.soundcloud = function(){
 
 // Are we on a bandcamp page?
 // 1. Look for .bandcamp.com url  
+// 2. Look for .hidden-access
 Scan.prototype.bandcamp = function(){
     if(location.href.indexOf('bandcamp.com') !== -1){
         this.response.isBandcamp = true;
         this.response.showPageActionIcon = true;
         return true;
+    }
+    if(document.querySelector('.hidden-access')){
+        if(document.querySelector('.hidden-access').innerText === 'Bandcamp'){
+            this.response.isBandcamp = true;
+            this.response.showPageActionIcon = true;
+            return true;
+        }
     }
     return false;
 }
@@ -287,8 +298,16 @@ Scan.prototype.insertPlayer = function(url){
 // minimize the iframe player
 Scan.prototype.minimizePlayer = function(){
     if(this.container){
-        this.container.classList.toggle('exfm-minimize');
-        document.body.classList.toggle('exfm-overlay');
+        this.container.classList.add('exfm-minimize');
+        document.body.classList.remove('exfm-overlay');
+    }
+}
+
+// maximize the iframe player
+Scan.prototype.maximizePlayer = function(){
+    if(this.container){
+        this.container.classList.remove('exfm-minimize');
+        document.body.classList.add('exfm-overlay');
     }
 }
 
@@ -299,21 +318,6 @@ function onMessage(e, sender, responseCallback){
     //console.log('onMessage', e, e.type);
     var type = e.type;
     switch(type){
-        /*
-case 'blur':
-            main.addBlur(e.dataUrl);
-        break;
-        case 'playlist':
-            main.playlist = e.playlist;
-            main.renderPlaylist();
-        break;
-        case 'noSongs':
-            main.renderNoSongs();
-        break;
-        case 'soundcloudKey':
-            main.playQueue.soundcloud_key = e.soundcloudKey;
-        break;
-*/
         case 'insertPlayer':
             scan.insertPlayer(e.url);
         break;
@@ -336,8 +340,11 @@ case 'blur':
         case 'needAuth':
             scan.confirmAuth(e.service, e.url);
         break;
-        case 'minimize':
+        case 'minimizeEnd':
             scan.minimizePlayer();
+        break;
+        case 'maximizeEnd':
+            scan.maximizePlayer();
         break;
         default:
         break;

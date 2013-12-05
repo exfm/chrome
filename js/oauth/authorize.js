@@ -1,6 +1,7 @@
 function Authorize(opts){
     this.callback = opts.callback;
     this.service = opts.service;
+    this.parameterType = opts.parameterType;
     this.consumer = 
         {
             'consumerKey': opts.key,
@@ -19,14 +20,24 @@ function Authorize(opts){
 
 // Get a request token
 Authorize.prototype.requestToken = function(){
-    console.log('echo', this.consumer.serviceProvider.echoURL);
+    var url = this.consumer.serviceProvider.requestTokenURL;
+    var parameters = [];
+    var requestBody = null;
+    if(this.parameterType === 'get'){
+        url += '?oauth_callback=' + this.consumer.serviceProvider.echoURL;
+    };
+    if(this.parameterType === 'post'){
+        parameters = {
+            'oauth_callback': this.consumer.serviceProvider.echoURL
+        }
+        requestBody = OAuth.formEncode(parameters);
+    };
     var message = 
         {
-            'method': "post", 
-            'action': this.consumer.serviceProvider.requestTokenURL, 
-    		'parameters': [["oauth_callback", this.consumer.serviceProvider.echoURL]]
+            'method': "POST", 
+            'action': url, 
+    		'parameters': parameters
         }
-    var requestBody = OAuth.formEncode(message.parameters);
     OAuth.completeRequest(message, this.consumer);
     var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters);
 	$.ajax(
@@ -37,7 +48,7 @@ Authorize.prototype.requestToken = function(){
 	            x.setRequestHeader("Authorization", authorizationHeader);
             },
             'complete': this.gotRequestToken.bind(this),
-            'cache': false, 
+            'cache': false,
             'data': requestBody
         }
     );
@@ -84,9 +95,9 @@ Authorize.prototype.requestAccessToken = function(){
     console.log('this.oauthVerifier', this.oauthVerifier);
     var message = 
         {
-		    'method': "post", 
-            'action': this.consumer.serviceProvider.accessTokenURL, 
-            'parameters': [["oauth_verifier", this.oauthVerifier]]
+		    'method': "POST", 
+            'action': this.consumer.serviceProvider.accessTokenURL + '?oauth_verifier=' + this.oauthVerifier, 
+            'parameters':[]
         }
     var requestBody = OAuth.formEncode(message.parameters);
     OAuth.completeRequest(

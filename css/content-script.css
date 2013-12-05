@@ -17,10 +17,10 @@ body.exfm-blur {
     right: 0;
     bottom: 0;
     z-index: 99999999999;
-    background-color: rgba(0,0,0,.9);
-    -webkit-transform-origin: top right;
-    -webkit-transition: -webkit-transform .2s linear;
 }
 .exfm-iframe.exfm-minimize {
-    -webkit-transform: scale(.2);
+    top: 0;
+    left: auto;
+    width: 300px;
+    height: 300px;
 }

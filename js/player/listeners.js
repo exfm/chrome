@@ -9,6 +9,9 @@ function onMessage(e, sender, responseCallback){
         case 'soundcloudKey':
             main.playQueue.soundcloud_key = e.soundcloudKey;
         break;
+        case 'toggleMinimize':
+            main.toggleMinimize();
+        break;
         default:
         break
     }
