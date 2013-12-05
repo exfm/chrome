@@ -2,6 +2,9 @@ html, body {
     margin: 0;
     padding: 0;
     color: white;
+    -webkit-font-smoothing: antialiased;
+    font-family: sans-serif;
+
 }
 .container {
     position: absolute;
@@ -9,14 +12,42 @@ html, body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0,0,0,.9);
     overflow: hidden;
     -webkit-transform-origin: top right;
     -webkit-transition: -webkit-transform .2s linear;
+    -webkit-perspective: 1500px;
+    visibility: hidden;
 }
 .container.minimized {
     -webkit-transform: scale(.2);
 }
+
+.captured-tab {
+    position: absolute;
+    -webkit-transform-style: preserve-3d;
+    -webkit-transition:
+        -webkit-transform 0.25s ease-in-out,
+        opacity 0.25s linear;
+    z-index: 100;
+}
+
+.show .container{
+    background: #131820;
+    visibility: visible;
+}
+
+.show .playlist {
+    -webkit-transform: translate3d(0, 0, 0);
+}
+
+
+
+.show .captured-tab {
+    opacity: 0.25;
+    -webkit-transform: translate3d(0, 0, -300px);
+    z-index: auto;
+}
+
 .minimize {
     position: absolute;
     top: 15px;
@@ -40,28 +71,39 @@ html, body {
     width: 300px;
     overflow-y: auto;
     overflow-x: hidden;
+    -webkit-transition: -webkit-transform 0.3s ease-out;
+    -webkit-transform: translate3d(-100%, 0, 200px);
+    background: rgba(37, 45, 60, 0.9);
 }
 .playlist-item {
-    height: 50px;
+    line-height: 18px;
+    padding: 12px 0;
+    margin-left: 20px;
+    border-bottom: 1px solid #000;
 }
 .playlist-item.selected {
-    color: #0DA6F2;
+    background: #29a5ff;
+    margin-left: 5px;
+    padding-left: 15px;
+    border-bottom-color: transparent;
 }
 .playlist-item-song {
     font-size: 16px;
-    margin: 4px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     width: 300px;
+    line-height: 18px;
+    font-weight: bold;
 }
 .playlist-item-artist {
-    font-size: 13px;
-    margin: 4px;
+    font-size: 14px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     width: 300px;
+    color: rgba(255,255,255,0.6);
+    line-height: 18px;
 }
 .current-song {
     position: absolute;

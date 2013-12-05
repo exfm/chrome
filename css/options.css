@@ -86,6 +86,12 @@ html, body {
     font-size: 30px;
     color: #fff;
 }
+.service-bandcamp {
+    font-size: 48px;
+}
+.service-spotify {
+    font-size: 45px;
+}
 .auth-button {
     float: right;
     background-color: #FFFFFF;

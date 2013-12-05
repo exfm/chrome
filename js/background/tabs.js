@@ -15,12 +15,13 @@ function Tab(sender, response, save){
 // Show page action icon
 // We may have songs on page
 Tab.prototype.showPageActionIcon = function(){
-    chrome.pageAction.show(this.id);   
+    chrome.pageAction.show(this.id);
 }
 
 // Page action icon on this
 // tab was clicked
 Tab.prototype.onPageActionClicked = function(){
+    this.captureVisibleTab();
     this.insertCSS();
 }
 
@@ -60,26 +61,24 @@ Tab.prototype.insertPlayer = function(){
 }
 
 Tab.prototype.captureVisibleTab = function(){
-    setTimeout(function(){
-        chrome.tabs.captureVisibleTab(null, 
+
+    chrome.tabs.captureVisibleTab(null,
         {
             'format': 'png'
-        }, 
+        },
         this.onCaptureVisibleTab.bind(this)
     );
-    }.bind(this), 1000)
-    
+
 }
 
 Tab.prototype.onCaptureVisibleTab = function(dataUrl){
 	console.log('captured', this);
     chrome.tabs.sendMessage(this.id,
         {
-            "type": "blur",
+            "type": "capturedTab",
             "dataUrl": dataUrl
         }
     );
-    this.deepScan();
 }
 
 
