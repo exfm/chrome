@@ -284,11 +284,17 @@ Scan.prototype.insertPlayer = function(url){
     document.body.appendChild(this.container);
 }
 
+// minimize the iframe player
+Scan.prototype.minimizePlayer = function(){
+    this.container.classList.toggle('exfm-minimize');
+    document.body.classList.toggle('exfm-overlay');
+}
+
 var scan = new Scan();
 
 // Messages received from background script
 function onMessage(e, sender, responseCallback){
-    console.log('onMessage', e, e.type);
+    //console.log('onMessage', e, e.type);
     var type = e.type;
     switch(type){
         /*
@@ -327,6 +333,9 @@ case 'blur':
         break;
         case 'needAuth':
             scan.confirmAuth(e.service, e.url);
+        break;
+        case 'minimize':
+            scan.minimizePlayer();
         break;
         default:
         break;

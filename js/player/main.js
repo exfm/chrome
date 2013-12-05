@@ -11,10 +11,27 @@ function Main(){
             "type": 'deepScan'
         }
     )
+    $(document.body).on('click', function(){
+        chrome.runtime.sendMessage(null, 
+            {
+                "type": 'minimize'
+            }
+        )   
+    })
 }
 
 Main.prototype.gotPlaylist = function(list){
-    console.log(list);
+    this.playQueue.add(list);
+    this.playQueue.play(0);
+    console.log('playQueue', this.playQueue.getList());
+    var template = document.getElementById('song');
+    //console.log(template.content, template.innerHTML);
+    document.body.appendChild(template.content.cloneNode(true));
 }
-
-var main = new Main();
+var main;
+$(document).ready(
+    function(){
+        console.log('ready');
+        main = new Main();       
+    }
+)

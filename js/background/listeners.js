@@ -19,11 +19,18 @@ function onMessage(e, sender){
             );
         break;
         case 'deepScan':
-            chrome.storage.local.get("tab" + sender.id, function(savedTab){
-                var props = savedTab["tab" + sender.id];
+            chrome.storage.local.get("tab" + sender.tab.id, function(savedTab){
+                var props = savedTab["tab" + sender.tab.id];
                 var tab = new Tab(props.sender, props.response, false);
                 tab.deepScan();
             });
+        break;
+        case 'minimize': 
+            chrome.tabs.sendMessage(sender.tab.id,
+                {
+                    "type": "minimize"
+                }
+            );
         break;
         default:
         break

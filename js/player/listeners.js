@@ -6,13 +6,11 @@ function onMessage(e, sender, responseCallback){
         case 'playlist':
             main.gotPlaylist(e.playlist);
         break;
-        case 'openTab':
-            
+        case 'soundcloudKey':
+            main.playQueue.soundcloud_key = e.soundcloudKey;
         break;
         default:
         break
     }
 }
 chrome.runtime.onMessage.addListener(this.onMessage);
-
-console.log(main);
