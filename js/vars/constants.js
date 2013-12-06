@@ -6,7 +6,9 @@ var constants = {
             'REQUEST_URL': "http://www.tumblr.com/oauth/request_token",
             'AUTHORIZE_URL': "http://www.tumblr.com/oauth/authorize",
             'ACCESS_URL': "http://www.tumblr.com/oauth/access_token",
-            'PARAMETER_TYPE': "post"
+            'PARAMETER_TYPE': "post",
+            'LIKE_POST': "http://api.tumblr.com/v2/user/like",
+            'USER_INFO': "http://api.tumblr.com/v2/user/info"
         },
     'SOUNDCLOUD':
         {
