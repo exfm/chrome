@@ -13,7 +13,6 @@ function onMessage(e, sender, responseCallback){
             main.toggleMinimize();
         break;
         case 'capturedTab':
-            console.log('capturedTab:', e.dataUrl);
             main.capturedTab(e.dataUrl);
         break;
         default:
