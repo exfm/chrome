@@ -1,7 +1,8 @@
 function Options(){
     this.services = [
         'tumblr',
-        'rdio'
+        'rdio',
+        'soundcloud'
     ]
     $('.auth-button').on('click', this.onServiceClick.bind(this));
     this.getAuthStatus();
@@ -37,10 +38,12 @@ Options.prototype.gotAuthStatus = function(service, oAuthObj){
         $('#service-logo-' + service)
             .removeClass('connected');
     }
-    if(service === 'rdio'){
+    /*
+if(service === 'rdio'){
         var rdio = new Rdio();
         rdio.getPlaylists(oAuthObj);
     }
+*/
 }
 
 // auth button clicked
@@ -75,7 +78,8 @@ Options.prototype.connect = function(service, oAuthVersion){
             'callbackUrl': keys[capitalService].OAUTH_CALLBACK,
             'callback': this.authDone.bind(this),
             'service': service,
-            'parameterType': constants[capitalService].PARAMETER_TYPE
+            'parameterType': constants[capitalService].PARAMETER_TYPE,
+            'authorizeParams': constants[capitalService].AUTHORIZE_PARAMS
         }
     );
     if(oAuthVersion === "1"){

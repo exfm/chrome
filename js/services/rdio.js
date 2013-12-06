@@ -23,7 +23,7 @@ Rdio.prototype.getPlaylists = function(oAuthObj){
             'tokenSecret': oAuthObj['rdioAuth'].oauth_token_secret
         }
     );
-    var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters);
+    var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters, true);
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = this.response.bind(this); 
     xhr.open(message.method, requestUrl, true);
@@ -69,6 +69,6 @@ Rdio.prototype.createPlaylist = function(oAuthObj){
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = this.response.bind(this); 
     xhr.open(message.method, requestUrl, true);
-    xhr.setRequestHeader("Authorization", authorizationHeader);
+    xhr.setRequestHeader("Authorization", authorizationHeader, true);
     xhr.send(requestBody);
 }

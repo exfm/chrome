@@ -1,12 +1,14 @@
 // New Soundcloud object
 function Soundcloud(tab){
-    this.tab = tab;
-    chrome.tabs.sendMessage(this.tab.id,
-        {
-            "type": "soundcloudKey",
-            "soundcloudKey": keys.SOUNDCLOUD.KEY
-        }
-    );
+    if(tab){
+        this.tab = tab;
+        chrome.tabs.sendMessage(this.tab.id,
+            {
+                "type": "soundcloudKey",
+                "soundcloudKey": keys.SOUNDCLOUD.KEY
+            }
+        );
+    }
 }
 
 // resolve url to json from Soundcloud API
@@ -137,4 +139,41 @@ Soundcloud.prototype.getQueryParams = function(str){
         }
     } catch(e){}
     return obj;
+}
+
+// favorite song 
+Soundcloud.prototype.favorite = function(id){
+    chrome.storage.sync.get(
+        'soundcloudAuth',
+        function(oAuthObj){
+            if(oAuthObj['soundcloudAuth']){
+                var requestUrl = constants.SOUNDCLOUD.FAVORITE_TRACK + id; 
+                requestUrl += ".json?oauth_token=" + oAuthObj['soundcloudAuth'].accessToken;
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = this.favoriteResponse.bind(this); 
+                xhr.open("PUT", requestUrl, true);
+                xhr.send();
+            }
+            else{
+                chrome.tabs.sendMessage(this.tab.id,
+                    {
+                        "type": "needAuth",
+                        "service": "Soundcloud",
+                        "url": chrome.extension.getURL("html/options.html")
+                    }
+                );
+            }
+        }.bind(this)
+    );
+}
+
+// favorite response from Soundcloud API
+Soundcloud.prototype.favoriteResponse = function(e){
+    if(e.target.readyState === 4){
+        console.log(e.target);
+        if(e.target.status === 200){
+            var json = JSON.parse(e.target.response);
+            console.log('like', json);
+        }
+    }
 }
