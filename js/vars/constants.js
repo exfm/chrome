@@ -14,7 +14,9 @@ var constants = {
         {
             'RESOLVE': "https://api.soundcloud.com/resolve.json?url=",
             'USERS': "http://api.soundcloud.com/users/",
-            'AUTHORIZE_URL': "https://soundcloud.com/connect"
+            'AUTHORIZE_URL': "https://soundcloud.com/connect",
+            'AUTHORIZE_PARAMS': "&response_type=code_and_token&scope=non-expiring",
+            'FAVORITE_TRACK': "https://api.soundcloud.com/me/favorites/"
         },
     "BANDCAMP_ALBUM": "http://api.bandcamp.com/api/album/2/info?",
     "BANDCAMP_ARTIST": "http://api.bandcamp.com/api/band/3/info?",
