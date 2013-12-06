@@ -14,4 +14,5 @@ function Song(){
     this.duration = null;
     this.serviceId = null;
     this.postAuthor = null;
+    this.reblogKey = null;
 }

@@ -12,7 +12,8 @@ function Authorize(opts){
                     'requestTokenURL': opts.requestTokenUrl,
     				'userAuthorizationURL': opts.userAuthorizationURL,
     				'accessTokenURL': opts.accessTokenURL,
-    				'echoURL': opts.callbackUrl
+    				'echoURL': opts.callbackUrl,
+    				'authorizeParams': opts.authorizeParams,
     			}
         }
 }
@@ -80,7 +81,7 @@ Authorize.prototype.gotRequestToken = function(xhr){
 Authorize.prototype.tabListener = function(tabId, obj, tab){
     var indexOf = tab.url.indexOf(this.consumer.serviceProvider.echoURL);
 	if (indexOf !== -1 && obj.status === "complete"){
-		chrome.tabs.onUpdated.removeListener(this.bindedListener);
+		chrome.tabs.onUpdated.removeListener(this.bindedTabListener);
 		var results = OAuth.decodeForm(tab.url.split("?")[1]);
         this.oauthToken = OAuth.getParameter(results, "oauth_token");
         this.oauthVerifier = OAuth.getParameter(results, "oauth_verifier"),
@@ -145,11 +146,32 @@ Authorize.prototype.openAuthDialog = function(){
     var url = this.consumer.serviceProvider.userAuthorizationURL;
     url += "?client_id="+this.consumer.consumerKey;
     url += "&redirect_uri="+this.consumer.serviceProvider.echoURL;
-    url += "&response_type=code_and_token&scope=non-expiring";
+    url += this.consumer.serviceProvider.authorizeParams;
+    this.bindedTabListener = this.oauth2TabListener.bind(this);
+    chrome.tabs.onUpdated.addListener(this.bindedTabListener);
     chrome.tabs.create(
         {
             'url': url
         }
     );
-    //https://soundcloud.com/connect?state=SoundCloud_Dialog_7dfac&client_id=leL50hzZ1H8tAdKCLSCnw&redirect_uri=http://oauth.extension.fm/soundcloud&response_type=code_and_token&scope=non-expiring
+}
+
+// Oauth 2 
+// Listen for callback tab
+Authorize.prototype.oauth2TabListener = function(tabId, obj, tab){
+    var indexOf = tab.url.indexOf(this.consumer.serviceProvider.echoURL);
+    if (indexOf === 0 && obj.status === "complete"){
+	    chrome.tabs.onUpdated.removeListener(this.bindedTabListener);
+		var results = OAuth.decodeForm(tab.url.split("?")[1]);
+        var split = results[0][1].split('#');
+        var code = split[0];
+        var accessToken = split[1].split('=')[1];
+        console.log(code, accessToken);
+        var obj = {
+            "code" : code,
+            "accessToken" : accessToken
+            }
+        this.callback(true, obj, this.service);
+		chrome.tabs.remove(tabId);
+	}
 }

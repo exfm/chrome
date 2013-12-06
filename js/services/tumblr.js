@@ -31,11 +31,10 @@ Tumblr.prototype.checkAuth = function(oAuthObj){
         var requestUrl = constants.TUMBLR.DASHBOARD + "?type=audio"; 
         var message = 
             {
-				method: "post", 
+				method: "get", 
 				action: requestUrl, 
 				parameters: []
 			}
-        var requestBody = OAuth.formEncode(message.parameters);
         OAuth.completeRequest(message, 
             {
     			'consumerKey': keys.TUMBLR.KEY, 
@@ -93,11 +92,15 @@ Tumblr.prototype.parse = function(json){
                 song.url = post.audio_url;
                 song.link = post.post_url;
                 song.serviceId = post.id;
+                song.reblogKey = post.reblog_key;
                 song.timestamp = post.timestamp;
                 if(!post.track_name){
                     song.title = post.slug.replace(/-/g, ' ');
                 }
                 song.postAuthor = post.blog_name;
+                if(post.audio_type === 'tumblr' && post.audio_url.indexOf('tumblr.com') !== -1){
+                    song.url += '?plead=please-dont-download-this-or-our-lawyers-wont-let-us-host-audio';
+                }
                 playlist.push(song);
             }
         }
@@ -108,3 +111,58 @@ Tumblr.prototype.parse = function(json){
         this.tab.noSongs();
     }
 }
+
+// like post 
+Tumblr.prototype.like = function(id, reblogKey){
+    chrome.storage.sync.get(
+        'tumblrAuth',
+        function(oAuthObj){
+            if(oAuthObj['tumblrAuth']){
+                var method = 'POST';
+                var url = constants.TUMBLR.LIKE_POST+'?id='+id+'&reblog_key='+reblogKey;
+                var params = {'id':id};
+                var message = 
+                    {
+        				method: method, 
+        				action: url, 
+        				parameters: []
+        			}
+                OAuth.completeRequest(message, 
+                    {
+            			'consumerKey': keys.TUMBLR.KEY, 
+            			'consumerSecret': keys.TUMBLR.SECRET, 
+            			'token': oAuthObj['tumblrAuth'].oauth_token,
+                        'tokenSecret': oAuthObj['tumblrAuth'].oauth_token_secret
+                    }
+                );
+                var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters);
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = this.likeResponse.bind(this); 
+                xhr.open(message.method, url, true);
+                xhr.setRequestHeader("Authorization", authorizationHeader);
+                xhr.send();
+            }
+            else{
+                chrome.tabs.sendMessage(this.tab.id,
+                    {
+                        "type": "needAuth",
+                        "service": "Tumblr",
+                        "url": chrome.extension.getURL("html/options.html")
+                    }
+                );
+            }
+        }.bind(this)
+    );
+}
+
+// like response from Tumblr API
+Tumblr.prototype.likeResponse = function(e){
+    if(e.target.readyState === 4){
+        if(e.target.status === 200){
+            var json = JSON.parse(e.target.response);
+            console.log('like', json);
+        }
+    }
+}
+
+

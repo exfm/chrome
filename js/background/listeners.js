@@ -50,6 +50,10 @@ function onMessage(e, sender, responseCallback){
             responseCallback(dataUrlObj[sender.tab.id]);
             delete dataUrlObj[sender.tab.id];
         break;
+        case 'tumblrLike':
+            var tumblr = new Tumblr(sender.tab);
+            tumblr.like(e.id, e.reblogKey);
+        break;
         default:
         break
     }
