@@ -2,7 +2,7 @@
 // If response.showPageActionIcon === true,
 // We've got possible songs on page
 // Create a new Tab object
-function onMessage(e, sender){
+function onMessage(e, sender, responseCallback){
     console.log('onMessage', e, sender);
     var type = e.type;
     switch(type){
@@ -45,6 +45,10 @@ function onMessage(e, sender){
                     "type": "maximizeEnd"
                 }
             );
+        break;
+        case 'getDataUrl':
+            responseCallback(dataUrlObj[sender.tab.id]);
+            delete dataUrlObj[sender.tab.id];
         break;
         default:
         break

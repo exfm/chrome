@@ -29,6 +29,7 @@ html, body {
         -webkit-transform 0.25s ease-in-out,
         opacity 0.25s linear;
     z-index: 100;
+    -webkit-filter: blur(30px);
 }
 
 .show .container{

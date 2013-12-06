@@ -22,7 +22,24 @@ Tab.prototype.showPageActionIcon = function(){
 // tab was clicked
 Tab.prototype.onPageActionClicked = function(){
     this.captureVisibleTab();
-    this.insertCSS();
+}
+
+// capture screenshot 
+Tab.prototype.captureVisibleTab = function(){
+    chrome.tabs.captureVisibleTab(null,
+        {
+            'format': 'png'
+        },
+        this.onCaptureVisibleTab.bind(this)
+    );
+}
+
+// got screen capture
+// set dataUrl in a global var
+var dataUrlObj = {};
+Tab.prototype.onCaptureVisibleTab = function(dataUrl){
+	dataUrlObj[this.id] = dataUrl;
+	this.insertCSS();
 }
 
 // Insert player css into page
@@ -36,20 +53,6 @@ Tab.prototype.insertCSS = function(){
     );
 }
 
-
-// Insert playqueue script into page
-/*
-Tab.prototype.insertPlayqueue = function(){
-    chrome.tabs.executeScript(
-        this.id,
-        {
-            file: "js/content-script/playqueue.js"
-        },
-        this.insertMain.bind(this)
-    );
-}
-*/
-
 // Insert main script into page
 Tab.prototype.insertPlayer = function(){
     chrome.tabs.sendMessage(this.id,
@@ -59,28 +62,6 @@ Tab.prototype.insertPlayer = function(){
         }
     );
 }
-
-Tab.prototype.captureVisibleTab = function(){
-
-    chrome.tabs.captureVisibleTab(null,
-        {
-            'format': 'png'
-        },
-        this.onCaptureVisibleTab.bind(this)
-    );
-
-}
-
-Tab.prototype.onCaptureVisibleTab = function(dataUrl){
-	console.log('captured', this);
-    chrome.tabs.sendMessage(this.id,
-        {
-            "type": "capturedTab",
-            "dataUrl": dataUrl
-        }
-    );
-}
-
 
 // Page action was clicked
 // Deep scan page to get actual songs

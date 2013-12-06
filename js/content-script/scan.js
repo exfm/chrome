@@ -293,6 +293,7 @@ Scan.prototype.insertPlayer = function(url){
     this.container.setAttribute('src', url);
     this.container.className = "exfm-iframe";
     document.body.appendChild(this.container);
+    return true;
 }
 
 // minimize the iframe player
@@ -319,7 +320,9 @@ function onMessage(e, sender, responseCallback){
     var type = e.type;
     switch(type){
         case 'insertPlayer':
-            scan.insertPlayer(e.url);
+            if(scan.insertPlayer(e.url)){
+                responseCallback();
+            }
         break;
         case 'getPageVar':
             var tracks = scan.getPageVar(e.pageVar);

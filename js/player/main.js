@@ -29,6 +29,12 @@ function Main(){
             "type": 'deepScan'
         }
     )
+    chrome.runtime.sendMessage(null,
+        {
+            "type": 'getDataUrl'
+        },
+        this.capturedTab.bind(this)   
+    )
 }
 
 // cache elements

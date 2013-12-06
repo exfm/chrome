@@ -2,7 +2,7 @@ body.exfm-overlay {
 	overflow: hidden;
 }
 body.exfm-blur {
-    -webkit-filter: blur(20px);
+    -webkit-filter: blur(30px);
 }
 .exfm-hidden {
     display: none;
