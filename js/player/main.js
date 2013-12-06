@@ -33,7 +33,7 @@ function Main(){
         {
             "type": 'getDataUrl'
         },
-        this.capturedTab.bind(this)   
+        this.capturedTab.bind(this)
     )
 }
 
@@ -100,7 +100,7 @@ Main.prototype.gotPlaylist = function(list){
     }
     this.playlistEl.html(items);
     this.playQueue.add(list);
-    this.playQueue.play(0);
+    // this.playQueue.play(0);
 }
 
 // Toggle minimize state

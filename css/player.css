@@ -4,7 +4,10 @@ html, body {
     color: white;
     -webkit-font-smoothing: antialiased;
     font-family: sans-serif;
-
+}
+@font-face {
+    font-family: 'exfm-icons';
+    src:url('../fonts/ex-icons.ttf') format('truetype');
 }
 .container {
     position: absolute;
@@ -29,7 +32,7 @@ html, body {
         -webkit-transform 0.25s ease-in-out,
         opacity 0.25s linear;
     z-index: 100;
-    -webkit-filter: blur(30px);
+    -webkit-filter: blur(12px);
 }
 
 .show .container{
@@ -44,8 +47,8 @@ html, body {
 
 
 .show .captured-tab {
-    opacity: 0.25;
-    -webkit-transform: translate3d(0, 0, -300px);
+    opacity: 0.15;
+    -webkit-transform: translate3d(0, 0, -100px);
     z-index: auto;
 }
 
@@ -72,15 +75,17 @@ html, body {
     width: 300px;
     overflow-y: auto;
     overflow-x: hidden;
-    -webkit-transition: -webkit-transform 0.3s ease-out;
-    -webkit-transform: translate3d(-100%, 0, 200px);
-    background: rgba(37, 45, 60, 0.9);
+    -webkit-transition: -webkit-transform 0.3s cubic-bezier(0, 1, 0.71, 1) 0.1s;
+    -webkit-transform: translate3d(-100%, 0, 0);
+    background: rgba(37, 45, 60, 0.75);
+    -webkit-transform-origin: 0 50%;
+    -webkit-transform-style: preserve-3d;
 }
 .playlist-item {
     line-height: 18px;
     padding: 12px 0;
     margin-left: 20px;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid rgba(0,0,0, 0.4);
 }
 .playlist-item.selected {
     background: #29a5ff;
@@ -111,72 +116,87 @@ html, body {
     top: 100px;
     left: 400px;
     right: 100px;
+    /* width: 640px; */
+    height: 400px;
 }
 .artwork {
-    position: absolute;
-    top: 20px;
-    left: 20px;
     width: 300px;
     height: 300px;
     background-repeat: no-repeat;
     background-size: cover;
     background-color: gray;
+    float: left;
+    margin-right: 30px;
+}
+.current-song-info {
+    line-height: 30px;
+    float: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: rgba(255,255,255, 0.75);
+    font-size: 16px;
+}
+.now-playing {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 20px;
 }
 .song-title {
-    position: absolute;
-    top: 20px;
-    left: 340px;
-    right: 20px;
-    font-size: 30px;
+    font-size: 38px;
     color: white;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    /* font-weight: bold; */
+    line-height: 50px;
 }
 .artist {
-    position: absolute;
-    top: 70px;
-    left: 340px;
-    right: 20px;
-    font-size: 30px;
-    color: white;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+
 }
 .album {
-    position: absolute;
-    top: 120px;
-    left: 340px;
-    right: 20px;
-    font-size: 30px;
-    color: white;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    font-style: italic;
 }
+.current-song-ui {
+    position: absolute;
+    left: 300px;
+    right: 0;
+    bottom: 0;
+    height: 120px;
+    background: rgba(19, 24, 32, 0.5);
+    background: -webkit-linear-gradient(top, rgba(19, 24, 32, 0.2) 0%,rgba(19, 24, 32, 0.75) 100%);
+}
+
 .controls {
     position: absolute;
-    top: 180px;
-    left: 340px;
+    top: 20px;
+    left: 50%;
+    /* background: rgba(0,0,0,0.1); */
+    margin-left: -135px;
 }
 .control {
-    width: 50px;
+    width: 80px;
     height: 50px;
-    background-color: white;
-    color: black;
+    /* background-color: white; */
+    color: #fff;
     line-height: 50px;
     text-align: center;
     cursor: pointer;
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 65px;
+    /* font-weight: bold; */
     float: left;
     margin: 0 5px;
+    font-family: exfm-icons;
+    /* background: #000; */
 }
+.control.prev:after { content: 'a'; }
+.control.play-pause:after { content: 'b'; }
+.control.next:after { content: 'd'; }
+
+
+
 .progress-back {
     position: absolute;
-    top: 260px;
-    left: 340px;
+    top: 85px;
+    left: 20px;
     right: 20px;
     height: 4px;
     background: #000000;
@@ -195,8 +215,11 @@ html, body {
 }
 .current-time {
     position: absolute;
-    top: 280px;
-    left: 340px;
-    color: #0DA6F2;
-    font-size: 21px;
+    top: 95px;
+    left: 20px;
+    color: #495774;
+    font-size: 14px;
+}
+.time-count {
+    color: #29A5FF;
 }
