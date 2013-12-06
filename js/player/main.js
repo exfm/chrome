@@ -51,7 +51,7 @@ Main.prototype.cacheElements = function(){
 Main.prototype.addListeners = function(){
     this.playQueue.addEventListener(
         "loading",
-        this.updateCurrentSong.bind(this),
+        this.songLoading.bind(this),
         false
     );
     $('#minimize').on('click', function(){
@@ -72,19 +72,24 @@ Main.prototype.addListeners = function(){
     }.bind(this));
 }
 
-// update the current song UI with metadata
-Main.prototype.updateCurrentSong = function(e){
+// new song loading
+Main.prototype.songLoading = function(e){
     console.log(e);
-    this.currentSongTitleEl.text(e.target.song.title || 'Unknown Title');
-    this.currentArtistEl.text(e.target.song.artist || '');
-    this.currentAlbumEl.text(e.target.song.album || '');
-    var artwork = e.target.song.artwork || '';
+    this.updateCurrentSong(e.target.song, e.target.queueNumber);
+}
+
+// update the current song UI with metadata
+Main.prototype.updateCurrentSong = function(song, queueuNumber){
+    this.currentSongTitleEl.text(song.title || 'Unknown Title');
+    this.currentArtistEl.text(song.artist || '');
+    this.currentAlbumEl.text(song.album || '');
+    var artwork = song.artwork || '';
     this.currentSongArtworkEl.css(
         'background-image',
         'url(' + artwork + ')'
     );
     $('.playlist-item').removeClass('selected');
-    $($('.playlist-item')[e.target.queueNumber]).addClass('selected');
+    $($('.playlist-item')[queueNumber]).addClass('selected');
 }
 
 // Got the playlist from background
@@ -100,6 +105,7 @@ Main.prototype.gotPlaylist = function(list){
     }
     this.playlistEl.html(items);
     this.playQueue.add(list);
+    this.updateCurrentSong(list[0]);
     // this.playQueue.play(0);
 }
 
