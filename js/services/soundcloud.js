@@ -72,6 +72,7 @@ Soundcloud.prototype.buildPlaylist = function(list, album){
                 song.link = this.tab.response.url;
                 song.originalSource = track.permalink_url;
             }
+            song.hasMeta = true;
             playlist.push(song);
         }
     }

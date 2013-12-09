@@ -11,7 +11,7 @@ function Main(){
         'artwork', 'url', 'link',
         'timestamp', 'purchaseUrl', 'type',
         'originalType', 'originalSource', 'duration',
-        'serviceId', 'postAuthor'
+        'serviceId', 'postAuthor', 'hasMeta'
     ];
     this.progressBar = new ProgressBar(
         {
@@ -117,6 +117,33 @@ Main.prototype.updateCurrentSong = function(song, queueNumber){
     );
     $('.playlist-item').removeClass('selected');
     $($('.playlist-item')[queueNumber]).addClass('selected');
+    if(song.hasMeta === false){
+        chrome.runtime.sendMessage(null,
+            {
+                "type": 'getId3',
+                "url": song.url
+            },
+            this.gotId3.bind(this, queueNumber)
+        )
+    }
+}
+
+// got id3 data from file
+// Update UI
+Main.prototype.gotId3 = function(queueNumber, tags){
+    if(tags !== null){
+        if(tags.title){
+            this.currentSongTitleEl.text(tags.title);
+            $($('.playlist-item-song')[queueNumber]).text(tags.title);
+        }
+        if(tags.artist){
+            this.currentArtistEl.text(tags.artist);
+            $($('.playlist-item-artist')[queueNumber]).text(tags.artist);
+        }
+        if(tags.album){
+            this.currentAlbumEl.text(tags.album);
+        }
+    }
 }
 
 // Got the playlist from background

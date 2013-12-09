@@ -94,8 +94,10 @@ Tumblr.prototype.parse = function(json){
                 song.serviceId = post.id;
                 song.reblogKey = post.reblog_key;
                 song.timestamp = post.timestamp;
+                song.hasMeta = true;
                 if(!post.track_name){
                     song.title = post.slug.replace(/-/g, ' ');
+                    song.hasMeta = false;
                 }
                 song.postAuthor = post.blog_name;
                 if(post.audio_type === 'tumblr' && post.audio_url.indexOf('tumblr.com') !== -1){
