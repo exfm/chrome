@@ -88,6 +88,7 @@ Bandcamp.prototype.buildPlaylist = function(list, artist, album, artwork, url, t
         song.serviceId = track.id || track.track_id;
         song.timestamp = new Date(timestamp).getTime();
         song.duration = track.duration;
+        song.hasMeta = true;
         playlist.push(song);
     }
     this.tab.playlist = playlist;

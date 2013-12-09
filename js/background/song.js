@@ -15,4 +15,5 @@ function Song(){
     this.serviceId = null;
     this.postAuthor = null;
     this.reblogKey = null;
+    this.hasMeta = false;
 }
