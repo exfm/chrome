@@ -105,16 +105,21 @@ Main.prototype.updateCurrentSong = function(song, queueNumber){
 // Update UI
 Main.prototype.gotId3 = function(queueNumber, tags){
     if(tags !== null){
+        var song = this.playQueue.getSong(queueNumber);
+        song.hasMeta = true;
         if(tags.title){
             this.currentSongTitleEl.text(tags.title);
             $($('.playlist-item-song')[queueNumber]).text(tags.title);
+            song.title = tags.title;
         }
         if(tags.artist){
             this.currentArtistEl.text(tags.artist);
             $($('.playlist-item-artist')[queueNumber]).text(tags.artist);
+            song.artist = tags.artist;
         }
         if(tags.album){
             this.currentAlbumEl.text(tags.album);
+            song.album = tags.album;
         }
     }
 }
