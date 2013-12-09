@@ -9,6 +9,10 @@ html, body {
     font-family: 'exfm-icons';
     src:url('../fonts/ex-icons.ttf') format('truetype');
 }
+@font-face {
+    font-family:'services';
+    src:url('../fonts/services.ttf') format('truetype');
+}
 .container {
     position: absolute;
     top: 0;
@@ -77,11 +81,20 @@ html, body {
     overflow-x: hidden;
     -webkit-transition: -webkit-transform 0.3s cubic-bezier(0, 1, 0.71, 1) 0.1s;
     -webkit-transform: translate3d(-100%, 0, 0);
-    background: rgba(37, 45, 60, 0.75);
+    background: hsla(219, 24%, 15%, 0.75);
     -webkit-transform-origin: 0 50%;
     -webkit-transform-style: preserve-3d;
     white-space: nowrap;
 }
+
+.right {
+    position: absolute;
+    top: 0;
+    left: 300px;
+    right: 0;
+    bottom: 0;
+}
+
 .playlist-item {
     line-height: 18px;
     padding: 12px 0;
@@ -104,7 +117,7 @@ html, body {
     font-size: 16px;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 18px;
+    line-height: 22px;
     font-weight: bold;
     pointer-events: none;
 }
@@ -115,15 +128,19 @@ html, body {
     text-overflow: ellipsis;
     width: 300px;
     color: rgba(255,255,255,0.6);
-    line-height: 18px;
+    line-height: 20px;
     pointer-events: none;
 }
 .current-song {
     position: absolute;
     top: 100px;
-    left: 400px;
-    right: 100px;
-    height: 400px;
+    /* left: 400px; */
+    /* right: 100px; */
+    height: 300px;
+    width: 800px;
+    left: 50%;
+    margin-left: -400px;
+    /* left: 330px; */
 }
 .artwork {
     width: 300px;
@@ -133,28 +150,23 @@ html, body {
     background-color: gray;
     float: left;
     margin-right: 30px;
-    -webkit-transition: 4s ease-in-out;
-
-    -webkit-transform-origin: 50% 50%;
     position: relative;
-    -webkit-transform-style: preserve-3d;
 }
 .artwork:before {
-    width: 100%;
+    /*width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.2);
     content: '';
     display: block;
     -webkit-filter: blur(4px);
-
     -webkit-transform-origin: 50% 50%;
-    position: relative;
+    position: relative;*/
 }
 .show .artwork {
-     -webkit-transform: rotateY(17deg);
+
 }
 .show .artwork:before {
-    -webkit-transform: translate3d(-10px, 20px, -10px) scale(1, 0.9) rotateX(10deg);
+
 }
 .current-song-info {
     line-height: 30px;
@@ -176,6 +188,8 @@ html, body {
     line-height: 50px;
     text-overflow: ellipsis;
     overflow: hidden;
+    font-weight: lighter;
+    font-weight: 100;
 }
 .artist {
 
@@ -185,16 +199,16 @@ html, body {
 }
 .current-song-ui {
     position: absolute;
-    left: 300px;
+    left: 330px;
     right: 0;
     bottom: 0;
-    height: 120px;
-    background: rgba(19, 24, 32, 0.5);
+    height: 90px;
+    /* background: rgba(19, 24, 32, 0.5); */
 }
 
 .controls {
     position: absolute;
-    top: 20px;
+    bottom: 0;
     left: 50%;
     margin-left: -135px;
 }
@@ -217,18 +231,18 @@ html, body {
 
 .progress-back {
     position: absolute;
-    top: 85px;
-    left: 20px;
-    right: 20px;
-    height: 4px;
-    background: #000000;
-    border-radius: 2px;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(255,255,255, 0.1);
+    border-radius: 1px;
     overflow: hidden;
 }
 .progress {
     position: absolute;
-    left: 1px;
-    top: 1px;
+    left: 0;
+    top: 0;
     height: 2px;
     border-radius: 1px;
     width: 100%;
@@ -237,11 +251,42 @@ html, body {
 }
 .current-time {
     position: absolute;
-    top: 95px;
-    left: 20px;
+    top: 10;
+    left: 10;
     color: #495774;
     font-size: 14px;
 }
 .time-count {
     color: #29A5FF;
+}
+
+.services {
+    font-family: services;
+    position: absolute;
+    left: 330px;
+    bottom: 110px;
+}
+
+.service-icon {
+    float: left;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px inset;
+    margin: 0 10px 0 0;
+    text-align: center;
+    line-height: 44px;
+    font-size: 34px;
+    cursor: pointer;
+    opacity: 0.3;
+    -webkit-transition: opacity 0.1s linear;
+}
+.service-icon:hover {
+    opacity: 1;
+}
+.rdio {
+    font-size: 26px;
+}
+.tumblr {
+    font-size: 24px;
 }
