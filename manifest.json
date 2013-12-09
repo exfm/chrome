@@ -22,7 +22,8 @@
                 "js/services/livemusicarchive.js",
                 "js/services/mp3links.js",
                 "js/oauth/sha1.js",
-                "js/oauth/oauth.js"
+                "js/oauth/oauth.js",
+                "js/libs/id3.js"
             ]
         },
     "permissions": 

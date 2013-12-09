@@ -11,7 +11,7 @@ function Main(){
         'artwork', 'url', 'link',
         'timestamp', 'purchaseUrl', 'type',
         'originalType', 'originalSource', 'duration',
-        'serviceId', 'postAuthor'
+        'serviceId', 'postAuthor', 'hasMeta'
     ];
     this.progressBar = new ProgressBar(
         {
@@ -79,7 +79,7 @@ Main.prototype.songLoading = function(e){
 }
 
 // update the current song UI with metadata
-Main.prototype.updateCurrentSong = function(song, queueuNumber){
+Main.prototype.updateCurrentSong = function(song, queueNumber){
     this.currentSongTitleEl.text(song.title || 'Unknown Title');
     this.currentArtistEl.text(song.artist || '');
     this.currentAlbumEl.text(song.album || '');
@@ -90,6 +90,33 @@ Main.prototype.updateCurrentSong = function(song, queueuNumber){
     );
     $('.playlist-item').removeClass('selected');
     $($('.playlist-item')[queueNumber]).addClass('selected');
+    if(song.hasMeta === false){
+        chrome.runtime.sendMessage(null,
+            {
+                "type": 'getId3',
+                "url": song.url
+            },
+            this.gotId3.bind(this, queueNumber)
+        )
+    }
+}
+
+// got id3 data from file
+// Update UI
+Main.prototype.gotId3 = function(queueNumber, tags){
+    if(tags !== null){
+        if(tags.title){
+            this.currentSongTitleEl.text(tags.title);
+            $($('.playlist-item-song')[queueNumber]).text(tags.title);
+        }
+        if(tags.artist){
+            this.currentArtistEl.text(tags.artist);
+            $($('.playlist-item-artist')[queueNumber]).text(tags.artist);
+        }
+        if(tags.album){
+            this.currentAlbumEl.text(tags.album);
+        }
+    }
 }
 
 // Got the playlist from background
@@ -105,7 +132,7 @@ Main.prototype.gotPlaylist = function(list){
     }
     this.playlistEl.html(items);
     this.playQueue.add(list);
-    this.updateCurrentSong(list[0]);
+    this.updateCurrentSong(list[0], 0);
     // this.playQueue.play(0);
 }
 

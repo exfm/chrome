@@ -47,6 +47,7 @@ LiveMusicArchive.prototype.parse = function(json){
             try{
                 song.artwork = json.misc.image;
             }catch(e){}
+            song.hasMeta = true;
             playlist.push(song);
         }
     }
