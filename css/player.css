@@ -80,12 +80,19 @@ html, body {
     background: rgba(37, 45, 60, 0.75);
     -webkit-transform-origin: 0 50%;
     -webkit-transform-style: preserve-3d;
+    white-space: nowrap;
 }
 .playlist-item {
     line-height: 18px;
     padding: 12px 0;
     margin-left: 20px;
     border-bottom: 1px solid rgba(0,0,0, 0.4);
+    cursor: pointer;
+}
+.playlist-item:hover {
+    background: rgba(0, 0, 0, 0.25);
+    margin-left: 5px;
+    padding-left: 15px;
 }
 .playlist-item.selected {
     background: #29a5ff;
@@ -96,11 +103,10 @@ html, body {
 .playlist-item-song {
     font-size: 16px;
     overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis;
-    width: 300px;
     line-height: 18px;
     font-weight: bold;
+    pointer-events: none;
 }
 .playlist-item-artist {
     font-size: 14px;
@@ -110,13 +116,13 @@ html, body {
     width: 300px;
     color: rgba(255,255,255,0.6);
     line-height: 18px;
+    pointer-events: none;
 }
 .current-song {
     position: absolute;
     top: 100px;
     left: 400px;
     right: 100px;
-    /* width: 640px; */
     height: 400px;
 }
 .artwork {
@@ -152,7 +158,6 @@ html, body {
 }
 .current-song-info {
     line-height: 30px;
-    float: left;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -168,8 +173,9 @@ html, body {
 .song-title {
     font-size: 38px;
     color: white;
-    /* font-weight: bold; */
     line-height: 50px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .artist {
 
@@ -184,36 +190,27 @@ html, body {
     bottom: 0;
     height: 120px;
     background: rgba(19, 24, 32, 0.5);
-    /* background: -webkit-linear-gradient(top, rgba(19, 24, 32, 0.2) 0%,rgba(19, 24, 32, 0.75) 100%); */
 }
 
 .controls {
     position: absolute;
     top: 20px;
     left: 50%;
-    /* background: rgba(0,0,0,0.1); */
     margin-left: -135px;
-    /* color: rgba(19, 24, 32, 0.5); */
 }
 .control {
     width: 65px;
-    /* height: 65px; */
-    /* background-color: white; */
-    /* color: rgba(255,255,255, 0.5); */
     line-height: 55px;
     text-align: center;
     cursor: pointer;
     font-size: 60px;
-    /* font-weight: bold; */
     float: left;
     margin: 0 5px;
     font-family: exfm-icons;
-    /* background: #000; */
-    /* border-radius: 50%; */
-    /* box-shadow: 0 0 0 2px rgba(255,255,255, 0.5) inset; */
 }
 .control.prev:after { content: 'a'; }
-.control.play-pause:after { content: 'b'; }
+.control.play-pause:after { content: 'c'; }
+.control.play-pause.paused:after { content: 'b'; }
 .control.next:after { content: 'd'; }
 
 

@@ -54,6 +54,17 @@ Main.prototype.addListeners = function(){
         this.songLoading.bind(this),
         false
     );
+    this.playQueue.addEventListener(
+        "play",
+        this.toggleControlState.bind(this),
+        false
+    );
+    this.playQueue.addEventListener(
+        "pause",
+        this.toggleControlState.bind(this),
+        false
+    );
+
     $('#minimize').on('click', function(){
         chrome.runtime.sendMessage(null,
             {
@@ -70,7 +81,23 @@ Main.prototype.addListeners = function(){
     $('#next').on('click', function(){
         this.playQueue.next();
     }.bind(this));
+
+    // playlist click events
+    this.playlistEl.on('click', function(e){
+        var target = e.target;
+        var index = $('.playlist-item').index($(target));
+        this.playQueue.play(index);
+    }.bind(this))
+
 }
+
+Main.prototype.toggleControlState = function(e) {
+    if(e.type === "play"){
+        $('#play-pause').removeClass('paused');
+    }else {
+        $('#play-pause').addClass('paused');
+    }
+};
 
 // new song loading
 Main.prototype.songLoading = function(e){
@@ -79,7 +106,7 @@ Main.prototype.songLoading = function(e){
 }
 
 // update the current song UI with metadata
-Main.prototype.updateCurrentSong = function(song, queueuNumber){
+Main.prototype.updateCurrentSong = function(song, queueNumber){
     this.currentSongTitleEl.text(song.title || 'Unknown Title');
     this.currentArtistEl.text(song.artist || '');
     this.currentAlbumEl.text(song.album || '');
@@ -105,7 +132,7 @@ Main.prototype.gotPlaylist = function(list){
     }
     this.playlistEl.html(items);
     this.playQueue.add(list);
-    this.updateCurrentSong(list[0]);
+    this.updateCurrentSong(list[0], 0);
     // this.playQueue.play(0);
 }
 

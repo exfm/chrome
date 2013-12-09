@@ -13,11 +13,11 @@ function Soundcloud(tab){
 
 // resolve url to json from Soundcloud API
 Soundcloud.prototype.resolve = function(url){
-    var requestUrl = constants.SOUNDCLOUD.RESOLVE; 
+    var requestUrl = constants.SOUNDCLOUD.RESOLVE;
     requestUrl += url;
     requestUrl += "&client_id=" + keys.SOUNDCLOUD.KEY;
     var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = this.response.bind(this); 
+    xhr.onreadystatechange = this.response.bind(this);
     xhr.open("GET", requestUrl, true);
     xhr.send();
 }
@@ -59,7 +59,7 @@ Soundcloud.prototype.buildPlaylist = function(list, album){
             song.title = track.title;
             song.artist = track.user.username;
             song.album = album;
-            song.artwork = track.artwork_url;
+            song.artwork = track.artwork_url.replace('large', 't500x500');
             song.url = track.stream_url;
             song.serviceId = track.id;
             song.timestamp = new Date(track.created_at).getTime();
@@ -82,11 +82,11 @@ Soundcloud.prototype.buildPlaylist = function(list, album){
 
 // get user json from Soundcloud API
 Soundcloud.prototype.requestUser = function(json){
-    var requestUrl = constants.SOUNDCLOUD.USERS; 
+    var requestUrl = constants.SOUNDCLOUD.USERS;
     requestUrl += this.user.id + "/tracks.json";
     requestUrl += "?client_id=" + keys.SOUNDCLOUD.KEY;
     var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = this.userResponse.bind(this); 
+    xhr.onreadystatechange = this.userResponse.bind(this);
     xhr.open("GET", requestUrl, true);
     xhr.send();
 }
@@ -141,16 +141,16 @@ Soundcloud.prototype.getQueryParams = function(str){
     return obj;
 }
 
-// favorite song 
+// favorite song
 Soundcloud.prototype.favorite = function(id){
     chrome.storage.sync.get(
         'soundcloudAuth',
         function(oAuthObj){
             if(oAuthObj['soundcloudAuth']){
-                var requestUrl = constants.SOUNDCLOUD.FAVORITE_TRACK + id; 
+                var requestUrl = constants.SOUNDCLOUD.FAVORITE_TRACK + id;
                 requestUrl += ".json?oauth_token=" + oAuthObj['soundcloudAuth'].accessToken;
                 var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = this.favoriteResponse.bind(this); 
+                xhr.onreadystatechange = this.favoriteResponse.bind(this);
                 xhr.open("PUT", requestUrl, true);
                 xhr.send();
             }
