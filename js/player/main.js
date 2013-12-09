@@ -54,6 +54,17 @@ Main.prototype.addListeners = function(){
         this.songLoading.bind(this),
         false
     );
+    this.playQueue.addEventListener(
+        "play",
+        this.toggleControlState.bind(this),
+        false
+    );
+    this.playQueue.addEventListener(
+        "pause",
+        this.toggleControlState.bind(this),
+        false
+    );
+
     $('#minimize').on('click', function(){
         chrome.runtime.sendMessage(null,
             {
@@ -70,7 +81,23 @@ Main.prototype.addListeners = function(){
     $('#next').on('click', function(){
         this.playQueue.next();
     }.bind(this));
+
+    // playlist click events
+    this.playlistEl.on('click', function(e){
+        var target = e.target;
+        var index = $('.playlist-item').index($(target));
+        this.playQueue.play(index);
+    }.bind(this))
+
 }
+
+Main.prototype.toggleControlState = function(e) {
+    if(e.type === "play"){
+        $('#play-pause').removeClass('paused');
+    }else {
+        $('#play-pause').addClass('paused');
+    }
+};
 
 // new song loading
 Main.prototype.songLoading = function(e){
