@@ -87,6 +87,13 @@ Tumblr.prototype.parse = function(json){
                 song.originalSource = post.source_url;
                 song.title = post.track_name;
                 song.artist = post.artist;
+                if(post.audio_type === 'soundcloud' && !song.artist){
+                    var titleSplit = post.track_name.split(' - ');
+                    if(titleSplit.length === 2){
+                        song.artist = titleSplit[0];
+                        song.title = titleSplit[1];
+                    }
+                }
                 song.album = post.album;
                 song.artwork = post.album_art;
                 song.url = post.audio_url;
