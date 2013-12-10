@@ -56,6 +56,11 @@ Main.prototype.addListeners = function(){
         false
     );
     this.playQueue.addEventListener(
+        "playing",
+        this.songPlaying.bind(this),
+        false
+    );
+    this.playQueue.addEventListener(
         "play",
         this.toggleControlState.bind(this),
         false
@@ -108,12 +113,25 @@ Main.prototype.songLoading = function(e){
     this.newSong(e.target.song, e.target.queueNumber);
 }
 
+// new song playing
+Main.prototype.songPlaying = function(e){
+    console.log('songPlaying', e);
+    if(e.target.song.hasMeta === true){
+        chrome.runtime.sendMessage(null,
+            {
+                "type": 'nowPlaying',
+                "song": e.target.song
+            }
+        )
+    }
+}
+
 // new song loading/playing
 // update UI
 Main.prototype.newSong = function(song, queueNumber){
     this.updateCurrentSong(song);
     this.updatePlaylistUI(queueNumber);
-    this.checkMeta(song);
+    this.checkMeta(song, queueNumber);
     this.updateCurrentServiceButtons(song);
 }
 
@@ -136,7 +154,7 @@ Main.prototype.updatePlaylistUI = function(queueNumber){
 }
 
 // check if song needs metadata
-Main.prototype.checkMeta = function(song){
+Main.prototype.checkMeta = function(song, queueNumber){
     if(song.hasMeta === false){
         chrome.runtime.sendMessage(null,
             {
