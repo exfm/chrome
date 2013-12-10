@@ -3,7 +3,8 @@ function Main(){
     this.playQueue = new PlayQueue(
         {
             'audio': this.audio,
-            'use_local_storage': false
+            'use_local_storage': false,
+            'notify_song_half': true
         }
     );
     this.playQueue.savedSongProperties = [
@@ -58,6 +59,11 @@ Main.prototype.addListeners = function(){
     this.playQueue.addEventListener(
         "playing",
         this.songPlaying.bind(this),
+        false
+    );
+    this.playQueue.addEventListener(
+        "songHalf",
+        this.onSongHalf.bind(this),
         false
     );
     this.playQueue.addEventListener(
@@ -120,6 +126,19 @@ Main.prototype.songPlaying = function(e){
         chrome.runtime.sendMessage(null,
             {
                 "type": 'nowPlaying',
+                "song": e.target.song
+            }
+        )
+    }
+}
+
+// song half way through
+Main.prototype.onSongHalf = function(e){
+    console.log('songHalf', e);
+    if(e.target.song.hasMeta === true){
+        chrome.runtime.sendMessage(null,
+            {
+                "type": 'songHalf',
                 "song": e.target.song
             }
         )
