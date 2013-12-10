@@ -135,23 +135,40 @@ html, body {
 .current-song {
     position: absolute;
     top: 50%;
-    /* left: 400px; */
-    /* right: 100px; */
-    height: 300px;
-    width: 800px;
-    left: 50%;
-    margin-left: -400px;
+    left: 0;
+    right: 0;
+    height: 520px;
+    min-width: 600px;
+    /* left: 50%; */
+    /* margin-left: -400px; */
     /* left: 330px; */
+    margin-top: -260px;
+    top: 0;
+    bottom: 0;
+    margin: 0;
+    height: auto;
+}
+
+.artworks {
+    position: absolute;
+
+    top: 25%;
+    height: 300px;
+    width: 100%;
+    left: 0;
     margin-top: -150px;
 }
+
 .artwork {
     width: 300px;
     height: 300px;
     background-color: rgba(0,0,0, 0.1);
-    float: left;
-    margin-right: 30px;
-    position: relative;
+    /* float: left; */
+    /* margin-right: 30px; */
+    position: absolute;
     overflow: hidden;
+    left: 50%;
+    margin-left: -150px;
 }
 .artwork-current,
 .artwork-next,
@@ -189,7 +206,8 @@ html, body {
     overflow: hidden;
 }
 .next-artwork-container {
-    right: -200px;
+    /* right: -200px; */
+    left: 75%; margin-left: -150px;
 }
 .artwork-item {
     -webkit-transition-delay: 0.05s;
@@ -202,7 +220,8 @@ html, body {
     -webkit-transition-delay: 0.1s;
 }
 .previous-artwork-container {
-    left: -200px;
+    left: 25%;
+    margin-left: -150px;
 }
 
 
@@ -237,6 +256,14 @@ html, body {
     text-overflow: ellipsis;
     color: rgba(255,255,255, 0.75);
     font-size: 16px;
+    width: 500px;
+    position: absolute;
+    top: 330px;
+    text-align: center;
+    left: 50%;
+    margin-left: -250px;
+    top: 60%;
+    margin-top: -45px;
 }
 .now-playing {
     font-size: 11px;
@@ -245,9 +272,9 @@ html, body {
     line-height: 20px;
 }
 .song-title {
-    font-size: 38px;
+    font-size: 24px;
     color: white;
-    line-height: 50px;
+    line-height: 40px;
     text-overflow: ellipsis;
     overflow: hidden;
     font-weight: lighter;
@@ -261,21 +288,26 @@ html, body {
 }
 .current-song-ui {
     position: absolute;
-    left: 330px;
-    right: 0;
+    left: 50%;
+    /* right: 0; */
     bottom: 0;
-    height: 90px;
+    height: 80px;
     /* background: rgba(19, 24, 32, 0.5); */
+    width: 360px;
+    margin-left: -180px;
+    bottom: auto;
+    top: 60%;
+    margin-top: 80px;
 }
 
 .controls {
     position: absolute;
     bottom: 0;
     left: 50%;
-    margin-left: -135px;
+    margin-left: -105px;
 }
 .control {
-    width: 65px;
+    width: 60px;
     line-height: 55px;
     text-align: center;
     cursor: pointer;
@@ -293,9 +325,9 @@ html, body {
 
 .progress-back {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 6px;
+    left: 30px;
+    right: 30px;
     height: 2px;
     background: rgba(255,255,255, 0.1);
     border-radius: 1px;
@@ -313,36 +345,47 @@ html, body {
 }
 .current-time {
     position: absolute;
-    top: 10;
-    left: 10;
+    top: 0;
+    left: 0;
     color: #495774;
-    font-size: 14px;
+    font-size: 12px;
+    width: 100%;
 }
 .time-count {
     color: #29A5FF;
+}
+.time-duration {
+    position: absolute;
+    right: 0;
 }
 
 .services {
     font-family: services;
     position: absolute;
-    left: 330px;
+    left: 50%;
     bottom: 110px;
+    width: 500px;
+    margin-left: -250px;
+    text-align: center;
+    vertical-align: bottom;
 }
 
 .service-icon {
-    float: left;
+    /* float: left; */
     width: 44px;
     height: 44px;
     border-radius: 50%;
     box-shadow: 0 0 0 2px inset;
-    margin: 0 10px 0 0;
+    margin: 0 8px;
     text-align: center;
     line-height: 44px;
     font-size: 34px;
     cursor: pointer;
     opacity: 0.3;
     -webkit-transition: opacity 0.1s linear;
-    display: none;
+    /* display: none; */
+    display: inline-block;
+    vertical-align: middle;
 }
 .service-icon.show {
     display: block;
