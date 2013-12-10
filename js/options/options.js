@@ -2,7 +2,8 @@ function Options(){
     this.services = [
         'tumblr',
         'rdio',
-        'soundcloud'
+        'soundcloud',
+        'lastfm'
     ]
     $('.auth-button').on('click', this.onServiceClick.bind(this));
     this.getAuthStatus();
@@ -87,6 +88,9 @@ Options.prototype.connect = function(service, oAuthVersion){
     }
     if(oAuthVersion === "2"){
         authorize.openAuthDialog();
+    }
+    if(oAuthVersion === "lastfm"){
+        authorize.openLastFMAuthDialog();
     }
 }
 

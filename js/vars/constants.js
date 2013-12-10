@@ -27,5 +27,10 @@ var constants = {
             'ACCESS_URL': "http://api.rdio.com/oauth/access_token",
             'PARAMETER_TYPE': "get",
             'API_URL': "http://api.rdio.com/1/"
+        },
+    'LASTFM':
+        {
+            'AUTHORIZE_URL': "http://www.last.fm/api/auth/",
+            'ACCESS_URL': "http://ws.audioscrobbler.com/2.0/?method=auth.getSession",
         }
 }
