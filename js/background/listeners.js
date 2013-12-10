@@ -68,7 +68,15 @@ function onMessage(e, sender, responseCallback){
                 }
             });
             return true;
-         break;
+        break;
+        case 'nowPlaying':
+            var lastfm = new Lastfm(sender.tab);
+            lastfm.nowPlaying(e.song);
+        break;
+        case 'songHalf':
+            var lastfm = new Lastfm(sender.tab);
+            lastfm.scrobble(e.song);
+        break;
         default:
         break
     }
