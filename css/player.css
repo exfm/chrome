@@ -206,8 +206,8 @@ html, body {
     overflow: hidden;
 }
 .next-artwork-container {
-    /* right: -200px; */
-    left: 75%; margin-left: -150px;
+    left: 75%;
+    margin-left: -150px;
 }
 .artwork-item {
     -webkit-transition-delay: 0.05s;
@@ -258,7 +258,6 @@ html, body {
     font-size: 16px;
     width: 500px;
     position: absolute;
-    top: 330px;
     text-align: center;
     left: 50%;
     margin-left: -250px;
@@ -289,10 +288,8 @@ html, body {
 .current-song-ui {
     position: absolute;
     left: 50%;
-    /* right: 0; */
     bottom: 0;
     height: 80px;
-    /* background: rgba(19, 24, 32, 0.5); */
     width: 360px;
     margin-left: -180px;
     bottom: auto;
@@ -371,7 +368,6 @@ html, body {
 }
 
 .service-icon {
-    /* float: left; */
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -383,12 +379,11 @@ html, body {
     cursor: pointer;
     opacity: 0.3;
     -webkit-transition: opacity 0.1s linear;
-    /* display: none; */
-    display: inline-block;
+    display: none;
     vertical-align: middle;
 }
 .service-icon.show {
-    display: block;
+    display: inline-block;
 }
 .service-icon:hover {
     opacity: 1;
