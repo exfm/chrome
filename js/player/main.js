@@ -45,7 +45,9 @@ Main.prototype.cacheElements = function(){
     this.currentSongTitleEl = $('#song-title');
     this.currentArtistEl = $('#artist');
     this.currentAlbumEl = $('#album');
-    this.currentSongArtworkEl = $('#artwork');
+    this.rightContainerEl = $('#right');
+    this.currentSongArtworkEl = $('#artwork-current');
+    this.nextSongArtworkEl = $('#artwork-next');
     this.playlistEl = $('#playlist');
 }
 
@@ -100,7 +102,7 @@ Main.prototype.addListeners = function(){
         var index = $('.playlist-item').index($(target));
         this.playQueue.play(index);
     }.bind(this))
-    
+
     $('.service-icon').on('click', this.onServiceIconClick.bind(this));
 
 }
@@ -148,23 +150,109 @@ Main.prototype.onSongHalf = function(e){
 // new song loading/playing
 // update UI
 Main.prototype.newSong = function(song, queueNumber){
-    this.updateCurrentSong(song);
+    this.updateCurrentSong(song, queueNumber);
     this.updatePlaylistUI(queueNumber);
     this.checkMeta(song, queueNumber);
     this.updateCurrentServiceButtons(song);
 }
 
 // update the current song UI with metadata
-Main.prototype.updateCurrentSong = function(song){
+Main.prototype.updateCurrentSong = function(song, queueNumber){
     this.currentSongTitleEl.text(song.title || 'Unknown Title');
     this.currentArtistEl.text(song.artist || '');
     this.currentAlbumEl.text(song.album || '');
-    var artwork = song.artwork || '';
-    this.currentSongArtworkEl.css(
-        'background-image',
-        'url(' + artwork + ')'
-    );
+
+    this.updateArtwork(song, queueNumber);
+
 }
+
+// update artwork
+Main.prototype.updateArtwork = function(song, queueNumber) {
+    var currentArtwork = song.artwork || '',
+        prevArtwork = '',
+        nextArtwork = '';
+    var lastTransitionEl = this.currentSongArtworkEl;
+    this.rightContainerEl.removeClass('no-transition');
+
+    // main artwork element
+    this.nextSongArtworkEl.css(
+            'background-image',
+            'url(' + currentArtwork + ')'
+        ).removeClass('artwork-next')
+        .addClass('artwork-current');
+    this.currentSongArtworkEl.addClass('artwork-previous');
+
+    // next & previous artwork
+    var nextSong = this.playQueue.getList()[queueNumber + 1];
+    var prevSong = this.playQueue.getList()[queueNumber - 1];
+
+    if(nextSong !== undefined){
+        nextArtwork = nextSong.artwork || '';
+        $('#next-artwork-current').addClass('artwork-previous');
+        $('#next-artwork-next').css(
+                'background-image',
+                'url(' + nextArtwork + ')'
+            )
+            .removeClass('artwork-next')
+            .addClass('artwork-current');
+    }
+    if(prevSong !== undefined){
+        lastTransitionEl = $('#prev-artwork-next');
+        prevArtwork = prevSong.artwork || '';
+        $('#prev-artwork-current').addClass('artwork-previous');
+        $('#prev-artwork-next').css(
+                'background-image',
+                'url(' + prevArtwork + ')'
+            )
+            .removeClass('artwork-next')
+            .addClass('artwork-current');
+    }
+
+    // reset artwork classes when last transition finishes
+    lastTransitionEl.one('webkitTransitionEnd', this.resetArtwork.bind(this, currentArtwork, prevArtwork, nextArtwork));
+
+};
+
+// reset artwork elements
+Main.prototype.resetArtwork = function(currentArtwork, prevArtwork, nextArtwork){
+    this.rightContainerEl.addClass('no-transition');
+
+    // reset main artwork element
+    this.currentSongArtworkEl.css(
+            'background-image',
+            'url(' + currentArtwork + ')'
+        )
+        .removeClass('artwork-previous')
+        .addClass('artwork-current');
+    this.nextSongArtworkEl
+        .removeClass('artwork-current')
+        .addClass('artwork-next');
+
+    // reset next artwork element
+    $('#next-artwork-current').css(
+            'background-image',
+            'url(' + nextArtwork + ')'
+        )
+        .removeClass('artwork-previous')
+        .addClass('artwork-current');
+
+    $('#next-artwork-next')
+        .removeClass('artwork-current')
+        .addClass('artwork-next');
+
+    // reset previous artwork element
+    $('#prev-artwork-current').css(
+            'background-image',
+            'url(' + prevArtwork + ')'
+        )
+        .removeClass('artwork-previous')
+        .addClass('artwork-current');
+
+    $('#prev-artwork-next')
+        .removeClass('artwork-current')
+        .addClass('artwork-next');
+}
+
 
 // update playlist ui
 Main.prototype.updatePlaylistUI = function(queueNumber){
