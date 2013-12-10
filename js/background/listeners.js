@@ -54,6 +54,10 @@ function onMessage(e, sender, responseCallback){
             var tumblr = new Tumblr(sender.tab);
             tumblr.like(e.id, e.reblogKey);
         break;
+        case 'soundcloudResolveThenFavorite':
+            var soundcloud = new Soundcloud(sender.tab);
+            soundcloud.resolveThenFavorite(e.url);
+        break;
         case 'getId3':
             id3(e.url, function(err, tags) {
                 if(!err){
