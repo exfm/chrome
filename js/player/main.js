@@ -11,7 +11,8 @@ function Main(){
         'artwork', 'url', 'link',
         'timestamp', 'purchaseUrl', 'type',
         'originalType', 'originalSource', 'duration',
-        'serviceId', 'postAuthor', 'hasMeta'
+        'serviceId', 'postAuthor', 'hasMeta',
+        'reblogKey'
     ];
     this.progressBar = new ProgressBar(
         {
@@ -88,6 +89,8 @@ Main.prototype.addListeners = function(){
         var index = $('.playlist-item').index($(target));
         this.playQueue.play(index);
     }.bind(this))
+    
+    $('.service-icon').on('click', this.onServiceIconClick.bind(this));
 
 }
 
@@ -102,11 +105,20 @@ Main.prototype.toggleControlState = function(e) {
 // new song loading
 Main.prototype.songLoading = function(e){
     console.log(e);
-    this.updateCurrentSong(e.target.song, e.target.queueNumber);
+    this.newSong(e.target.song, e.target.queueNumber);
+}
+
+// new song loading/playing
+// update UI
+Main.prototype.newSong = function(song, queueNumber){
+    this.updateCurrentSong(song);
+    this.updatePlaylistUI(queueNumber);
+    this.checkMeta(song);
+    this.updateCurrentServiceButtons(song);
 }
 
 // update the current song UI with metadata
-Main.prototype.updateCurrentSong = function(song, queueNumber){
+Main.prototype.updateCurrentSong = function(song){
     this.currentSongTitleEl.text(song.title || 'Unknown Title');
     this.currentArtistEl.text(song.artist || '');
     this.currentAlbumEl.text(song.album || '');
@@ -115,8 +127,16 @@ Main.prototype.updateCurrentSong = function(song, queueNumber){
         'background-image',
         'url(' + artwork + ')'
     );
+}
+
+// update playlist ui
+Main.prototype.updatePlaylistUI = function(queueNumber){
     $('.playlist-item').removeClass('selected');
     $($('.playlist-item')[queueNumber]).addClass('selected');
+}
+
+// check if song needs metadata
+Main.prototype.checkMeta = function(song){
     if(song.hasMeta === false){
         chrome.runtime.sendMessage(null,
             {
@@ -128,11 +148,29 @@ Main.prototype.updateCurrentSong = function(song, queueNumber){
     }
 }
 
+// update current song service buttons
+Main.prototype.updateCurrentServiceButtons = function(song){
+    $('.service-icon').removeClass('show selected');
+    switch(song.type){
+        case 'tumblr':
+            $('#service-icon-tumblr').addClass('show');
+            if(song.originalType === 'soundcloud'){
+                $('#service-icon-soundcloud').addClass('show');
+            }
+            if(song.originalType === 'bandcamp'){
+                $('#service-icon-bandcamp').addClass('show');
+            }
+        break;
+        default:
+        break;
+    }
+}
+
 // got id3 data from file
 // Update UI
 Main.prototype.gotId3 = function(queueNumber, tags){
     if(tags !== null){
-        var song = this.playQueue.getSong(queueNumber);
+        var song = this.playQueue.getList()[queueNumber];
         song.hasMeta = true;
         if(tags.title){
             this.currentSongTitleEl.text(tags.title);
@@ -164,7 +202,7 @@ Main.prototype.gotPlaylist = function(list){
     }
     this.playlistEl.html(items);
     this.playQueue.add(list);
-    this.updateCurrentSong(list[0], 0);
+    this.newSong(list[0], 0);
     // this.playQueue.play(0);
 }
 
@@ -209,6 +247,44 @@ Main.prototype.capturedTab = function(dataUrl) {
     img.src = dataUrl;
 
 };
+
+Main.prototype.onServiceIconClick = function(e){
+    $(e.target).addClass('selected');
+    var service = e.target.dataset.service;
+    var song = this.playQueue.getSong();
+    console.log(service, song);
+    switch(service){
+        case 'tumblr':
+            chrome.runtime.sendMessage(null,
+                {
+                    "type": 'tumblrLike',
+                    "id": song.serviceId,
+                    "reblogKey": song.reblogKey
+                }
+            )
+        break;
+        case 'soundcloud':
+            if(song.type === 'soundcloud'){
+                chrome.runtime.sendMessage(null,
+                    {
+                        "type": 'soundcloudFavorite',
+                        "id": song.serviceId
+                    }
+                )
+            }
+            if(song.type === 'tumblr'){
+                chrome.runtime.sendMessage(null,
+                    {
+                        "type": 'soundcloudResolveThenFavorite',
+                        "url": song.originalSource
+                    }
+                )
+            }
+        break;
+        default:
+        break;
+    }
+}
 
 var main;
 $(document).ready(

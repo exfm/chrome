@@ -280,8 +280,15 @@ html, body {
     cursor: pointer;
     opacity: 0.3;
     -webkit-transition: opacity 0.1s linear;
+    display: none;
+}
+.service-icon.show {
+    display: block;
 }
 .service-icon:hover {
+    opacity: 1;
+}
+.service-icon.selected {
     opacity: 1;
 }
 .rdio {

@@ -142,6 +142,44 @@ Soundcloud.prototype.getQueryParams = function(str){
     return obj;
 }
 
+// first resolve url 
+// then favorite song
+Soundcloud.prototype.resolveThenFavorite = function(url){
+    chrome.storage.sync.get(
+        'soundcloudAuth',
+        function(oAuthObj){
+            if(oAuthObj['soundcloudAuth']){
+                var requestUrl = constants.SOUNDCLOUD.RESOLVE;
+                requestUrl += url;
+                requestUrl += "&client_id=" + keys.SOUNDCLOUD.KEY;
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(e){
+                    if(e.target.readyState === 4){
+                        if(e.target.status === 200){
+                            var json = JSON.parse(e.target.response);
+                            console.log(json);
+                            if(json.kind === 'track'){
+                                this.favorite(json.id);
+                            }       
+                        }
+                    }
+                }.bind(this);
+                xhr.open("GET", requestUrl, true);
+                xhr.send();
+            }
+            else{
+                chrome.tabs.sendMessage(this.tab.id,
+                    {
+                        "type": "needAuth",
+                        "service": "Soundcloud",
+                        "url": chrome.extension.getURL("html/options.html")
+                    }
+                );
+            }
+        }.bind(this)
+    );
+}
+
 // favorite song
 Soundcloud.prototype.favorite = function(id){
     chrome.storage.sync.get(
