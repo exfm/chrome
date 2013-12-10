@@ -175,3 +175,76 @@ Authorize.prototype.oauth2TabListener = function(tabId, obj, tab){
 		chrome.tabs.remove(tabId);
 	}
 }
+
+// Lastfm Auth
+// Opne the auth dialog
+Authorize.prototype.openLastFMAuthDialog = function(){
+    var url = this.consumer.serviceProvider.userAuthorizationURL;
+    url += "?api_key="+this.consumer.consumerKey;
+    url += "&cb="+this.consumer.serviceProvider.echoURL;
+    this.bindedTabListener = this.lastFMTabListener.bind(this);
+    chrome.tabs.onUpdated.addListener(this.bindedTabListener);
+    chrome.tabs.create(
+        {
+            'url': url
+        }
+    );
+}
+
+// lastfm 
+// Listen for callback tab
+Authorize.prototype.lastFMTabListener = function(tabId, obj, tab){
+    var indexOf = tab.url.indexOf(this.consumer.serviceProvider.echoURL);
+    if (indexOf === 0 && obj.status === "complete"){
+        chrome.tabs.onUpdated.removeListener(this.bindedTabListener);
+		var results = OAuth.decodeForm(tab.url);
+		var token = results[0][1];
+        console.log(token);
+        chrome.tabs.remove(tabId);
+        this.getLastFMSession(token);
+	}
+}
+
+// lastfm getSession
+Authorize.prototype.getLastFMSession = function(token){
+    var paramString = "api_key" + this.consumer.consumerKey;
+    paramString += "methodauth.getSession";
+    paramString += "token" + token;
+    paramString += this.consumer.consumerSecret;
+    console.log(paramString);
+    var apiSignature = hex_md5(paramString);
+    console.log(apiSignature);
+    var message = 
+        {
+            'method': "POST", 
+            'action': this.consumer.serviceProvider.accessTokenURL, 
+    		'parameters': {
+        		'token': token,
+        		'api_key': this.consumer.consumerKey,
+        		'api_sig': apiSignature,
+        		'format': 'json'
+    		}
+        }
+    console.log('message', message, this.gotLastFMSession.bind(this));
+    $.ajax(
+	    {
+	        'url': message.action,
+	        'type': message.method,
+            'complete': this.gotLastFMSession.bind(this),
+            'cache': false,
+            'data': message.parameters
+        }
+    );
+    console.log('sent');
+}
+
+// got lastfm session
+Authorize.prototype.gotLastFMSession = function(xhr){
+    console.log('gotLastFMSession', xhr);
+    if (xhr.status == 200){
+        this.callback(true, xhr.responseJSON, this.service);
+    }
+    else{
+        this.callback(false);
+    }
+}

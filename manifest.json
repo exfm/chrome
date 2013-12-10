@@ -21,7 +21,9 @@
                 "js/services/bandcamp.js",
                 "js/services/livemusicarchive.js",
                 "js/services/mp3links.js",
+                "js/services/lastfm.js",
                 "js/oauth/sha1.js",
+                "js/oauth/md5.js",
                 "js/oauth/oauth.js",
                 "js/libs/id3.js"
             ]

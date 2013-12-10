@@ -17,5 +17,11 @@ var keys = {
             'KEY': "49axrax9zccsc7hmxmbmy7jx",
             'SECRET': "Q8u4nVTQTC",
             'OAUTH_CALLBACK': "http://oauth.extension.fm/callback"
+        },
+    'LASTFM':
+        {
+            'KEY': "474b32b1b1920cccf57c308141054f2f",
+            'SECRET': "8ef2e8aed5ea1192f262fb539cc88298",
+            'OAUTH_CALLBACK': "http://oauth.extension.fm/callback"
         }
 }

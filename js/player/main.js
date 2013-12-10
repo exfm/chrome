@@ -3,7 +3,8 @@ function Main(){
     this.playQueue = new PlayQueue(
         {
             'audio': this.audio,
-            'use_local_storage': false
+            'use_local_storage': false,
+            'notify_song_half': true
         }
     );
     this.playQueue.savedSongProperties = [
@@ -55,6 +56,16 @@ Main.prototype.addListeners = function(){
     this.playQueue.addEventListener(
         "loading",
         this.songLoading.bind(this),
+        false
+    );
+    this.playQueue.addEventListener(
+        "playing",
+        this.songPlaying.bind(this),
+        false
+    );
+    this.playQueue.addEventListener(
+        "songHalf",
+        this.onSongHalf.bind(this),
         false
     );
     this.playQueue.addEventListener(
@@ -110,12 +121,38 @@ Main.prototype.songLoading = function(e){
     this.newSong(e.target.song, e.target.queueNumber);
 }
 
+// new song playing
+Main.prototype.songPlaying = function(e){
+    console.log('songPlaying', e);
+    if(e.target.song.hasMeta === true){
+        chrome.runtime.sendMessage(null,
+            {
+                "type": 'nowPlaying',
+                "song": e.target.song
+            }
+        )
+    }
+}
+
+// song half way through
+Main.prototype.onSongHalf = function(e){
+    console.log('songHalf', e);
+    if(e.target.song.hasMeta === true){
+        chrome.runtime.sendMessage(null,
+            {
+                "type": 'songHalf',
+                "song": e.target.song
+            }
+        )
+    }
+}
+
 // new song loading/playing
 // update UI
 Main.prototype.newSong = function(song, queueNumber){
     this.updateCurrentSong(song, queueNumber);
     this.updatePlaylistUI(queueNumber);
-    this.checkMeta(song);
+    this.checkMeta(song, queueNumber);
     this.updateCurrentServiceButtons(song);
 }
 
@@ -207,7 +244,7 @@ Main.prototype.updatePlaylistUI = function(queueNumber){
 }
 
 // check if song needs metadata
-Main.prototype.checkMeta = function(song){
+Main.prototype.checkMeta = function(song, queueNumber){
     if(song.hasMeta === false){
         chrome.runtime.sendMessage(null,
             {
