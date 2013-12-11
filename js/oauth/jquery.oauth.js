@@ -5,7 +5,7 @@ $.oauth = function(options) {
         {
 			method: options.type || 'GET', 
 			action: options.url, 
-			parameters: options.data
+			parameters: options.data || {}
 		}
 	OAuth.completeRequest(message, 
         {
@@ -16,6 +16,17 @@ $.oauth = function(options) {
         }
     );
     return this.ajax(options);    
+};
+
+}($));
+
+(function ($){
+
+$.oauthLastfm = function(options) {
+    var paramString = OAuth.SignatureMethod.normalizeParameters(options.data);
+    var apiSignature = hex_md5(paramString);
+    options.data.api_sig = apiSignature;
+    return $.ajax(options);    
 };
 
 }($));
