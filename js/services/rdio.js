@@ -122,7 +122,6 @@ Rdio.prototype.determineSearch = function(json, title, artist){
 
 // Search for a song 
 Rdio.prototype.search = function(title, artist){
-
 	return $.oauth(
 	    {
 	        'url': constants.RDIO.API_URL,
@@ -138,44 +137,6 @@ Rdio.prototype.search = function(title, artist){
 			'consumerSecret': keys.RDIO.SECRET
         }
     );
-    
-  /*
-  
-    var requestUrl = constants.RDIO.API_URL; 
-    var message = 
-        {
-			method: "post", 
-			action: requestUrl, 
-			parameters: {
-				'method': 'search',
-				'query': artist + ' ' + title,
-				'types': 'tracks',
-				'count': 1,
-				'never_or': true
-			}
-		}
-    var requestBody = $.param(message.parameters);
-    OAuth.completeRequest(message, 
-        {
-			'consumerKey': keys.RDIO.KEY, 
-			'consumerSecret': keys.RDIO.SECRET
-        }
-    );
-    var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters, true);
-    return $.ajax(
-	    {
-	        'url': message.action,
-	        'type': message.method,
-	        'beforeSend': function(x){ 
-	            x.setRequestHeader("Authorization", authorizationHeader);
-            },
-            'cache': false,
-            'processData': false,
-            'contentType': 'application/json',
-            'data': requestBody
-        }
-    );
-*/
 }
 
 // Get logged in user playlists
@@ -193,43 +154,6 @@ Rdio.prototype.getPlaylists = function(oAuthObject){
 			'tokenSecret': oAuthObject.oauth_token_secret
         }
     );
-
-
-   /*
- console.log('getPlaylists');	
-    var requestUrl = constants.RDIO.API_URL; 
-    var message = 
-        {
-			method: "post", 
-			action: requestUrl, 
-			parameters: {
-				'method': 'getPlaylists'
-			}
-		}
-    var requestBody = $.param(message.parameters);
-    OAuth.completeRequest(message, 
-        {
-			'consumerKey': keys.RDIO.KEY, 
-			'consumerSecret': keys.RDIO.SECRET, 
-			'token': oAuthObject.oauth_token,
-            'tokenSecret': oAuthObject.oauth_token_secret
-        }
-    );
-    var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters, true);
-    return $.ajax(
-	    {
-	        'url': message.action,
-	        'type': message.method,
-	        'beforeSend': function(x){ 
-	            x.setRequestHeader("Authorization", authorizationHeader);
-            },
-            'cache': false,
-            'processData': false,
-            'contentType': 'application/json',
-            'data': requestBody
-        }
-    );
-*/
 }
 
 // Is there a playlist alreayd called Exfm?
@@ -302,84 +226,45 @@ Rdio.prototype.savePlaylistId = function(arg){
 
 // Create Exfm playlist
 Rdio.prototype.createPlaylist = function(oAuthObject, trackId){
-    var requestUrl = constants.RDIO.API_URL; 
-    var message = 
-        {
-			method: "post", 
-			action: requestUrl, 
-			parameters: {
+    return $.oauth(
+	    {
+	        'url': constants.RDIO.API_URL,
+	        'type': 'POST',
+            'data': {
 				'method': 'createPlaylist',
 				'name': 'Exfm',
 				'description': 'Songs discovered with Exfm http://ex.fm',
 				'tracks': trackId
-			}
-		}
-    var requestBody = $.param(message.parameters);
-    OAuth.completeRequest(message, 
-        {
+			 },
 			'consumerKey': keys.RDIO.KEY, 
-			'consumerSecret': keys.RDIO.SECRET, 
+			'consumerSecret': keys.RDIO.SECRET,
 			'token': oAuthObject.oauth_token,
-            'tokenSecret': oAuthObject.oauth_token_secret
+			'tokenSecret': oAuthObject.oauth_token_secret
         }
-    );
-    var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters, true);
-    return $.ajax(
-	    {
-	        'url': message.action,
-	        'type': message.method,
-	        'beforeSend': function(x){ 
-	            x.setRequestHeader("Authorization", authorizationHeader);
-            },
-            'cache': false,
-            'processData': false,
-            'contentType': 'application/json',
-            'data': requestBody
-        }
-    );
+    ); 
 }
 
-// Create Exfm playlist
+// Add to Exfm playlist
 Rdio.prototype.addToPlaylist = function(oAuthObject, playlistId, trackId){
-    var requestUrl = constants.RDIO.API_URL; 
-    var message = 
-        {
-			method: "post", 
-			action: requestUrl, 
-			parameters: {
+    return $.oauth(
+	    {
+	        'url': constants.RDIO.API_URL,
+	        'type': 'POST',
+            'data': {
 				'method': 'addToPlaylist',
 				'playlist': playlistId,
 				'tracks': trackId
-			}
-		}
-    var requestBody = $.param(message.parameters);
-    OAuth.completeRequest(message, 
-        {
+			 },
 			'consumerKey': keys.RDIO.KEY, 
-			'consumerSecret': keys.RDIO.SECRET, 
+			'consumerSecret': keys.RDIO.SECRET,
 			'token': oAuthObject.oauth_token,
-            'tokenSecret': oAuthObject.oauth_token_secret
-        }
-    );
-    var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters, true);
-    return $.ajax(
-	    {
-	        'url': message.action,
-	        'type': message.method,
-	        'beforeSend': function(x){ 
-	            x.setRequestHeader("Authorization", authorizationHeader);
-            },
-            'cache': false,
-            'processData': false,
-            'contentType': 'application/json',
-            'data': requestBody
+			'tokenSecret': oAuthObject.oauth_token_secret
         }
     );
 }
 
 // tell tab we need auth
 Rdio.prototype.sendAuthDialog = function(){
-    console.log('sending');
     chrome.tabs.sendMessage(this.tab.id,
         {
             "type": "needAuth",
