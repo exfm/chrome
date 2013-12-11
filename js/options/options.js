@@ -76,7 +76,6 @@ Options.prototype.connect = function(service, oAuthVersion){
             'callbackUrl': keys[capitalService].OAUTH_CALLBACK,
             'callback': this.authDone.bind(this),
             'service': service,
-            'parameterType': constants[capitalService].PARAMETER_TYPE,
             'authorizeParams': constants[capitalService].AUTHORIZE_PARAMS
         }
     );

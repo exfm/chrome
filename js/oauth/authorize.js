@@ -4,13 +4,9 @@ function Authorize(opts){
 
 // Get a request token
 Authorize.prototype.requestToken = function(){
-    var url = this.opts.requestTokenUrl;
-    if(this.opts.parameterType === 'get'){
-        url += '?oauth_callback=' + this.opts.callbackUrl; 
-    };
     $.oauth(
 	    {
-	        'url': url,
+	        'url': this.opts.requestTokenUrl,
 	        'type': 'POST',
             'data': {
 				'oauth_callback': this.opts.callbackUrl
@@ -76,7 +72,6 @@ Authorize.prototype.requestAccessToken = function(){
 
 // Got the access token
 Authorize.prototype.gotAccessToken = function(responseText){
-    console.log('gotAccessToken', responseText);
     var results = OAuth.decodeForm(responseText);
     var obj = {
         "oauth_token" : OAuth.getParameter(results, "oauth_token"),
