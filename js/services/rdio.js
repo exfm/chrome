@@ -62,7 +62,9 @@ Rdio.prototype.save = function(title, artist){
     )
 }
 
-// 
+// see if we already have a playlist id
+// if we dont have a playlist id search for Exfm playlist on rdio
+// if we dont have an Exfm playlist on rdio create on
 Rdio.prototype.getOrCreatePlaylist = function(oAuthObject, trackId){
     this.getPlaylists(oAuthObject).then(
         function(json){
