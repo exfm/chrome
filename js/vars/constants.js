@@ -26,7 +26,8 @@ var constants = {
             'AUTHORIZE_URL': "https://www.rdio.com/oauth/authorize",
             'ACCESS_URL': "http://api.rdio.com/oauth/access_token",
             'PARAMETER_TYPE': "get",
-            'API_URL': "http://api.rdio.com/1/"
+            'API_URL': "http://api.rdio.com/1/",
+            'PLAYLIST_NAME': "Exfm"
         },
     'LASTFM':
         {

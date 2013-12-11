@@ -286,8 +286,16 @@ Main.prototype.updateCurrentServiceButtons = function(song){
                 $('#service-icon-bandcamp').addClass('show');
             }
         break;
+        case 'soundcloud':
+            $('#service-icon-soundcloud').addClass('show');
+        break;
         default:
         break;
+    }
+    if(song.hasMeta === true){
+        if(song.title && song.artist){
+            $('#service-icon-rdio').addClass('show');
+        }
     }
 }
 
@@ -310,6 +318,9 @@ Main.prototype.gotId3 = function(queueNumber, tags){
         if(tags.album){
             this.currentAlbumEl.text(tags.album);
             song.album = tags.album;
+        }
+        if(tags.title && tags.artist){
+            $('#service-icon-rdio').addClass('show');
         }
     }
 }
@@ -405,6 +416,15 @@ Main.prototype.onServiceIconClick = function(e){
                     }
                 )
             }
+        break;
+        case 'rdio':
+            chrome.runtime.sendMessage(null,
+                {
+                    "type": 'rdioSave',
+                    "title": song.title,
+                    "artist": song.artist
+                }
+            )
         break;
         default:
         break;

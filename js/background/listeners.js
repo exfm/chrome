@@ -54,6 +54,10 @@ function onMessage(e, sender, responseCallback){
             var tumblr = new Tumblr(sender.tab);
             tumblr.like(e.id, e.reblogKey);
         break;
+        case 'soundcloudFavorite':
+            var soundcloud = new Soundcloud(sender.tab);
+            soundcloud.favorite(e.id);
+        break;
         case 'soundcloudResolveThenFavorite':
             var soundcloud = new Soundcloud(sender.tab);
             soundcloud.resolveThenFavorite(e.url);
@@ -76,6 +80,10 @@ function onMessage(e, sender, responseCallback){
         case 'songHalf':
             var lastfm = new Lastfm(sender.tab);
             lastfm.scrobble(e.song);
+        break;
+        case 'rdioSave':
+            var rdio = new Rdio(sender.tab);
+            rdio.save(e.title, e.artist);
         break;
         default:
         break
