@@ -13,23 +13,24 @@ function Soundcloud(tab){
 
 // resolve url to json from Soundcloud API
 Soundcloud.prototype.resolve = function(url){
-    var requestUrl = constants.SOUNDCLOUD.RESOLVE;
-    requestUrl += url;
-    requestUrl += "&client_id=" + keys.SOUNDCLOUD.KEY;
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = this.response.bind(this);
-    xhr.open("GET", requestUrl, true);
-    xhr.send();
+    return $.ajax(
+	    {
+	        'url': constants.SOUNDCLOUD.RESOLVE,
+	        'type': 'GET',
+            'data': {
+				'client_id': keys.SOUNDCLOUD.KEY,
+				'url': url
+			 }
+        }
+    )
 }
 
-// response from Soundcloud API
-Soundcloud.prototype.response = function(e){
-    if(e.target.readyState === 4){
-        if(e.target.status === 200){
-            var json = JSON.parse(e.target.response);
-            this.parse(json);
-        }
-    }
+// get page on Soundcloud
+Soundcloud.prototype.getPage = function(url){
+    this.resolve(url).then(
+        this.parse.bind(this),
+        this.tab.noSongs.bind(this.tab)
+    );
 }
 
 // parse response from Soundcloud API
@@ -42,8 +43,7 @@ Soundcloud.prototype.parse = function(json){
         this.buildPlaylist([json], null);
     }
     if(json.kind === "user"){
-        this.user = json;
-        this.requestUser();
+        this.requestUser(json.id);
     }
 }
 
@@ -59,7 +59,9 @@ Soundcloud.prototype.buildPlaylist = function(list, album){
             song.title = track.title;
             song.artist = track.user.username;
             song.album = album;
-            song.artwork = track.artwork_url.replace('large', 't500x500');
+            if(track.artwork_url){
+                song.artwork = track.artwork_url.replace('large', 't500x500');
+            }
             song.url = track.stream_url;
             song.serviceId = track.id;
             song.timestamp = new Date(track.created_at).getTime();
@@ -82,24 +84,20 @@ Soundcloud.prototype.buildPlaylist = function(list, album){
 
 
 // get user json from Soundcloud API
-Soundcloud.prototype.requestUser = function(json){
-    var requestUrl = constants.SOUNDCLOUD.USERS;
-    requestUrl += this.user.id + "/tracks.json";
-    requestUrl += "?client_id=" + keys.SOUNDCLOUD.KEY;
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = this.userResponse.bind(this);
-    xhr.open("GET", requestUrl, true);
-    xhr.send();
-}
-
-// response from Soundcloud API
-Soundcloud.prototype.userResponse = function(e){
-    if(e.target.readyState === 4){
-        if(e.target.status === 200){
-            var json = JSON.parse(e.target.response);
-            this.buildPlaylist(json, null);
+Soundcloud.prototype.requestUser = function(userId){
+    $.ajax(
+	    {
+	        'url': constants.SOUNDCLOUD.USERS + userId + "/tracks.json",
+	        'type': 'GET',
+            'data': {
+				'client_id': keys.SOUNDCLOUD.KEY
+			 }
         }
-    }
+    ).then(
+        function(json){
+            this.buildPlaylist(json);
+        }.bind(this)
+    )
 }
 
 // embeds on page
@@ -121,7 +119,10 @@ Soundcloud.prototype.gotEmbeds = function(list){
         var src = list[i];
         var obj = this.getQueryParams(src);
         if(obj.url){
-            this.resolve(obj.url);
+            var url = decodeURIComponent(obj.url);
+            this.resolve(url).then(
+                this.parse.bind(this)
+            )
         }
     }
 }
@@ -145,74 +146,55 @@ Soundcloud.prototype.getQueryParams = function(str){
 // first resolve url 
 // then favorite song
 Soundcloud.prototype.resolveThenFavorite = function(url){
-    chrome.storage.sync.get(
-        'soundcloudAuth',
-        function(oAuthObj){
-            if(oAuthObj['soundcloudAuth']){
-                var requestUrl = constants.SOUNDCLOUD.RESOLVE;
-                requestUrl += url;
-                requestUrl += "&client_id=" + keys.SOUNDCLOUD.KEY;
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function(e){
-                    if(e.target.readyState === 4){
-                        if(e.target.status === 200){
-                            var json = JSON.parse(e.target.response);
-                            console.log(json);
-                            if(json.kind === 'track'){
-                                this.favorite(json.id);
-                            }       
-                        }
+    this.getAuth().then(
+        function(oAuthObject){
+            this.resolve(url).then(
+                function(json){
+                    if(json.kind === 'track'){
+                        this.favorite(json.id);
                     }
-                }.bind(this);
-                xhr.open("GET", requestUrl, true);
-                xhr.send();
-            }
-            else{
-                chrome.tabs.sendMessage(this.tab.id,
-                    {
-                        "type": "needAuth",
-                        "service": "Soundcloud",
-                        "url": chrome.extension.getURL("html/options.html")
-                    }
-                );
-            }
-        }.bind(this)
+                }.bind(this)
+            )
+        }.bind(this),
+        this.tab.sendAuthDialog.bind(this.tab, 'Soundcloud')
     );
 }
 
 // favorite song
 Soundcloud.prototype.favorite = function(id){
+    this.getAuth().then(
+        function(oAuthObject){
+            $.ajax(
+        	    {
+        	        'url': constants.SOUNDCLOUD.FAVORITE_TRACK + id + '.json',
+        	        'type': 'PUT',
+                    'data': {
+        				'oauth_token': oAuthObject.accessToken
+        			 }
+                }
+            ).then(
+                function(json){
+                    console.log('like', json);
+                }
+            )
+        }.bind(this),
+        this.tab.sendAuthDialog.bind(this.tab, 'Soundcloud')
+    );
+}
+
+// check if user is connected to Soundcloud
+Soundcloud.prototype.getAuth = function(){
+    var promise = $.Deferred();
     chrome.storage.sync.get(
         'soundcloudAuth',
         function(oAuthObj){
             if(oAuthObj['soundcloudAuth']){
-                var requestUrl = constants.SOUNDCLOUD.FAVORITE_TRACK + id;
-                requestUrl += ".json?oauth_token=" + oAuthObj['soundcloudAuth'].accessToken;
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = this.favoriteResponse.bind(this);
-                xhr.open("PUT", requestUrl, true);
-                xhr.send();
+                promise.resolve(oAuthObj['soundcloudAuth']);
             }
             else{
-                chrome.tabs.sendMessage(this.tab.id,
-                    {
-                        "type": "needAuth",
-                        "service": "Soundcloud",
-                        "url": chrome.extension.getURL("html/options.html")
-                    }
-                );
+                promise.reject();
             }
-        }.bind(this)
-    );
-}
-
-// favorite response from Soundcloud API
-Soundcloud.prototype.favoriteResponse = function(e){
-    if(e.target.readyState === 4){
-        console.log(e.target);
-        if(e.target.status === 200){
-            var json = JSON.parse(e.target.response);
-            console.log('like', json);
         }
-    }
+    )
+    return promise;
 }

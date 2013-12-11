@@ -12,9 +12,7 @@ Tumblr.prototype.getPosts = function(){
             'data': {
 				'api_key': keys.TUMBLR.KEY,
 				'type': 'audio'
-			 },
-			'consumerKey': keys.TUMBLR.KEY, 
-			'consumerSecret': keys.TUMBLR.SECRET
+			 }
         }
     ).then(
         this.parse.bind(this),

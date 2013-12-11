@@ -79,7 +79,7 @@ Tab.prototype.deepScan = function(){
     }
     if(this.response.isSoundcloud === true){
         var soundcloud = new Soundcloud(this);
-        soundcloud.resolve(this.response.url);
+        soundcloud.getPage(this.response.url);
         return;
     }
     if(this.response.isBandcamp === true){

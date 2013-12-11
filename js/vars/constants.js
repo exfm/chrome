@@ -12,7 +12,7 @@ var constants = {
         },
     'SOUNDCLOUD':
         {
-            'RESOLVE': "https://api.soundcloud.com/resolve.json?url=",
+            'RESOLVE': "https://api.soundcloud.com/resolve.json",
             'USERS': "http://api.soundcloud.com/users/",
             'AUTHORIZE_URL': "https://soundcloud.com/connect",
             'AUTHORIZE_PARAMS': "&response_type=code_and_token&scope=non-expiring",
