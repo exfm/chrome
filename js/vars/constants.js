@@ -32,7 +32,7 @@ var constants = {
     'LASTFM':
         {
             'AUTHORIZE_URL': "http://www.last.fm/api/auth/",
-            'ACCESS_URL': "http://ws.audioscrobbler.com/2.0/?method=auth.getSession",
+            'ACCESS_URL': "http://ws.audioscrobbler.com/2.0/?format=json",
             'API_URL': "http://ws.audioscrobbler.com/2.0/?format=json",
         }
 }

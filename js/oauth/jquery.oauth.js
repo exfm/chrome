@@ -24,6 +24,9 @@ $.oauth = function(options) {
 
 $.oauthLastfm = function(options) {
     var paramString = OAuth.SignatureMethod.normalizeParameters(options.data);
+    paramString = paramString.replace(/\=/g, "");
+    paramString = paramString.replace(/\&/g, "");
+    paramString += options.consumerSecret;
     var apiSignature = hex_md5(paramString);
     options.data.api_sig = apiSignature;
     return $.ajax(options);    

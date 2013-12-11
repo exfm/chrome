@@ -158,8 +158,9 @@ Authorize.prototype.getLastFMSession = function(token){
             'data': {
         		'token': token,
         		'api_key': this.opts.key,
-        		'format': 'json'
-    		}
+        		'method': 'auth.getSession'
+    		},
+    		consumerSecret: this.opts.secret
         }
     ).then(
         this.gotLastFMSession.bind(this),
@@ -169,7 +170,12 @@ Authorize.prototype.getLastFMSession = function(token){
 
 // got lastfm session
 Authorize.prototype.gotLastFMSession = function(responseJSON){
-    this.opts.callback(true, responseJSON, this.opts.service);
+    if(responseJSON.session){
+        this.opts.callback(true, responseJSON, this.opts.service);
+    }
+    else{
+        this.callbackError();
+    }
 }
 
 Authorize.prototype.callbackError = function(){
