@@ -72,7 +72,8 @@
         "js/player/main.js",
         "js/player/playqueue.js",
         "js/player/progress-bar.js",
-        "js/player/listeners.js"
+        "js/player/listeners.js",
+        "js/analytics/ga.js"
       ],
     "commands": {
         "minimize-player": {
@@ -81,5 +82,6 @@
           },
           "description": "Toggle minimize player"
         }
-    }
+    },
+    "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'"
 }

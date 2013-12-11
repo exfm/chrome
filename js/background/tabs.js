@@ -4,6 +4,7 @@ function Tab(sender, response, save){
     this.id = sender.tab.id;
     this.sender = sender;
     this.response = response;
+    this.pageType = '';
     this.showPageActionIcon();
     if(save === true){
         var obj = {};
@@ -68,39 +69,47 @@ Tab.prototype.insertPlayer = function(){
 // determined by what type of page scan gave us
 Tab.prototype.deepScan = function(){
     if(this.response.isTumblr === true){
+        this.pageType = 'tumblr';
         var tumblr = new Tumblr(this);
         tumblr.getPosts();
         return;
     }
     if(this.response.isTumblrDashboard === true){
+        this.pageType = 'tumblrDashboard';
         var tumblr = new Tumblr(this);
         tumblr.getDashboard();
         return;
     }
     if(this.response.isSoundcloud === true){
+        this.pageType = 'soundcloud';
         var soundcloud = new Soundcloud(this);
         soundcloud.getPage(this.response.url);
         return;
     }
     if(this.response.isBandcamp === true){
+        this.pageType = 'bandcamp';
         var bandcamp = new Bandcamp(this);
         bandcamp.getPageVar();
         return;
     }
     if(this.response.isLiveMusicArchive === true){
+        this.pageType = 'liveMusicArchive';
         var liveMusicArchive = new LiveMusicArchive(this);
         return;
     }
     if(this.response.hasMp3Links === true){
+        this.pageType = 'mp3Links';
         var mp3Links = new Mp3Links(this);
         return;
     }
     if(this.response.hasSoundcloudEmbeds === true){
+        this.pageType = 'soundcloudEmbeds';
         var soundcloud = new Soundcloud(this);
         soundcloud.hasEmbeds();
         return;
     }
     if(this.response.hasBandcampEmbeds === true){
+        this.pageType = 'bandcampEmbeds';
         var bandcamp = new Bandcamp(this);
         bandcamp.hasEmbeds();
         return;
@@ -113,7 +122,8 @@ Tab.prototype.showPlaylist = function(){
     chrome.tabs.sendMessage(this.id,
         {
             "type": "playlist",
-            "playlist": this.playlist
+            "playlist": this.playlist,
+            "pageType": this.pageType
         }
     );
 }
