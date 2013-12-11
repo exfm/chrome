@@ -5,70 +5,46 @@ function Tumblr(tab){
 
 // request audio posts from Tumblr API
 Tumblr.prototype.getPosts = function(){
-    var requestUrl = constants.TUMBLR.POSTS; 
-    requestUrl += this.tab.response.hostname;
-    requestUrl += "/posts?api_key=" + keys.TUMBLR.KEY;
-    requestUrl += "&type=audio";
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = this.response.bind(this); 
-    xhr.open("GET", requestUrl, true);
-    xhr.send();
+    $.ajax(
+	    {
+	        'url': constants.TUMBLR.POSTS + this.tab.response.hostname + '/posts',
+	        'type': 'GET',
+            'data': {
+				'api_key': keys.TUMBLR.KEY,
+				'type': 'audio'
+			 },
+			'consumerKey': keys.TUMBLR.KEY, 
+			'consumerSecret': keys.TUMBLR.SECRET
+        }
+    ).then(
+        this.parse.bind(this),
+        this.tab.noSongs.bind(this.tab)
+    )  
 }
 
 // request audio posts from Dashboard
 Tumblr.prototype.getDashboard = function(){
-    chrome.storage.sync.get(
-        'tumblrAuth',
-        this.checkAuth.bind(this)
+    this.getAuth().then(
+        function(oAuthObject){
+            $.oauth(
+        	    {
+        	        'url': constants.TUMBLR.DASHBOARD,
+        	        'type': 'GET',
+                    'data': {
+        				'type': 'audio'
+        			 },
+        			'consumerKey': keys.TUMBLR.KEY, 
+        			'consumerSecret': keys.TUMBLR.SECRET,
+        			'token': oAuthObject.oauth_token,
+                    'tokenSecret': oAuthObject.oauth_token_secret
+                }
+            ).then(
+                this.parse.bind(this),
+                this.tab.noSongs.bind(this.tab)
+            )
+        }.bind(this),
+        this.tab.sendAuthDialog.bind(this.tab, 'Tumblr')
     );
-}
-
-// check to see if user has auth
-// if so, make signed request to dashboard
-// if not, prompt for user to auth
-Tumblr.prototype.checkAuth = function(oAuthObj){
-    if(oAuthObj['tumblrAuth']){
-        var requestUrl = constants.TUMBLR.DASHBOARD + "?type=audio"; 
-        var message = 
-            {
-				method: "get", 
-				action: requestUrl, 
-				parameters: []
-			}
-        OAuth.completeRequest(message, 
-            {
-    			'consumerKey': keys.TUMBLR.KEY, 
-    			'consumerSecret': keys.TUMBLR.SECRET, 
-    			'token': oAuthObj['tumblrAuth'].oauth_token,
-                'tokenSecret': oAuthObj['tumblrAuth'].oauth_token_secret
-            }
-        );
-        var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters);
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = this.response.bind(this); 
-        xhr.open(message.method, requestUrl, true);
-        xhr.setRequestHeader("Authorization", authorizationHeader);
-        xhr.send();
-    }
-    else{
-        chrome.tabs.sendMessage(this.tab.id,
-            {
-                "type": "needAuth",
-                "service": "Tumblr",
-                "url": chrome.extension.getURL("html/options.html")
-            }
-        );
-    }
-}
-
-// response from Tumblr API
-Tumblr.prototype.response = function(e){
-    if(e.target.readyState === 4){
-        if(e.target.status === 200){
-            var json = JSON.parse(e.target.response);
-            this.parse(json);
-        }
-    }
 }
 
 // parse response from Tumblr API
@@ -123,55 +99,29 @@ Tumblr.prototype.parse = function(json){
 
 // like post 
 Tumblr.prototype.like = function(id, reblogKey){
-    chrome.storage.sync.get(
-        'tumblrAuth',
-        function(oAuthObj){
-            if(oAuthObj['tumblrAuth']){
-                var method = 'POST';
-                var url = constants.TUMBLR.LIKE_POST+'?id='+id+'&reblog_key='+reblogKey;
-                var params = {'id':id};
-                var message = 
-                    {
-        				method: method, 
-        				action: url, 
-        				parameters: []
-        			}
-                OAuth.completeRequest(message, 
-                    {
-            			'consumerKey': keys.TUMBLR.KEY, 
-            			'consumerSecret': keys.TUMBLR.SECRET, 
-            			'token': oAuthObj['tumblrAuth'].oauth_token,
-                        'tokenSecret': oAuthObj['tumblrAuth'].oauth_token_secret
-                    }
-                );
-                var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters);
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = this.likeResponse.bind(this); 
-                xhr.open(message.method, url, true);
-                xhr.setRequestHeader("Authorization", authorizationHeader);
-                xhr.send();
-            }
-            else{
-                chrome.tabs.sendMessage(this.tab.id,
-                    {
-                        "type": "needAuth",
-                        "service": "Tumblr",
-                        "url": chrome.extension.getURL("html/options.html")
-                    }
-                );
-            }
-        }.bind(this)
+    this.getAuth().then(
+        function(oAuthObject){
+            $.oauth(
+        	    {
+        	        'url': constants.TUMBLR.LIKE_POST,
+        	        'type': 'POST',
+                    'data': {
+        				'id': id,
+        				'reblog_key': reblogKey 
+        			 },
+        			'consumerKey': keys.TUMBLR.KEY, 
+        			'consumerSecret': keys.TUMBLR.SECRET,
+        			'token': oAuthObject.oauth_token,
+                    'tokenSecret': oAuthObject.oauth_token_secret
+                }
+            ).then(
+                function(json){
+                    console.log('like', json);
+                }.bind(this)
+            )
+        }.bind(this),
+        this.tab.sendAuthDialog.bind(this.tab, 'Tumblr')
     );
-}
-
-// like response from Tumblr API
-Tumblr.prototype.likeResponse = function(e){
-    if(e.target.readyState === 4){
-        if(e.target.status === 200){
-            var json = JSON.parse(e.target.response);
-            console.log('like', json);
-        }
-    }
 }
 
 // check if user is connected to Tumblr
@@ -190,39 +140,3 @@ Tumblr.prototype.getAuth = function(){
     )
     return promise;
 }
-
-Tumblr.prototype.getDashboardg = function(oAuthObject){
-	return $.oauth(
-	    {
-	        'url': constants.TUMBLR.DASHBOARD,
-	        'type': 'GET',
-            'data': {
-				'type': 'audio'
-			},
-			'consumerKey': keys.TUMBLR.KEY, 
-			'consumerSecret': keys.TUMBLR.SECRET,
-			'token': oAuthObject.oauth_token,
-			'tokenSecret': oAuthObject.oauth_token_secret,
-			'options': true
-        }
-    );
-}
-
-
-Tumblr.prototype.foo = function(){
-	this.getAuth().then(
-		function(oAuthObject){
-			console.log('auth', this);
-			this.getDashboardg(oAuthObject).then(
-				function(json){
-					console.log('json', json);
-				},
-				function(e){
-					console.log('error', e);
-				}
-			)
-		}.bind(this)
-	)
-}
-
-
