@@ -3,17 +3,6 @@ function Rdio(tab){
     this.tab = tab;
 }
 
-// response from Rdio API
-Rdio.prototype.response = function(e){
-    if(e.target.readyState === 4){
-        if(e.target.status === 200){
-            var json = JSON.parse(e.target.response);
-            console.log(json);
-            //this.parse(json);
-        }
-    }
-}
-
 // Save a song to a playlist
 // search for a match
 // see if we already have a playlist id

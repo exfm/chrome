@@ -24,6 +24,7 @@
                 "js/services/mp3links.js",
                 "js/services/lastfm.js",
                 "js/services/rdio.js",
+                "js/services/spotify.js",
                 "js/oauth/sha1.js",
                 "js/oauth/md5.js",
                 "js/oauth/jquery.oauth.js",

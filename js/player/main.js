@@ -295,6 +295,7 @@ Main.prototype.updateCurrentServiceButtons = function(song){
     if(song.hasMeta === true){
         if(song.title && song.artist){
             $('#service-icon-rdio').addClass('show');
+            $('#service-icon-spotify').addClass('show');
         }
     }
 }
@@ -321,6 +322,7 @@ Main.prototype.gotId3 = function(queueNumber, tags){
         }
         if(tags.title && tags.artist){
             $('#service-icon-rdio').addClass('show');
+            $('#service-icon-spotify').addClass('show');
         }
     }
 }
@@ -423,6 +425,16 @@ Main.prototype.onServiceIconClick = function(e){
                     "type": 'rdioSave',
                     "title": song.title,
                     "artist": song.artist
+                }
+            )
+        break;
+        case 'spotify':
+            chrome.runtime.sendMessage(null,
+                {
+                    "type": 'spotifyOpen',
+                    "title": song.title,
+                    "artist": song.artist,
+                    "album": song.album
                 }
             )
         break;
