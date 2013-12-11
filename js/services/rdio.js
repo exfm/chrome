@@ -58,7 +58,7 @@ Rdio.prototype.save = function(title, artist){
                 }
             );
         }.bind(this),
-        this.sendAuthDialog.bind(this)
+        this.tab.sendAuthDialog.bind(this.tab, 'Rdio')
     )
 }
 
@@ -261,31 +261,4 @@ Rdio.prototype.addToPlaylist = function(oAuthObject, playlistId, trackId){
 			'tokenSecret': oAuthObject.oauth_token_secret
         }
     );
-}
-
-// tell tab we need auth
-Rdio.prototype.sendAuthDialog = function(){
-    chrome.tabs.sendMessage(this.tab.id,
-        {
-            "type": "needAuth",
-            "service": "Rdio",
-            "url": chrome.extension.getURL("html/options.html")
-        }
-    );
-}
-
-Rdio.prototype.foo = function(){
-	this.getAuth().then(
-		function(oAuthObject){
-			console.log('auth', this);
-			this.getPlaylists(oAuthObject).then(
-				function(json){
-					console.log('json', json);
-				},
-				function(e){
-					console.log('error', e);
-				}
-			)
-		}.bind(this)
-	)
 }
