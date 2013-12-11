@@ -1,4 +1,5 @@
 function Scan(){
+    this.playerInserted = false;
     this.response = {
         "url": location.href,
         "hostname": location.hostname,
@@ -285,15 +286,17 @@ Scan.prototype.confirmAuth = function(service, url){
 
 // insert the player iframe into page
 Scan.prototype.insertPlayer = function(url){
-    document.body.classList.add('exfm-overlay');
-    this.container = document.createElement("iframe");
-    this.container.setAttribute('width', '100%');
-    this.container.setAttribute('height', '100%');
-    this.container.setAttribute('frameborder', 'none');
-    this.container.setAttribute('src', url);
-    this.container.className = "exfm-iframe";
-    document.body.appendChild(this.container);
-    return true;
+    if(this.playerInserted === false){
+        this.playerInserted = true;
+        document.body.classList.add('exfm-overlay');
+        this.container = document.createElement("iframe");
+        this.container.setAttribute('width', '100%');
+        this.container.setAttribute('height', '100%');
+        this.container.setAttribute('frameborder', 'none');
+        this.container.setAttribute('src', url);
+        this.container.className = "exfm-iframe";
+        document.body.appendChild(this.container);
+    }
 }
 
 // minimize the iframe player
@@ -320,9 +323,7 @@ function onMessage(e, sender, responseCallback){
     var type = e.type;
     switch(type){
         case 'insertPlayer':
-            if(scan.insertPlayer(e.url)){
-                responseCallback();
-            }
+            scan.insertPlayer(e.url);
         break;
         case 'getPageVar':
             var tracks = scan.getPageVar(e.pageVar);
