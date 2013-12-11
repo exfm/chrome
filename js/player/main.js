@@ -104,6 +104,8 @@ Main.prototype.addListeners = function(){
     }.bind(this))
 
     $('.service-icon').on('click', this.onServiceIconClick.bind(this));
+    
+    $(document).on('keyup', this.onKeyup.bind(this));
 
 }
 
@@ -437,6 +439,31 @@ Main.prototype.onServiceIconClick = function(e){
                     "album": song.album
                 }
             )
+        break;
+        default:
+        break;
+    }
+}
+
+Main.prototype.onKeyup = function(e){
+    switch(e.keyCode){
+        case 32:
+            this.playQueue.playPause();
+        break;
+        case 37:
+            this.playQueue.previous();
+        break;
+        case 38:
+            this.playQueue.previous();
+        break;
+        case 39:
+            this.playQueue.next();
+        break;
+        case 40:
+            this.playQueue.next();
+        break;
+        case 77:
+            this.toggleMinimize();
         break;
         default:
         break;

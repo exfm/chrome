@@ -80,12 +80,6 @@
             "default": "Alt+P"
           },
           "description": "Toggle minimize player"
-        },
-        "play-pause": {
-          "suggested_key": {
-            "default": "MediaPlayPause"
-          },
-          "description": "Toggle play/pause"
         }
     }
 }
