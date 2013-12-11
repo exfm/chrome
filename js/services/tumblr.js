@@ -174,4 +174,55 @@ Tumblr.prototype.likeResponse = function(e){
     }
 }
 
+// check if user is connected to Tumblr
+Tumblr.prototype.getAuth = function(){
+    var promise = $.Deferred();
+    chrome.storage.sync.get(
+        'tumblrAuth',
+        function(oAuthObj){
+            if(oAuthObj['tumblrAuth']){
+                promise.resolve(oAuthObj['tumblrAuth']);
+            }
+            else{
+                promise.reject();
+            }
+        }
+    )
+    return promise;
+}
+
+Tumblr.prototype.getDashboardg = function(oAuthObject){
+	return $.oauth(
+	    {
+	        'url': constants.TUMBLR.DASHBOARD,
+	        'type': 'GET',
+            'data': {
+				'type': 'audio'
+			},
+			'consumerKey': keys.TUMBLR.KEY, 
+			'consumerSecret': keys.TUMBLR.SECRET,
+			'token': oAuthObject.oauth_token,
+			'tokenSecret': oAuthObject.oauth_token_secret,
+			'options': true
+        }
+    );
+}
+
+
+Tumblr.prototype.foo = function(){
+	this.getAuth().then(
+		function(oAuthObject){
+			console.log('auth', this);
+			this.getDashboardg(oAuthObject).then(
+				function(json){
+					console.log('json', json);
+				},
+				function(e){
+					console.log('error', e);
+				}
+			)
+		}.bind(this)
+	)
+}
+
 

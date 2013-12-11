@@ -120,6 +120,25 @@ Rdio.prototype.determineSearch = function(json, title, artist){
 
 // Search for a song 
 Rdio.prototype.search = function(title, artist){
+
+	return $.oauth(
+	    {
+	        'url': constants.RDIO.API_URL,
+	        'type': 'POST',
+            'data': {
+				'method': 'search',
+				'query': artist + ' ' + title,
+				'types': 'tracks',
+				'count': 1,
+				'never_or': true
+			},
+			'consumerKey': keys.RDIO.KEY, 
+			'consumerSecret': keys.RDIO.SECRET
+        }
+    );
+    
+  /*
+  
     var requestUrl = constants.RDIO.API_URL; 
     var message = 
         {
@@ -154,12 +173,30 @@ Rdio.prototype.search = function(title, artist){
             'data': requestBody
         }
     );
+*/
 }
 
 // Get logged in user playlists
 Rdio.prototype.getPlaylists = function(oAuthObject){
-   var requestUrl = constants.RDIO.API_URL; 
-   var message = 
+	return $.oauth(
+	    {
+	        'url': constants.RDIO.API_URL,
+	        'type': 'POST',
+            'data': {
+				'method': 'getPlaylists'
+			},
+			'consumerKey': keys.RDIO.KEY, 
+			'consumerSecret': keys.RDIO.SECRET,
+			'token': oAuthObject.oauth_token,
+			'tokenSecret': oAuthObject.oauth_token_secret
+        }
+    );
+
+
+   /*
+ console.log('getPlaylists');	
+    var requestUrl = constants.RDIO.API_URL; 
+    var message = 
         {
 			method: "post", 
 			action: requestUrl, 
@@ -190,6 +227,7 @@ Rdio.prototype.getPlaylists = function(oAuthObject){
             'data': requestBody
         }
     );
+*/
 }
 
 // Is there a playlist alreayd called Exfm?
@@ -347,4 +385,20 @@ Rdio.prototype.sendAuthDialog = function(){
             "url": chrome.extension.getURL("html/options.html")
         }
     );
+}
+
+Rdio.prototype.foo = function(){
+	this.getAuth().then(
+		function(oAuthObject){
+			console.log('auth', this);
+			this.getPlaylists(oAuthObject).then(
+				function(json){
+					console.log('json', json);
+				},
+				function(e){
+					console.log('error', e);
+				}
+			)
+		}.bind(this)
+	)
 }
