@@ -6,7 +6,6 @@ var constants = {
             'REQUEST_URL': "http://www.tumblr.com/oauth/request_token",
             'AUTHORIZE_URL': "http://www.tumblr.com/oauth/authorize",
             'ACCESS_URL': "http://www.tumblr.com/oauth/access_token",
-            'PARAMETER_TYPE': "post",
             'LIKE_POST': "http://api.tumblr.com/v2/user/like",
             'USER_INFO': "http://api.tumblr.com/v2/user/info"
         },
@@ -25,7 +24,6 @@ var constants = {
             'REQUEST_URL': "http://api.rdio.com/oauth/request_token",
             'AUTHORIZE_URL': "https://www.rdio.com/oauth/authorize",
             'ACCESS_URL': "http://api.rdio.com/oauth/access_token",
-            'PARAMETER_TYPE': "get",
             'API_URL': "http://api.rdio.com/1/",
             'PLAYLIST_NAME': "Exfm"
         },
