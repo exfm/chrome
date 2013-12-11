@@ -96,6 +96,10 @@ function onMessage(e, sender, responseCallback){
             var spotify = new Spotify(tab);
             spotify.search(e.title, e.artist, e.album);
         break;
+        case 'getGA':
+            var account = keys.GOOGLE_ANALYTICS.ACCOUNT || null;
+            responseCallback(account);
+        break;
         default:
         break
     }

@@ -26,7 +26,12 @@ function Main(){
     );
     this.cacheElements();
     this.addListeners();
-    this.ga = new GoogleAnalytics();
+    chrome.runtime.sendMessage(null,
+        {
+            "type": 'getGA'
+        },
+        this.gotGA.bind(this)
+    );
     chrome.runtime.sendMessage(null,
         {
             "type": 'deepScan'
@@ -452,6 +457,7 @@ Main.prototype.onServiceIconClick = function(e){
     main.ga.event('button', 'click', service, 1);
 }
 
+// keyboard shortcuts
 Main.prototype.onKeyup = function(e){
     switch(e.keyCode){
         case 32:
@@ -481,6 +487,11 @@ Main.prototype.onKeyup = function(e){
         default:
         break;
     }
+}
+
+// Google Analytics
+Main.prototype.gotGA = function(account){
+    this.ga = new GoogleAnalytics(account);
 }
 
 var main;
