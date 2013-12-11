@@ -79,7 +79,7 @@ Tab.prototype.deepScan = function(){
     }
     if(this.response.isSoundcloud === true){
         var soundcloud = new Soundcloud(this);
-        soundcloud.resolve(this.response.url);
+        soundcloud.getPage(this.response.url);
         return;
     }
     if(this.response.isBandcamp === true){
@@ -121,9 +121,22 @@ Tab.prototype.showPlaylist = function(){
 // No songs found on page
 // after deep scan
 Tab.prototype.noSongs = function(){
+    console.log('sending noSongs', this);
     chrome.tabs.sendMessage(this.id,
         {
             "type": "noSongs"
+        }
+    );
+}
+
+// tell tab we need auth
+Tab.prototype.sendAuthDialog = function(serviceName){
+    console.log('sending', serviceName);
+    chrome.tabs.sendMessage(this.id,
+        {
+            "type": "needAuth",
+            "service": serviceName,
+            "url": chrome.extension.getURL("html/options.html")
         }
     );
 }

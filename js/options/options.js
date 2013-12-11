@@ -39,12 +39,6 @@ Options.prototype.gotAuthStatus = function(service, oAuthObj){
         $('#service-logo-' + service)
             .removeClass('connected');
     }
-    /*
-if(service === 'rdio'){
-        var rdio = new Rdio();
-        rdio.getPlaylists(oAuthObj);
-    }
-*/
 }
 
 // auth button clicked
@@ -63,6 +57,9 @@ Options.prototype.onServiceClick = function(e){
             service + 'Auth',
             this.getAuthStatus.bind(this)
         );
+        if(service === 'rdio'){
+            chrome.storage.sync.remove('rdioPlaylistId');
+        }
     }
 }
 
@@ -74,8 +71,8 @@ Options.prototype.connect = function(service, oAuthVersion){
             'key': keys[capitalService].KEY,
             'secret': keys[capitalService].SECRET,
             'requestTokenUrl': constants[capitalService].REQUEST_URL,
-            'userAuthorizationURL': constants[capitalService].AUTHORIZE_URL,
-            'accessTokenURL': constants[capitalService].ACCESS_URL,
+            'userAuthorizationUrl': constants[capitalService].AUTHORIZE_URL,
+            'accessTokenUrl': constants[capitalService].ACCESS_URL,
             'callbackUrl': keys[capitalService].OAUTH_CALLBACK,
             'callback': this.authDone.bind(this),
             'service': service,

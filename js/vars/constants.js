@@ -12,7 +12,7 @@ var constants = {
         },
     'SOUNDCLOUD':
         {
-            'RESOLVE': "https://api.soundcloud.com/resolve.json?url=",
+            'RESOLVE': "https://api.soundcloud.com/resolve.json",
             'USERS': "http://api.soundcloud.com/users/",
             'AUTHORIZE_URL': "https://soundcloud.com/connect",
             'AUTHORIZE_PARAMS': "&response_type=code_and_token&scope=non-expiring",
@@ -26,12 +26,13 @@ var constants = {
             'AUTHORIZE_URL': "https://www.rdio.com/oauth/authorize",
             'ACCESS_URL': "http://api.rdio.com/oauth/access_token",
             'PARAMETER_TYPE': "get",
-            'API_URL': "http://api.rdio.com/1/"
+            'API_URL': "http://api.rdio.com/1/",
+            'PLAYLIST_NAME': "Exfm"
         },
     'LASTFM':
         {
             'AUTHORIZE_URL': "http://www.last.fm/api/auth/",
-            'ACCESS_URL': "http://ws.audioscrobbler.com/2.0/?method=auth.getSession",
+            'ACCESS_URL': "http://ws.audioscrobbler.com/2.0/?format=json",
             'API_URL': "http://ws.audioscrobbler.com/2.0/?format=json",
         }
 }

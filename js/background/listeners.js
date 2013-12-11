@@ -51,11 +51,18 @@ function onMessage(e, sender, responseCallback){
             delete dataUrlObj[sender.tab.id];
         break;
         case 'tumblrLike':
-            var tumblr = new Tumblr(sender.tab);
+            var tab = new Tab(sender, null, false);
+            var tumblr = new Tumblr(tab);
             tumblr.like(e.id, e.reblogKey);
         break;
+        case 'soundcloudFavorite':
+            var tab = new Tab(sender, null, false);
+            var soundcloud = new Soundcloud(tab);
+            soundcloud.favorite(e.id);
+        break;
         case 'soundcloudResolveThenFavorite':
-            var soundcloud = new Soundcloud(sender.tab);
+            var tab = new Tab(sender, null, false);
+            var soundcloud = new Soundcloud(tab);
             soundcloud.resolveThenFavorite(e.url);
         break;
         case 'getId3':
@@ -70,12 +77,19 @@ function onMessage(e, sender, responseCallback){
             return true;
         break;
         case 'nowPlaying':
-            var lastfm = new Lastfm(sender.tab);
+            var tab = new Tab(sender, null, false);
+            var lastfm = new Lastfm(tab);
             lastfm.nowPlaying(e.song);
         break;
         case 'songHalf':
-            var lastfm = new Lastfm(sender.tab);
+            var tab = new Tab(sender, null, false);
+            var lastfm = new Lastfm(tab);
             lastfm.scrobble(e.song);
+        break;
+        case 'rdioSave':
+            var tab = new Tab(sender, null, false);
+            var rdio = new Rdio(tab);
+            rdio.save(e.title, e.artist);
         break;
         default:
         break
