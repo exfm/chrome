@@ -94,15 +94,15 @@ Main.prototype.addListeners = function(){
     });
     $('#play-pause').on('click', function(){
         this.playQueue.playPause();
-        main.ga.event('button', 'click', 'playPause', 1);
+        this.ga.event('button', 'click', 'playPause', 1);
     }.bind(this));
     $('#prev').on('click', function(){
         this.playQueue.previous();
-        main.ga.event('button', 'click', 'previous', 1);
+        this.ga.event('button', 'click', 'previous', 1);
     }.bind(this));
     $('#next').on('click', function(){
         this.playQueue.next();
-        main.ga.event('button', 'click', 'next', 1);
+        this.ga.event('button', 'click', 'next', 1);
     }.bind(this));
 
     // playlist click events
@@ -110,7 +110,7 @@ Main.prototype.addListeners = function(){
         var target = e.target;
         var index = $('.playlist-item').index($(target));
         this.playQueue.play(index);
-        main.ga.event('button', 'click', 'playlist item', 1);
+        this.ga.event('button', 'click', 'playlist item', 1);
     }.bind(this))
 
     $('.service-icon').on('click', this.onServiceIconClick.bind(this));
@@ -144,7 +144,7 @@ Main.prototype.songPlaying = function(e){
             }
         )
     }
-    main.ga.event('song', 'play', e.target.song.type, 1, true);
+    this.ga.event('song', 'play', e.target.song.type, 1, true);
 }
 
 // song half way through
@@ -454,7 +454,7 @@ Main.prototype.onServiceIconClick = function(e){
         default:
         break;
     }
-    main.ga.event('button', 'click', service, 1);
+    this.ga.event('button', 'click', service, 1);
 }
 
 // keyboard shortcuts
@@ -462,27 +462,27 @@ Main.prototype.onKeyup = function(e){
     switch(e.keyCode){
         case 32:
             this.playQueue.playPause();
-            main.ga.event('keyboard', 'keyup', 'playPause', 1);
+            this.ga.event('keyboard', 'keyup', 'playPause', 1);
         break;
         case 37:
             this.playQueue.previous();
-            main.ga.event('keyboard', 'keyup', 'previous', 1);
+            this.ga.event('keyboard', 'keyup', 'previous', 1);
         break;
         case 38:
             this.playQueue.previous();
-            main.ga.event('keyboard', 'keyup', 'previous', 1);
+            this.ga.event('keyboard', 'keyup', 'previous', 1);
         break;
         case 39:
             this.playQueue.next();
-            main.ga.event('keyboard', 'keyup', 'next', 1);
+            this.ga.event('keyboard', 'keyup', 'next', 1);
         break;
         case 40:
             this.playQueue.next();
-            main.ga.event('keyboard', 'keyup', 'next', 1);
+            this.ga.event('keyboard', 'keyup', 'next', 1);
         break;
         case 77:
             this.toggleMinimize();
-            main.ga.event('keyboard', 'keyup', 'toggleMinimize', 1);
+            this.ga.event('keyboard', 'keyup', 'toggleMinimize', 1);
         break;
         default:
         break;
@@ -491,13 +491,25 @@ Main.prototype.onKeyup = function(e){
 
 // Google Analytics
 Main.prototype.gotGA = function(account){
-    this.ga = new GoogleAnalytics(account);
+    this.ga = new ExtGA({
+    trackingId : account, // Your Tracking Id
+    trackingDns : "ex.fm", // Domain name that you created for the profile
+    appVersion : "4.0", // application Version
+    appName : "Chrome Extension" // application Name
+});
+    
+    
 }
 
 // Service action feedback
 // eg. after clicking a button
-Main.prototype.serviceAction = function(success, message){
+Main.prototype.serviceAction = function(success, message, action, network){
     console.log('serviceAction', success, message);
+    if(success === true){
+        var song = this.playQueue.getSong();
+        console.log(song.type, song);
+        this.ga.social(action, network, song.type, 1);
+    }
 }
 
 var main;
