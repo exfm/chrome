@@ -23,5 +23,9 @@ var keys = {
             'KEY': "474b32b1b1920cccf57c308141054f2f",
             'SECRET': "8ef2e8aed5ea1192f262fb539cc88298",
             'OAUTH_CALLBACK': "http://oauth.extension.fm/callback"
+        },
+    'GOOGLE_ANALYTICS':
+        {
+            'ACCOUNT': "UA-46379443-1"
         }
 }

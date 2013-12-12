@@ -91,6 +91,15 @@ function onMessage(e, sender, responseCallback){
             var rdio = new Rdio(tab);
             rdio.save(e.title, e.artist);
         break;
+        case 'spotifyOpen':
+            var tab = new Tab(sender, null, false);
+            var spotify = new Spotify(tab);
+            spotify.search(e.title, e.artist, e.album);
+        break;
+        case 'getGA':
+            var account = keys.GOOGLE_ANALYTICS.ACCOUNT || null;
+            responseCallback(account);
+        break;
         default:
         break
     }

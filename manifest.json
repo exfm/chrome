@@ -24,6 +24,7 @@
                 "js/services/mp3links.js",
                 "js/services/lastfm.js",
                 "js/services/rdio.js",
+                "js/services/spotify.js",
                 "js/oauth/sha1.js",
                 "js/oauth/md5.js",
                 "js/oauth/jquery.oauth.js",
@@ -71,7 +72,8 @@
         "js/player/main.js",
         "js/player/playqueue.js",
         "js/player/progress-bar.js",
-        "js/player/listeners.js"
+        "js/player/listeners.js",
+        "js/analytics/ga.js"
       ],
     "commands": {
         "minimize-player": {
@@ -79,12 +81,7 @@
             "default": "Alt+P"
           },
           "description": "Toggle minimize player"
-        },
-        "play-pause": {
-          "suggested_key": {
-            "default": "MediaPlayPause"
-          },
-          "description": "Toggle play/pause"
         }
-    }
+    },
+    "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'"
 }

@@ -115,6 +115,11 @@ Tumblr.prototype.like = function(id, reblogKey){
             ).then(
                 function(json){
                     console.log('like', json);
+                    this.tab.sendServiceAction(true, 'Post liked on Tumblr');
+                }.bind(this),
+                function(err){
+                    console.log('err', err);
+                    this.tab.sendServiceAction(false, 'There was a problem liking post on Tumblr');
                 }.bind(this)
             )
         }.bind(this),
