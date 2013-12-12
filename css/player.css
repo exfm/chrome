@@ -377,7 +377,7 @@ html, body {
     vertical-align: bottom;
     top: 60%;
     margin-top: 130px;
-    height: 90px;
+    height: 120px;
 }
 
 .service-icon {
@@ -401,33 +401,88 @@ html, body {
 .service-icon:hover {
     opacity: 1;
 }
-.service-icon.selected {
+.service-icon.selected,
+.service-icon.active  {
     opacity: 1;
 }
-.rdio {
+.service-icon.rdio {
     font-size: 26px;
 }
-.tumblr {
+.service-icon.tumblr {
     font-size: 24px;
 }
 
 
-
-
 .service-hover {
     font-family: sans-serif;
-
     font-size: 13px;
     height: 35px;
     line-height: 30px;
-    /* background: #29a5ff; */
     position: absolute;
     width: 100%;
     overflow: hidden;
-    bottom: 0;
-    font-weight: 600;
-    /* font-weight: bold; */
+    bottom: 30px;
+    font-weight: bold;
 }
+
+.service-hover-group {
+    display: none;
+    background: #29A5FF;
+    white-space: nowrap;
+}
+.service-hover-group.layout {
+    display: block;
+    position: absolute;
+    visibility: hidden;
+    white-space: nowrap;
+}
+
+.service-hover.tumblr .service-hover-group.tumblr,
+.service-hover.soundcloud .service-hover-group.soundcloud,
+.service-hover.bandcamp .service-hover-group.bandcamp,
+.service-hover.rdio .service-hover-group.rdio,
+.service-hover.spotify .service-hover-group.spotify {
+    display: block;
+    margin: auto;
+    position: relative;
+}
+
+.service-hover-container {
+     display: inline-block;
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
+    -webkit-transform: translateY(-100%);
+    overflow: hidden;
+    height: 30px;
+}
+.open .service-hover-container {
+    -webkit-transition:
+        -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1),
+        width 0.1s cubic-bezier(0, 1, 0.8, 1);
+}
+.service-hover.show .service-hover-container{
+    -webkit-transform: translateY(5px);
+}
+
+
+.service-hover-pointer {
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    top: -5px;
+    border: 5px solid rgba(0, 0, 0, 0);
+    border-bottom-color: #29A5FF;
+    left: 0;
+    margin-left: -2px;
+    opacity: 0;
+    -webkit-transform: translate(250px, 5px);
+    -webkit-transition: none;
+}
+
+.open .service-hover.show .service-hover-pointer {
+    opacity: 1;
+    -webkit-transition: -webkit-transform 0.1s ease-out;
+}
+
 .service-name {
     display: inline-block;
     padding: 0 8px;
@@ -446,52 +501,20 @@ html, body {
     -webkit-user-select: none;
     cursor: pointer;
     -webkit-transform: translateY(-100%);
-    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.68, 1.25);
     color: rgba(255,255,255, 0.5);
 }
 .service-link:last-of-type {
     box-shadow: none;
 }
 
-.service-hover-container {
-    background: #29A5FF;
-    display: inline-block;
-    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
-    -webkit-transform: translateY(-100%);
-    overflow: hidden;
-}
-.service-hover.show .service-hover-container,
-.services:hover .service-hover-container {
-    -webkit-transform: translateY(5px);
-}
-.service-hover.show .service-link,
-.services:hover .service-link {
+.service-hover.tumblr .service-hover-group.tumblr .service-link,
+.service-hover.soundcloud .service-hover-group.soundcloud .service-link,
+.service-hover.bandcamp .service-hover-group.bandcamp .service-link,
+.service-hover.rdio .service-hover-group.rdio .service-link,
+.service-hover.spotify .service-hover-group.spotify .service-link{
     -webkit-transform: translateY(0);
 }
-
-.service-hover:after {
-    width: 0px;
-    content: '';
-    position: absolute;
-    top: -5px;
-    height: 0px;
-    border: 5px solid rgba(0, 0, 0, 0);
-    border-bottom-color: #29A5FF;
-    left: 50%;
-    margin-left: -2px;
-    opacity: 0;
-    -webkit-transform: translateY(5px);
-    -webkit-transition: none;
-}
-
-.services:hover .service-hover:after,
-.service-hover.show:after {
-    -webkit-transform: translateY(0);
-    opacity: 1;
-    -webkit-transition: -webkit-transform 0.1s ease-out 0.2s, opacity 0 linear 0.2s;
-}
-
-
 
 .service-link:hover {
     color: #fff;
