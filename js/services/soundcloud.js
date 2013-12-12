@@ -155,7 +155,12 @@ Soundcloud.prototype.resolveThenFavorite = function(url){
                     }
                 }.bind(this),
                 function(err){
-                    this.tab.sendServiceAction(false, 'Song not found on Soundcloud');
+                    this.tab.sendServiceAction(
+                        false,
+                        'Song not found on Soundcloud',
+                        'like',
+                        'Soundcloud'
+                    );
                 }.bind(this)
             )
         }.bind(this),
@@ -178,10 +183,20 @@ Soundcloud.prototype.favorite = function(id){
             ).then(
                 function(json){
                     console.log('like', json);
-                    this.tab.sendServiceAction(true, 'Song liked on Soundcloud');
+                    this.tab.sendServiceAction(
+                        true,
+                        'Song liked on Soundcloud',
+                        'like',
+                        'Soundcloud'
+                    );
                 }.bind(this),
                 function(err){
-                    this.tab.sendServiceAction(false, 'Error liking song on Soundcloud');
+                    this.tab.sendServiceAction(
+                        false,
+                        'Error liking song on Soundcloud',
+                        'like',
+                        'Soundcloud'
+                    );
                 }.bind(this)
             )
         }.bind(this),

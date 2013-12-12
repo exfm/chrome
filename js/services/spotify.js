@@ -20,7 +20,15 @@ Spotify.prototype.search = function(title, artist, album){
 			}
         }
     ).then(
-        this.determineSearch.bind(this)
+        this.determineSearch.bind(this),
+        function(){
+            this.tab.sendServiceAction(
+                false,
+                'Error searching for song on Spotify',
+                'open',
+                'Spotify'
+            );
+        }.bind(this)
     )
 }
 
@@ -47,6 +55,20 @@ Spotify.prototype.determineSearch = function(json){
                     2000
                 )
             }.bind(this)
+        );
+        this.tab.sendServiceAction(
+            true,
+            'Song opened on Spotify',
+            'open',
+            'Spotify'
+        );
+    }
+    else{
+        this.tab.sendServiceAction(
+            false,
+            'Song not found on Spotify',
+            'open',
+            'Spotify'
         );
     }
 }

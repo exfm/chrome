@@ -97,8 +97,12 @@ function onMessage(e, sender, responseCallback){
             spotify.search(e.title, e.artist, e.album);
         break;
         case 'getGA':
-            var account = keys.GOOGLE_ANALYTICS.ACCOUNT || null;
-            responseCallback(account);
+            if(keys.GOOGLE_ANALYTICS){
+                responseCallback(keys.GOOGLE_ANALYTICS);
+            }
+            else{
+                responseCallback(null)
+            }
         break;
         default:
         break

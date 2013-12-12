@@ -5,7 +5,7 @@ function onMessage(e, sender, responseCallback){
     switch(type){
         case 'playlist':
             main.gotPlaylist(e.playlist);
-            main.ga.pageView(e.pageType);
+            main.ga.pageview(e.pageType, e.pageType);
         break;
         case 'soundcloudKey':
             main.playQueue.soundcloud_key = e.soundcloudKey;
@@ -17,7 +17,12 @@ function onMessage(e, sender, responseCallback){
             main.capturedTab(e.dataUrl);
         break;
         case 'serviceAction':
-            main.serviceAction(e.success, e.message);
+            main.serviceAction(
+                e.success,
+                e.message,
+                e.action,
+                e.network
+            );
         break;
         default:
         break
