@@ -116,7 +116,8 @@ Options.prototype.authDone = function(success, oAuthObj, service){
     else{
         alert("There was a problem. Please try again.");
     }
-    this.ga.social('connect', service, 'connect', 1);
+    var capitalService = service.charAt(0).toUpperCase() + service.slice(1);
+    this.ga.social('connect', capitalService, 'connect', 1);
 }
 
 // auth was successfull
