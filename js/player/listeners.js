@@ -17,7 +17,12 @@ function onMessage(e, sender, responseCallback){
             main.capturedTab(e.dataUrl);
         break;
         case 'serviceAction':
-            main.serviceAction(e.success, e.message);
+            main.serviceAction(
+                e.success,
+                e.message,
+                e.action,
+                e.network
+            );
         break;
         default:
         break

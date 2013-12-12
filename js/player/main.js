@@ -507,7 +507,7 @@ Main.prototype.serviceAction = function(success, message, action, network){
     console.log('serviceAction', success, message);
     if(success === true){
         var song = this.playQueue.getSong();
-        console.log(song.type, song);
+        console.log('social', action, network, song.type);
         this.ga.social(action, network, song.type, 1);
     }
 }
