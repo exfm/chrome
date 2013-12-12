@@ -22,7 +22,25 @@ ExtGA.prototype = {
      * Initilization function
      * @param object trackingData Have all tracking attributes
     */
-    init : function (trackingData) {
+    init : function (trackingData, callback) {
+        this.cid = '';
+        chrome.storage.sync.get(
+            'gaCid',
+            function(obj){
+                if(obj['gaCid']){
+                    this.cid = obj['gaCid'];
+                }
+                else{
+                    var cid = Math.round(2147483647 * Math.random());
+                    var newObj = {'gaCid': cid};
+                    this.cid = cid;
+                    chrome.storage.sync.set(newObj);
+                }
+                if(callback){
+                    callback();
+                }
+            }.bind(this)
+        );
         this.trackingId = trackingData.trackingId;
         this.trackingDns = trackingData.trackingDns;
         this.appVersion = trackingData.appVersion;
@@ -97,12 +115,11 @@ ExtGA.prototype = {
      * Get/Generate & Save Client Id
     */
     _getCid : function () {
-        if (localStorage.getItem("gaCid")){
-            return "&cid="+localStorage.getItem("gaCid");
-        } else {
-            var cid = Math.round(2147483647 * Math.random());
-            localStorage.setItem("gaCid", cid);
-            return "&cid="+cid;
+        if(this.cid){
+            return "&cid=" + this.cid;
+        }
+        else{
+            return "";
         }
     },
 
@@ -160,6 +177,6 @@ ExtGA.prototype = {
     }
 };
 
-function ExtGA(trackingData) {
-    this.init(trackingData);
+function ExtGA(trackingData, callback) {
+    this.init(trackingData, callback);
 }

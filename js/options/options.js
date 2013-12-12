@@ -5,7 +5,10 @@ function Options(){
             'trackingDns': keys.GOOGLE_ANALYTICS.DOMAIN,
             'appVersion': keys.GOOGLE_ANALYTICS.VERSION,
             'appName': keys.GOOGLE_ANALYTICS.NAME
-        }
+        },
+        function(){
+            this.ga.pageview('options', 'Options');
+        }.bind(this)
     );
     this.services = [
         'tumblr',
@@ -15,7 +18,6 @@ function Options(){
     ]
     $('.auth-button').on('click', this.onServiceClick.bind(this));
     this.getAuthStatus();
-    this.ga.pageview('options', 'Options');
 }
 
 // check to see what services
