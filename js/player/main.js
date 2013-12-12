@@ -55,6 +55,10 @@ Main.prototype.cacheElements = function(){
     this.currentSongArtworkEl = $('#artwork-current');
     this.nextSongArtworkEl = $('#artwork-next');
     this.playlistEl = $('#playlist');
+
+    // service elements
+    this.serviceHoverPointer = $('#service-hover-pointer');
+    this.serviceHoverContainer = $('#service-hover-container');
 }
 
 // add listeners
@@ -114,8 +118,47 @@ Main.prototype.addListeners = function(){
     }.bind(this))
 
     $('.service-icon').on('click', this.onServiceIconClick.bind(this));
-    
+
     $(document).on('keyup', this.onKeyup.bind(this));
+
+    // add hover events for service icons
+    $('.service-icon').on('mouseover', function(e){
+        var serviceIcon = $(this);
+        var serviceName = serviceIcon.data('service');
+
+        // make current icon active
+        $('.service-icon').removeClass('active');
+        serviceIcon.addClass('active');
+
+        // get width of service options;
+        var serviceOptionsEl = $('#service-hover-container').find('.'+serviceName);
+        serviceOptionsEl.addClass('layout');
+        var w = serviceOptionsEl.outerWidth();
+        serviceOptionsEl.removeClass('layout');
+        $('#service-hover-container').css('width', w);
+        $('#service-hover').attr('class', 'service-hover show '+serviceName);
+
+        // position of service pointer
+        var left = serviceIcon.position().left + 26;
+
+        // if service links aren't already displayed
+        if($('#services').hasClass('open') === false){
+            // move pointer to correct position before open
+            $('#service-hover-pointer').css('-webkit-transform', 'translate('+left+'px, 5px)');
+            $('#service-hover-container').one('webkitTransitionEnd', function(){
+                $('#services').addClass('open');
+                $('#service-hover-pointer').css('-webkit-transform', 'translateX('+left+'px)');
+            });
+        }else{
+            $('#service-hover-pointer').css('-webkit-transform', 'translateX('+left+'px)');
+        }
+    });
+    $('#services').on('mouseleave', function(){
+        $('#service-hover').removeClass('show');
+        $('#services').removeClass('open');
+        $('.service-icon').removeClass('active');
+    });
+
 
 }
 
