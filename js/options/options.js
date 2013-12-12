@@ -1,4 +1,12 @@
 function Options(){
+    this.ga = new ExtGA(
+        {
+            'trackingId': keys.GOOGLE_ANALYTICS.ACCOUNT,
+            'trackingDns': keys.GOOGLE_ANALYTICS.DOMAIN,
+            'appVersion': keys.GOOGLE_ANALYTICS.VERSION,
+            'appName': keys.GOOGLE_ANALYTICS.NAME
+        }
+    );
     this.services = [
         'tumblr',
         'rdio',
@@ -7,6 +15,7 @@ function Options(){
     ]
     $('.auth-button').on('click', this.onServiceClick.bind(this));
     this.getAuthStatus();
+    this.ga.pageview('options', 'Options');
 }
 
 // check to see what services
@@ -50,9 +59,9 @@ Options.prototype.onServiceClick = function(e){
     if($(e.target).hasClass('connect')){
         var oAuthVersion = e.target.dataset.oauth_version;
         this.connect(service, oAuthVersion);
+        this.ga.event('button', 'connect', service, 1);
     }
     else{
-        console.log('disconnect');
         chrome.storage.sync.remove(
             service + 'Auth',
             this.getAuthStatus.bind(this)
@@ -60,6 +69,7 @@ Options.prototype.onServiceClick = function(e){
         if(service === 'rdio'){
             chrome.storage.sync.remove('rdioPlaylistId');
         }
+        this.ga.event('button', 'disconnect', service, 1);
     }
 }
 
@@ -106,6 +116,7 @@ Options.prototype.authDone = function(success, oAuthObj, service){
     else{
         alert("There was a problem. Please try again.");
     }
+    this.ga.social('connect', service, 'connect', 1);
 }
 
 // auth was successfull
