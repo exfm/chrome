@@ -26,6 +26,9 @@ var keys = {
         },
     'GOOGLE_ANALYTICS':
         {
-            'ACCOUNT': "UA-46379443-1"
+            'ACCOUNT': "UA-46379443-1",
+            'DOMAIN': "ex.fm",
+            'VERSION': "4.0",
+            'NAME': "Chrome Extension"
         }
 }

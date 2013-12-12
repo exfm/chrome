@@ -490,15 +490,25 @@ Main.prototype.onKeyup = function(e){
 }
 
 // Google Analytics
-Main.prototype.gotGA = function(account){
-    this.ga = new ExtGA({
-    trackingId : account, // Your Tracking Id
-    trackingDns : "ex.fm", // Domain name that you created for the profile
-    appVersion : "4.0", // application Version
-    appName : "Chrome Extension" // application Name
-});
-    
-    
+Main.prototype.gotGA = function(obj){
+    if(obj !== null){
+        this.ga = new ExtGA(
+            {
+                'trackingId': obj.ACCOUNT,
+                'trackingDns': obj.DOMAIN,
+                'appVersion': obj.VERSION,
+                'appName': obj.NAME
+            }
+        );
+    }
+    else{
+        this.ga = {
+            'event': function(){},
+            'pageview': function(){},
+            'social': function(){},
+            'exception': function(){}
+        };
+    }
 }
 
 // Service action feedback
