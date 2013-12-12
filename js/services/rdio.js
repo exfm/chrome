@@ -27,7 +27,12 @@ Rdio.prototype.save = function(title, artist){
                                         function(json){
                                             console.log('addToPlaylist json', json);
                                             if(json.status === 'ok'){
-                                                this.tab.sendServiceAction(true, 'Song saved on Rdio');
+                                                this.tab.sendServiceAction(
+                                                    true,
+                                                    'Song saved on Rdio',
+                                                    'save',
+                                                    'Rdio'
+                                                );
                                             }
                                             else{
                                                 // The playlistId we had was wrong
@@ -39,7 +44,12 @@ Rdio.prototype.save = function(title, artist){
                                         }.bind(this),
                                         function(error){
                                             console.log('errrr', error);
-                                            this.tab.sendServiceAction(false, 'Error saving song on Rdio');
+                                            this.tab.sendServiceAction(
+                                                false,
+                                                'Error saving song on Rdio',
+                                                'save',
+                                                'Rdio'
+                                            );
                                         }.bind(this)
                                     )
                                 }.bind(this),
@@ -53,14 +63,24 @@ Rdio.prototype.save = function(title, artist){
                         function(){
                             console.log('no key found');
                             // No match on Rdio
-                            this.tab.sendServiceAction(false, 'Song not found on Rdio');
+                            this.tab.sendServiceAction(
+                                false,
+                                'Song not found on Rdio',
+                                'save',
+                                'Rdio'
+                            );
                         }.bind(this)
                     )
                 }.bind(this),
                 function(error){
                     console.log('rdio search error');
                     // Search error
-                    this.tab.sendServiceAction(false, 'Error searching for song on Rdio');
+                    this.tab.sendServiceAction(
+                        false,
+                        'Error searching for song on Rdio',
+                        'save',
+                        'Rdio'
+                    );
                 }.bind(this)
             );
         }.bind(this),
