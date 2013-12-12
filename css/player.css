@@ -377,6 +377,7 @@ html, body {
     vertical-align: bottom;
     top: 60%;
     margin-top: 130px;
+    height: 90px;
 }
 
 .service-icon {
@@ -411,3 +412,99 @@ html, body {
 }
 
 
+
+
+.service-hover {
+    font-family: sans-serif;
+
+    font-size: 13px;
+    height: 35px;
+    line-height: 30px;
+    /* background: #29a5ff; */
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    bottom: 0;
+    font-weight: 600;
+    /* font-weight: bold; */
+}
+.service-name {
+    display: inline-block;
+    padding: 0 8px;
+    background: rgba(0,0,0,0.1);
+}
+.service-links {
+    display: inline-block;
+    height: 24px;
+    padding: 3px 0;
+    line-height: 24px;
+}
+.service-link {
+    padding: 0 8px;
+    display: inline-block;
+    box-shadow: 1px 0 rgba(255, 255, 255, 0.3);
+    -webkit-user-select: none;
+    cursor: pointer;
+    -webkit-transform: translateY(-100%);
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
+    color: rgba(255,255,255, 0.5);
+}
+.service-link:last-of-type {
+    box-shadow: none;
+}
+
+.service-hover-container {
+    background: #29A5FF;
+    display: inline-block;
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
+    -webkit-transform: translateY(-100%);
+    overflow: hidden;
+}
+.service-hover.show .service-hover-container,
+.services:hover .service-hover-container {
+    -webkit-transform: translateY(5px);
+}
+.service-hover.show .service-link,
+.services:hover .service-link {
+    -webkit-transform: translateY(0);
+}
+
+.service-hover:after {
+    width: 0px;
+    content: '';
+    position: absolute;
+    top: -5px;
+    height: 0px;
+    border: 5px solid rgba(0, 0, 0, 0);
+    border-bottom-color: #29A5FF;
+    left: 50%;
+    margin-left: -2px;
+    opacity: 0;
+    -webkit-transform: translateY(5px);
+    -webkit-transition: none;
+}
+
+.services:hover .service-hover:after,
+.service-hover.show:after {
+    -webkit-transform: translateY(0);
+    opacity: 1;
+    -webkit-transition: -webkit-transform 0.1s ease-out 0.2s, opacity 0 linear 0.2s;
+}
+
+
+
+.service-link:hover {
+    color: #fff;
+}
+.service-link:nth-of-type(1) {
+    -webkit-transition-delay: 0.05s;
+}
+.service-link:nth-of-type(2) {
+    -webkit-transition-delay: 0.1s;
+}
+.service-link:nth-of-type(3) {
+    -webkit-transition-delay: 0.15s;
+}
+.service-link:nth-of-type(4) {
+    -webkit-transition-delay: 0.2s;
+}
