@@ -494,6 +494,12 @@ Main.prototype.gotGA = function(account){
     this.ga = new GoogleAnalytics(account);
 }
 
+// Service action feedback
+// eg. after clicking a button
+Main.prototype.serviceAction = function(success, message){
+    console.log('serviceAction', success, message);
+}
+
 var main;
 $(document).ready(
     function(){

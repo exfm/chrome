@@ -16,7 +16,7 @@ GoogleAnalytics.prototype.pageView = function(page){
             'title': page.toUpperCase()
         }
     );
-    console.log('pageView', page);
+    //console.log('pageView', page);
 }
 
 GoogleAnalytics.prototype.event = function(category, action, label, value, nonInteraction){
@@ -31,5 +31,5 @@ GoogleAnalytics.prototype.event = function(category, action, label, value, nonIn
         obj.nonInteraction = 1;
     }
     ga('send', obj);
-    console.log('event', obj);
+    //console.log('event', obj);
 }

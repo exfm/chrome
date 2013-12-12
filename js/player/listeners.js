@@ -16,6 +16,9 @@ function onMessage(e, sender, responseCallback){
         case 'capturedTab':
             main.capturedTab(e.dataUrl);
         break;
+        case 'serviceAction':
+            main.serviceAction(e.success, e.message);
+        break;
         default:
         break
     }

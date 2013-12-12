@@ -11,40 +11,57 @@ function Rdio(tab){
 Rdio.prototype.save = function(title, artist){
     this.getAuth().then(
         function(oAuthObject){
+            // Search for song
             this.search(title, artist).then(
                 function(json){
+                    // Does the song match what Rdio gave us?
                     this.determineSearch(json, title, artist).then(
                         function(trackId){
                             console.log('trackId', trackId);
+                            // Do we have the playlistId in storage?
                             this.getPlaylistId().then(
                                 function(playlistId){
                                     console.log('playlistId', playlistId);
+                                    // Add the song to the playlist
                                     this.addToPlaylist(oAuthObject, playlistId, trackId).then(
                                         function(json){
-                                            console.log(json);
-                                            if(json.code === 404){
-                                                this.getOrCreatePlaylist(oAuthObject, trackId);
+                                            console.log('addToPlaylist json', json);
+                                            if(json.status === 'ok'){
+                                                this.tab.sendServiceAction(true, 'Song saved on Rdio');
+                                            }
+                                            else{
+                                                // The playlistId we had was wrong
+                                                if(json.code === 404 && json.message === 'Playlist does not exist.'){
+                                                    // Get or create a new playlist
+                                                    this.getOrCreatePlaylist(oAuthObject, trackId);
+                                                }
                                             }
                                         }.bind(this),
                                         function(error){
                                             console.log('errrr', error);
-                                        }
+                                            this.tab.sendServiceAction(false, 'Error saving song on Rdio');
+                                        }.bind(this)
                                     )
                                 }.bind(this),
                                 function(){
                                     console.log('no id');
+                                    // Get or create a new playlist
                                     this.getOrCreatePlaylist(oAuthObject, trackId);
                                 }.bind(this)
                             )
                         }.bind(this),
                         function(){
                             console.log('no key found');
-                        }
+                            // No match on Rdio
+                            this.tab.sendServiceAction(false, 'Song not found on Rdio');
+                        }.bind(this)
                     )
                 }.bind(this),
                 function(error){
                     console.log('rdio search error');
-                }
+                    // Search error
+                    this.tab.sendServiceAction(false, 'Error searching for song on Rdio');
+                }.bind(this)
             );
         }.bind(this),
         this.tab.sendAuthDialog.bind(this.tab, 'Rdio')
@@ -55,18 +72,24 @@ Rdio.prototype.save = function(title, artist){
 // if we dont have a playlist id search for Exfm playlist on rdio
 // if we dont have an Exfm playlist on rdio create on
 Rdio.prototype.getOrCreatePlaylist = function(oAuthObject, trackId){
+    // Get playlists from Rdio
     this.getPlaylists(oAuthObject).then(
         function(json){
             console.log('playlists', json);
+            // Is there a playlist called 'Exfm'?
             this.determinePlaylists(json).then(
                 function(playlistId){
                     console.log('got playlistId', playlistId);
+                    // Got the playlist. Add the song
                     this.addToPlaylist(oAuthObject, playlistId, trackId);
+                    // Save the playlistId to storage
                     this.savePlaylistId(playlistId);
                 }.bind(this),
                 function(){
+                    // Create the playlist on Rdio
                     this.createPlaylist(oAuthObject, trackId).then(
                         function(json){
+                            // Save the playlistId to storage
                             this.savePlaylistId(json);
                         }.bind(this),
                         function(){

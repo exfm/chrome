@@ -150,3 +150,14 @@ Tab.prototype.sendAuthDialog = function(serviceName){
         }
     );
 }
+
+// Tell tab feedback on service action
+Tab.prototype.sendServiceAction = function(success, message){
+    chrome.tabs.sendMessage(this.id,
+        {
+            "type": "serviceAction",
+            "success": success,
+            "message": message
+        }
+    );
+}
