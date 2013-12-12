@@ -64,12 +64,13 @@ ExtGA.prototype = {
      * @param string label Event Label (optional)
      * @param integer value Event Value (optional)
     */
-    event : function (category, action, label, value) {
+    event : function (category, action, label, value, nonInteraction) {
         payload = "&t=event";
         if (category) payload += "&ec="+escape(category);
         if (action) payload += "&ea="+escape(action);
         if (label) payload += "&el="+escape(label);
         if (value) payload += "&ev="+parseInt(value);
+        if (nonInteraction === true) payload += "&ni=1";
         this._collect(payload);
     },
 
@@ -163,6 +164,7 @@ ExtGA.prototype = {
         urlGa = "https://www.google-analytics.com/collect?v=1";
         urlGa +="&dh="+this.trackingDns;
         urlGa +="&tid="+this.trackingId;
+        urlGa +="&z="+Math.round(2147483647 * Math.random());
 
         urlGa += this._getUid();
         urlGa += this._getCid();
