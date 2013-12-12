@@ -45,6 +45,7 @@ Authorize.prototype.tabListener = function(tabId, obj, tab){
         this.oauthToken = OAuth.getParameter(results, "oauth_token");
         this.oauthVerifier = OAuth.getParameter(results, "oauth_verifier"),
         this.oauthVerifier = this.oauthVerifier.split('#_=_')[0];
+        this.highlightTab();
 		chrome.tabs.remove(tabId);
 		this.requestAccessToken();
 	}    
@@ -111,6 +112,7 @@ Authorize.prototype.oauth2TabListener = function(tabId, obj, tab){
             "accessToken" : accessToken
             }
         this.opts.callback(true, obj, this.opts.service);
+        this.highlightTab();
 		chrome.tabs.remove(tabId);
 	}
 }
@@ -138,6 +140,7 @@ Authorize.prototype.lastFMTabListener = function(tabId, obj, tab){
         chrome.tabs.onUpdated.removeListener(this.bindedTabListener);
 		var results = OAuth.decodeForm(tab.url);
 		var token = results[0][1];
+		this.highlightTab();
         chrome.tabs.remove(tabId);
         this.getLastFMSession(token);
 	}
@@ -173,6 +176,19 @@ Authorize.prototype.gotLastFMSession = function(responseJSON){
     }
 }
 
+
+// callback with failure
 Authorize.prototype.callbackError = function(){
     this.opts.callback(false);
+}
+
+// highlight this tab after we close other tabs
+Authorize.prototype.highlightTab = function(){
+    chrome.tabs.getCurrent(function(tab){
+	   chrome.tabs.update(tab.id, 
+	       {
+	           'highlighted': true
+	       }
+	   )
+	});
 }

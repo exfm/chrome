@@ -28,6 +28,12 @@ function Main(){
     this.addListeners();
     chrome.runtime.sendMessage(null,
         {
+            "type": 'getGA'
+        },
+        this.gotGA.bind(this)
+    );
+    chrome.runtime.sendMessage(null,
+        {
             "type": 'deepScan'
         }
     )
@@ -36,7 +42,7 @@ function Main(){
             "type": 'getDataUrl'
         },
         this.capturedTab.bind(this)
-    )
+    );
 }
 
 // cache elements
@@ -88,12 +94,15 @@ Main.prototype.addListeners = function(){
     });
     $('#play-pause').on('click', function(){
         this.playQueue.playPause();
+        main.ga.event('button', 'click', 'playPause', 1);
     }.bind(this));
     $('#prev').on('click', function(){
         this.playQueue.previous();
+        main.ga.event('button', 'click', 'previous', 1);
     }.bind(this));
     $('#next').on('click', function(){
         this.playQueue.next();
+        main.ga.event('button', 'click', 'next', 1);
     }.bind(this));
 
     // playlist click events
@@ -101,9 +110,12 @@ Main.prototype.addListeners = function(){
         var target = e.target;
         var index = $('.playlist-item').index($(target));
         this.playQueue.play(index);
+        main.ga.event('button', 'click', 'playlist item', 1);
     }.bind(this))
 
     $('.service-icon').on('click', this.onServiceIconClick.bind(this));
+    
+    $(document).on('keyup', this.onKeyup.bind(this));
 
 }
 
@@ -132,6 +144,7 @@ Main.prototype.songPlaying = function(e){
             }
         )
     }
+    main.ga.event('song', 'play', e.target.song.type, 1, true);
 }
 
 // song half way through
@@ -295,6 +308,7 @@ Main.prototype.updateCurrentServiceButtons = function(song){
     if(song.hasMeta === true){
         if(song.title && song.artist){
             $('#service-icon-rdio').addClass('show');
+            $('#service-icon-spotify').addClass('show');
         }
     }
 }
@@ -321,6 +335,7 @@ Main.prototype.gotId3 = function(queueNumber, tags){
         }
         if(tags.title && tags.artist){
             $('#service-icon-rdio').addClass('show');
+            $('#service-icon-spotify').addClass('show');
         }
     }
 }
@@ -426,9 +441,63 @@ Main.prototype.onServiceIconClick = function(e){
                 }
             )
         break;
+        case 'spotify':
+            chrome.runtime.sendMessage(null,
+                {
+                    "type": 'spotifyOpen',
+                    "title": song.title,
+                    "artist": song.artist,
+                    "album": song.album
+                }
+            )
+        break;
         default:
         break;
     }
+    main.ga.event('button', 'click', service, 1);
+}
+
+// keyboard shortcuts
+Main.prototype.onKeyup = function(e){
+    switch(e.keyCode){
+        case 32:
+            this.playQueue.playPause();
+            main.ga.event('keyboard', 'keyup', 'playPause', 1);
+        break;
+        case 37:
+            this.playQueue.previous();
+            main.ga.event('keyboard', 'keyup', 'previous', 1);
+        break;
+        case 38:
+            this.playQueue.previous();
+            main.ga.event('keyboard', 'keyup', 'previous', 1);
+        break;
+        case 39:
+            this.playQueue.next();
+            main.ga.event('keyboard', 'keyup', 'next', 1);
+        break;
+        case 40:
+            this.playQueue.next();
+            main.ga.event('keyboard', 'keyup', 'next', 1);
+        break;
+        case 77:
+            this.toggleMinimize();
+            main.ga.event('keyboard', 'keyup', 'toggleMinimize', 1);
+        break;
+        default:
+        break;
+    }
+}
+
+// Google Analytics
+Main.prototype.gotGA = function(account){
+    this.ga = new GoogleAnalytics(account);
+}
+
+// Service action feedback
+// eg. after clicking a button
+Main.prototype.serviceAction = function(success, message){
+    console.log('serviceAction', success, message);
 }
 
 var main;
