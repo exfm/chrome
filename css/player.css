@@ -323,6 +323,10 @@ html, body {
 .control.next:after { content: 'd'; }
 
 
+.first-song .control.prev,
+.last-song .control.next {
+    display: none;
+}
 
 .progress-back {
     position: absolute;

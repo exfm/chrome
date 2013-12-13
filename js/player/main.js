@@ -253,6 +253,7 @@ Main.prototype.updateArtwork = function(song, queueNumber) {
     var nextSong = this.playQueue.getList()[queueNumber + 1];
     var prevSong = this.playQueue.getList()[queueNumber - 1];
 
+    $('#artworks').removeClass('first-song last-song');
     if(nextSong !== undefined){
         nextArtwork = nextSong.artwork || '';
         $('#next-artwork-current').addClass('artwork-previous');
@@ -262,6 +263,8 @@ Main.prototype.updateArtwork = function(song, queueNumber) {
             )
             .removeClass('artwork-next')
             .addClass('artwork-current');
+    }else{
+        $('#artworks').addClass('last-song');
     }
     if(prevSong !== undefined){
         lastTransitionEl = $('#prev-artwork-next');
@@ -273,6 +276,8 @@ Main.prototype.updateArtwork = function(song, queueNumber) {
             )
             .removeClass('artwork-next')
             .addClass('artwork-current');
+    }else{
+        $('#artworks').addClass('first-song');
     }
 
     // reset artwork classes when last transition finishes
