@@ -130,16 +130,31 @@ Main.prototype.addListeners = function(){
         $('.service-icon').removeClass('active');
         serviceIcon.addClass('active');
 
+
         // get width of service options;
         var serviceOptionsEl = $('#service-hover-container').find('.'+serviceName);
         serviceOptionsEl.addClass('layout');
-        var w = serviceOptionsEl.outerWidth();
-        serviceOptionsEl.removeClass('layout');
-        $('#service-hover-container').css('width', w);
-        $('#service-hover').attr('class', 'service-hover show '+serviceName);
+        var width = serviceOptionsEl.outerWidth();
+        var hoverContainerCss = {
+            'width': width,
+            '-webkit-transform': ''
+        };
 
-        // position of service pointer
+        // position of service pointer (26 is half width of icon)
         var left = serviceIcon.position().left + 26;
+
+        // adjust width if pointer is too far right or left
+        if(left > width/2 + 250 - 5){
+            var diff = left - (width/2 + 250 - 5) + 15 >> 0;
+            hoverContainerCss['-webkit-transform'] = 'translate('+diff+'px, 5px)';
+        }else if(left < 250 - width/2){
+            var diff = left - (250 - width/2) - 10 >> 0;
+            hoverContainerCss['-webkit-transform'] = 'translate('+diff+'px, 5px)';
+        }
+
+        serviceOptionsEl.removeClass('layout');
+        $('#service-hover-container').css(hoverContainerCss);
+        $('#service-hover').attr('class', 'service-hover show '+serviceName);
 
         // if service links aren't already displayed
         if($('#services').hasClass('open') === false){
@@ -157,6 +172,7 @@ Main.prototype.addListeners = function(){
         $('#service-hover').removeClass('show');
         $('#services').removeClass('open');
         $('.service-icon').removeClass('active');
+        $('#service-hover-container').css('-webkit-transform', '');
     });
 
 
@@ -242,6 +258,7 @@ Main.prototype.updateArtwork = function(song, queueNumber) {
     var nextSong = this.playQueue.getList()[queueNumber + 1];
     var prevSong = this.playQueue.getList()[queueNumber - 1];
 
+    $('#artworks').removeClass('first-song last-song');
     if(nextSong !== undefined){
         nextArtwork = nextSong.artwork || '';
         $('#next-artwork-current').addClass('artwork-previous');
@@ -251,6 +268,8 @@ Main.prototype.updateArtwork = function(song, queueNumber) {
             )
             .removeClass('artwork-next')
             .addClass('artwork-current');
+    }else{
+        $('#artworks').addClass('last-song');
     }
     if(prevSong !== undefined){
         lastTransitionEl = $('#prev-artwork-next');
@@ -262,6 +281,8 @@ Main.prototype.updateArtwork = function(song, queueNumber) {
             )
             .removeClass('artwork-next')
             .addClass('artwork-current');
+    }else{
+        $('#artworks').addClass('first-song');
     }
 
     // reset artwork classes when last transition finishes
@@ -313,7 +334,7 @@ Main.prototype.resetArtwork = function(currentArtwork, prevArtwork, nextArtwork)
 // update playlist ui
 Main.prototype.updatePlaylistUI = function(queueNumber){
     $('.playlist-item').removeClass('selected');
-    $($('.playlist-item')[queueNumber]).addClass('selected');
+    $('.playlist-item').eq(queueNumber).addClass('selected');
 }
 
 // check if song needs metadata
@@ -392,6 +413,16 @@ Main.prototype.gotPlaylist = function(list){
         var clone = playlistItem.cloneNode(true);
         clone.querySelector('.playlist-item-song').innerText = song.title || 'Unknow Title';
         clone.querySelector('.playlist-item-artist').innerText = song.artist || '';
+
+        var services = song.type;
+        services += ' '+song.originalType;
+        if(song.hasMeta === true){
+            if(song.title && song.artist){
+                services += ' rdio spotify'
+            }
+        }
+
+        clone.querySelector('.playlist-item-services').className += ' ' + services;
         items.push(clone);
     }
     this.playlistEl.html(items);
