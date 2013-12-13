@@ -130,16 +130,27 @@ Main.prototype.addListeners = function(){
         $('.service-icon').removeClass('active');
         serviceIcon.addClass('active');
 
+
         // get width of service options;
         var serviceOptionsEl = $('#service-hover-container').find('.'+serviceName);
         serviceOptionsEl.addClass('layout');
         var w = serviceOptionsEl.outerWidth();
+
+        // position of service pointer (26 is half width of icon)
+        var left = serviceIcon.position().left + 26;
+
+        // adjust width if pointer is too far right
+        if(left > w/2 + 250 - 5){
+            var diff = left - (w/2 + 250 - 5) + 15 >> 0;
+            w += diff;
+        }
+
         serviceOptionsEl.removeClass('layout');
         $('#service-hover-container').css('width', w);
         $('#service-hover').attr('class', 'service-hover show '+serviceName);
 
-        // position of service pointer
-        var left = serviceIcon.position().left + 26;
+
+
 
         // if service links aren't already displayed
         if($('#services').hasClass('open') === false){

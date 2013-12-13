@@ -453,6 +453,7 @@ html, body {
     -webkit-transform: translateY(-100%);
     overflow: hidden;
     height: 30px;
+     text-align: left;
 }
 .open .service-hover-container {
     -webkit-transition:
