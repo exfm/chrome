@@ -102,17 +102,28 @@ html, body {
     margin-left: 20px;
     border-bottom: 1px solid rgba(0,0,0, 0.4);
     cursor: pointer;
+    position: relative;
 }
 .playlist-item:hover {
     background: rgba(0, 0, 0, 0.25);
     margin-left: 5px;
     padding-left: 15px;
+    z-index: 100;
 }
 .playlist-item.selected {
     background: #29a5ff;
     margin-left: 5px;
     padding-left: 15px;
     border-bottom-color: transparent;
+}
+
+.playlit-item-container {
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
+    padding: 2px 0;
+    pointer-events: none;
+}
+.playlist-item:hover .playlit-item-container {
+    -webkit-transform: translateY(-8px);
 }
 .playlist-item-song {
     font-size: 16px;
@@ -129,9 +140,79 @@ html, body {
     text-overflow: ellipsis;
     width: 300px;
     color: rgba(255,255,255,0.6);
-    line-height: 20px;
+    line-height: 16px;
     pointer-events: none;
 }
+
+
+.playlist-item:hover .playlist-service-hover-container {
+    -webkit-transform: translateY(0);
+}
+.playlist-item.selected .playlist-service-hover-container {
+    background: #0F578A;
+}
+.playlist-service-hover-container {
+    background: rgba(16, 19, 25, 0.98);
+    -webkit-transform: translateY(100%);
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
+    padding-left: 10px;
+}
+.playlist-item-services {
+    position: absolute;
+    height: 30px;
+    /* width: 100%; */
+    /* background: rgba(16, 19, 25, 0.5); */
+    left: 0px;
+    bottom: 0;
+    z-index: 100;
+    /*display: none;*/
+    overflow: hidden;
+    margin-left: -15px;
+    right: 0;
+    -webkit-transform: translateY(0);
+    -webkit-transition: -webkit-transform 0.1s cubic-bezier(0, 1, 0.71, 1);
+}
+.playlist-item:hover .playlist-item-services {
+    /*display: block;*/
+    -webkit-transform: translateY(12px);
+    /* -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1); */
+    /* left: 0; */
+    margin-left: 0;
+}
+.playlist-item.selected .playlist-item-services {
+    margin-left: 0;
+}
+
+
+.playlist-item .service-icon {
+    display: none;
+    font-family: services;
+    width: auto;
+    height: 30px;
+    font-size: 36px;
+    line-height: 30px;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0 4px;
+}
+.playlist-item .service-icon.tumblr {
+    font-size: 17px;
+}
+.playlist-item .service-icon.rdio {
+    font-size: 23px;
+}
+.playlist-item .service-icon.spotify {
+    font-size: 24px;
+}
+
+.playlist-item-services.tumblr .service-icon.tumblr,
+.playlist-item-services.soundcloud .service-icon.soundcloud,
+.playlist-item-services.bandcamp .service-icon.bandcamp,
+.playlist-item-services.rdio .service-icon.rdio,
+.playlist-item-services.spotify .service-icon.spotify {
+    display: inline-block;
+}
+
 .current-song {
     position: absolute;
     top: 50%;
@@ -139,9 +220,6 @@ html, body {
     right: 0;
     height: 520px;
     min-width: 600px;
-    /* left: 50%; */
-    /* margin-left: -400px; */
-    /* left: 330px; */
     margin-top: -260px;
     top: 0;
     bottom: 0;

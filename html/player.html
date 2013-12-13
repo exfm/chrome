@@ -79,10 +79,7 @@
 
                             </div>
                         </div>
-
                     </div>
-
-
                     <div class="current-song-ui">
                         <div class="progress-back" id="progress-back">
                             <div class="progress" id="progress"></div>
@@ -98,8 +95,19 @@
         </div>
         <template id="playlist-item-template">
             <div class="playlist-item">
-                <div class="playlist-item-song"></div>
-                <div class="playlist-item-artist"></div>
+                <div class="playlit-item-container">
+                    <div class="playlist-item-song"></div>
+                    <div class="playlist-item-artist"></div>
+                </div>
+                <div class="playlist-item-services">
+                    <div class="playlist-service-hover-container">
+                        <div class="service-icon tumblr" data-service="tumblr">t</div>
+                        <div class="service-icon soundcloud" data-service="soundcloud">s</div>
+                        <div class="service-icon bandcamp" data-service="bandcamp">b</div>
+                        <div class="service-icon rdio" data-service="rdio">r</div>
+                        <div class="service-icon spotify" data-service="spotify">S</div>
+                    </div>
+                </div>
             </div>
         </template>
         <script type="text/javascript" src="../js/libs/jquery-2.0.3.js"></script>
