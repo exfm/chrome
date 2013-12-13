@@ -134,23 +134,27 @@ Main.prototype.addListeners = function(){
         // get width of service options;
         var serviceOptionsEl = $('#service-hover-container').find('.'+serviceName);
         serviceOptionsEl.addClass('layout');
-        var w = serviceOptionsEl.outerWidth();
+        var width = serviceOptionsEl.outerWidth();
+        var hoverContainerCss = {
+            'width': width,
+            '-webkit-transform': ''
+        };
 
         // position of service pointer (26 is half width of icon)
         var left = serviceIcon.position().left + 26;
 
-        // adjust width if pointer is too far right
-        if(left > w/2 + 250 - 5){
-            var diff = left - (w/2 + 250 - 5) + 15 >> 0;
-            w += diff;
+        // adjust width if pointer is too far right or left
+        if(left > width/2 + 250 - 5){
+            var diff = left - (width/2 + 250 - 5) + 15 >> 0;
+            hoverContainerCss['-webkit-transform'] = 'translate('+diff+'px, 5px)';
+        }else if(left < 250 - width/2){
+            var diff = left - (250 - width/2) - 10 >> 0;
+            hoverContainerCss['-webkit-transform'] = 'translate('+diff+'px, 5px)';
         }
 
         serviceOptionsEl.removeClass('layout');
-        $('#service-hover-container').css('width', w);
+        $('#service-hover-container').css(hoverContainerCss);
         $('#service-hover').attr('class', 'service-hover show '+serviceName);
-
-
-
 
         // if service links aren't already displayed
         if($('#services').hasClass('open') === false){
@@ -168,6 +172,7 @@ Main.prototype.addListeners = function(){
         $('#service-hover').removeClass('show');
         $('#services').removeClass('open');
         $('.service-icon').removeClass('active');
+        $('#service-hover-container').css('-webkit-transform', '');
     });
 
 

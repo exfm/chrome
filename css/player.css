@@ -153,7 +153,7 @@ html, body {
 .artworks {
     position: absolute;
 
-    top: 35%;
+    top: 30%;
     height: 300px;
     width: 100%;
     left: 0;
@@ -322,11 +322,11 @@ html, body {
 .control.play-pause.paused:after { content: 'b'; }
 .control.next:after { content: 'd'; }
 
-
 .first-song .control.prev,
 .last-song .control.next {
     display: none;
 }
+
 
 .progress-back {
     position: absolute;
@@ -457,11 +457,11 @@ html, body {
     -webkit-transform: translateY(-100%);
     overflow: hidden;
     height: 30px;
-     text-align: left;
+    text-align: left;
 }
 .open .service-hover-container {
     -webkit-transition:
-        -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1),
+        -webkit-transform 0.1s cubic-bezier(0, 1, 0.8, 1),
         width 0.1s cubic-bezier(0, 1, 0.8, 1);
 }
 .service-hover.show .service-hover-container{
@@ -485,7 +485,7 @@ html, body {
 
 .open .service-hover.show .service-hover-pointer {
     opacity: 1;
-    -webkit-transition: -webkit-transform 0.1s ease-out;
+    -webkit-transition: -webkit-transform 0.1s cubic-bezier(0, 1, 0.8, 1);
 }
 
 .service-name {
