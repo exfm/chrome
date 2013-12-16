@@ -7,7 +7,7 @@ html, body {
 }
 @font-face {
     font-family: 'exfm-icons';
-    src:url('../fonts/ex-icons.ttf') format('truetype');
+    src:url('../fonts/extension-symbols.ttf') format('truetype');
 }
 @font-face {
     font-family:'services';
@@ -67,18 +67,38 @@ html, body {
     position: absolute;
     top: 15px;
     right: 15px;
-    height: 30px;
-    width: 30px;
-    border-radius: 50%;
-    background-color: white;
+    height: 32px;
+    width: 50px;
     line-height: 30px;
     text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: black;
+    font-size: 50px;
+    color: #fff;
     cursor: pointer;
+    font-family: exfm-icons;
     z-index: 500;
+    opacity: 0.75;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.25);
 }
+.minimize:hover {
+    opacity: 1;
+}
+.minimize-toggle-small,
+.minimize-toggle-big {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0.5;
+}
+.minimize:hover .minimize-toggle-small {
+    opacity: 1;
+}
+.minimized .minimize:hover .minimize-toggle-small {
+    opacity: 0.5;
+}
+.minimized .minimize:hover .minimize-toggle-big {
+    opacity: 1;
+}
+
 .left {
     position: absolute;
     top: 0;
@@ -396,10 +416,10 @@ html, body {
 .control {
     width: 240px;
     height: 240px;
-    line-height: 240px;
+    /* line-height: 240px; */
     text-align: center;
     cursor: pointer;
-    font-size: 60px;
+    /* font-size: 60px; */
     font-family: exfm-icons;
     position: absolute;
     left: 50%;
@@ -417,9 +437,35 @@ html, body {
     left: 75%;
 }
 
+.control:before {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -20px;
+    margin-top: -20px;
+    box-shadow: 0 0 0 2px;
+    background: rgba(0,0,0,0.4);
+}
+.control:after {
+    width: 50px;
+    height: 40px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -25px;
+    margin-top: -20px;
+    line-height: 37px;
+    text-align: center;
+    font-size: 51px;
+}
+
 .control.prev:after { content: 'a'; }
-.control.play-pause:after { content: 'c'; }
-.control.play-pause.paused:after { content: 'b'; }
+.control.play-pause:after { content: 'c'; font-size: 50px;}
+.control.play-pause.paused:after { content: 'b'; width: 50px; height: 40px; position: absolute; left: 50%; top: 50%; margin-left: -23px; margin-top: -20px; line-height: 40px; text-align: center; font-size: 50px;}
 .control.next:after { content: 'd'; }
 
 .first-song .control.prev,
