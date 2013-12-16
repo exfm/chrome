@@ -13,7 +13,7 @@ function Scan(){
         "hasSoundcloudEmbeds": false,
         "hasBandcampEmbeds": false
     }
-    if(this.tumblr() || 
+    if(this.tumblr() ||
        this.soundcloud() ||
        this.bandcamp() ||
        this.liveMusicArchive() ||
@@ -28,7 +28,7 @@ function Scan(){
 
 // send response to background script
 Scan.prototype.done = function(){
-    chrome.runtime.sendMessage(null, 
+    chrome.runtime.sendMessage(null,
         {
             'type': 'scanDone',
             'response': this.response
@@ -37,7 +37,7 @@ Scan.prototype.done = function(){
 }
 
 // Are we on a tumblr page?
-// 1. Look for .tumblr.com url 
+// 1. Look for .tumblr.com url
 // 2. Look for tumblr.com/dashboard
 // 3. Look for 'follow' iframe
 Scan.prototype.tumblr = function(){
@@ -64,7 +64,7 @@ Scan.prototype.tumblr = function(){
 }
 
 // Are we on a soundcloud page?
-// 1. Look for .soundcloud.com url 
+// 1. Look for .soundcloud.com url
 Scan.prototype.soundcloud = function(){
     if(location.href.indexOf('soundcloud.com') !== -1){
         this.response.isSoundcloud = true;
@@ -75,7 +75,7 @@ Scan.prototype.soundcloud = function(){
 }
 
 // Are we on a bandcamp page?
-// 1. Look for .bandcamp.com url  
+// 1. Look for .bandcamp.com url
 // 2. Look for .hidden-access
 Scan.prototype.bandcamp = function(){
     if(location.href.indexOf('bandcamp.com') !== -1){
@@ -94,7 +94,7 @@ Scan.prototype.bandcamp = function(){
 }
 
 // Are we on a Live Music Archive page?
-// 1. Look for .archive.org url  
+// 1. Look for .archive.org url
 Scan.prototype.liveMusicArchive = function(){
     if(location.href.indexOf('archive.org') !== -1){
         this.response.isLiveMusicArchive = true;
@@ -104,7 +104,7 @@ Scan.prototype.liveMusicArchive = function(){
     return false;
 }
 
-// Do we have .mp3 links on page?  
+// Do we have .mp3 links on page?
 Scan.prototype.mp3Links = function(){
     var anchors = document.getElementsByTagName("a");
     var len = anchors.length, i;
@@ -126,11 +126,11 @@ Scan.prototype.mp3Links = function(){
                 return true;
             }
         }
-    } 
+    }
     return false;
 }
 
-// Do we have soundcloud embeds on page?  
+// Do we have soundcloud embeds on page?
 Scan.prototype.soundcloudEmbeds = function(){
     var iframes = document.getElementsByTagName("iframe");
     var len = iframes.length, i;
@@ -143,11 +143,11 @@ Scan.prototype.soundcloudEmbeds = function(){
             this.response.showPageActionIcon = true;
             return true;
         }
-    } 
+    }
     return false;
 }
 
-// Do we have bandcamp embeds on page?  
+// Do we have bandcamp embeds on page?
 Scan.prototype.bandcampEmbeds = function(){
     var iframes = document.getElementsByTagName("iframe");
     var len = iframes.length, i;
@@ -160,11 +160,11 @@ Scan.prototype.bandcampEmbeds = function(){
             this.response.showPageActionIcon = true;
             return true;
         }
-    } 
+    }
     return false;
 }
 
-// Get a javascript variable 
+// Get a javascript variable
 // embedded on page
 Scan.prototype.getPageVar = function(varName){
     try{
@@ -235,7 +235,7 @@ Scan.prototype.getMp3Links = function(){
                 )
             }
         }
-    } 
+    }
     return list;
 }
 
@@ -251,7 +251,7 @@ Scan.prototype.getIframes = function(regex){
         if (src && playerRegex.test(src)){
             list.push(src);
         }
-    } 
+    }
     return list;
 }
 
@@ -271,11 +271,11 @@ Scan.prototype.fixRelativePath = function(str){
     return str;
 }
 
-// show confirm dialog 
+// show confirm dialog
 // if confirmed, open url
 Scan.prototype.confirmAuth = function(service, url){
     if(confirm('Please connect Exfm <-> ' + service + ' to continue')){
-        chrome.runtime.sendMessage(null, 
+        chrome.runtime.sendMessage(null,
             {
                 "type": 'openTab',
                 "url": url
@@ -300,9 +300,11 @@ Scan.prototype.insertPlayer = function(url){
 }
 
 // minimize the iframe player
-Scan.prototype.minimizePlayer = function(){
+Scan.prototype.minimizePlayer = function(width, height){
     if(this.container){
         this.container.classList.add('exfm-minimize');
+        this.container.style.width = width;
+        this.container.style.height = height;
         document.body.classList.remove('exfm-overlay');
     }
 }
@@ -311,6 +313,8 @@ Scan.prototype.minimizePlayer = function(){
 Scan.prototype.maximizePlayer = function(){
     if(this.container){
         this.container.classList.remove('exfm-minimize');
+        this.container.style.width = '';
+        this.container.style.height = '';
         document.body.classList.add('exfm-overlay');
     }
 }
@@ -337,7 +341,7 @@ function onMessage(e, sender, responseCallback){
             var mp3Links = scan.getMp3Links();;
             responseCallback(mp3Links);
         break;
-        case 'getIframes': 
+        case 'getIframes':
             var iframes = scan.getIframes();
             responseCallback(iframes);
         break;
@@ -345,7 +349,10 @@ function onMessage(e, sender, responseCallback){
             scan.confirmAuth(e.service, e.url);
         break;
         case 'minimizeEnd':
-            scan.minimizePlayer();
+            console.log('minimizeEnd', e);
+            var width = e.width || '300px';
+            var height = e.height || '300px';
+            scan.minimizePlayer(width, height);
         break;
         case 'maximizeEnd':
             scan.maximizePlayer();
