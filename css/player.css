@@ -13,6 +13,11 @@ html, body {
     font-family:'services';
     src:url('../fonts/services.ttf') format('truetype');
 }
+.clearfix:after {
+    clear: both;
+    display: table;
+    content: '';
+}
 .container {
     position: absolute;
     top: 0;
@@ -115,6 +120,14 @@ html, body {
     box-shadow: 3px 0 rgba(0, 0, 0, 0.25);
 }
 
+.right {
+    position: absolute;
+    top: 0;
+    left: 300px;
+    right: 0;
+    bottom: 0;
+}
+
 .playlist {
     position: absolute;
     top: 0;
@@ -128,48 +141,47 @@ html, body {
     padding: 56px 0 10px 0;
 }
 
-.right {
-    position: absolute;
-    top: 0;
-    left: 300px;
-    right: 0;
-    bottom: 0;
-}
+
 
 .playlist-item {
+    line-height: 18px;
+    cursor: pointer;
+    position: relative;
+}
+.playlist-item:hover {
+    z-index: 100;
+}
+.playlist-item.selected .playlist-item-container,
+.playlist-item.selected:hover .playlist-item-container {
+    background: #29a5ff;
+    margin-left: 10px;
+    padding-left: 10px;
+    border-bottom-color: transparent;
+    background: #101319;
+}
+
+.playlist-item-container {
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
     line-height: 18px;
     padding: 12px 0;
     margin-left: 20px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.4);
     cursor: pointer;
     position: relative;
-}
-.playlist-item:hover {
-    background: rgba(0, 0, 0, 0.25);
-    margin-left: 5px;
-    padding-left: 15px;
-    z-index: 100;
-}
-.playlist-item.selected {
-    background: #29a5ff;
-    margin-left: 5px;
-    padding-left: 15px;
-    border-bottom-color: transparent;
-}
-
-.playlit-item-container {
-    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
-    padding: 2px 0;
     pointer-events: none;
+    min-height: 32px;
 }
-.playlist-item:hover .playlit-item-container {
-    -webkit-transform: translateY(-8px);
+.playlist-item:hover .playlist-item-container {
+    background: #181C25;
+    margin-left: 10px;
+    padding-left: 10px;
+    box-shadow: 0 -1px hsl(222, 21%, 8%);
 }
 .playlist-item-song {
     font-size: 16px;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 22px;
+    line-height: 24px;
     font-weight: bold;
     pointer-events: none;
 }
@@ -180,43 +192,46 @@ html, body {
     text-overflow: ellipsis;
     width: 300px;
     color: rgba(255,255,255,0.6);
-    line-height: 16px;
+    line-height: 18px;
     pointer-events: none;
 }
 
 
 .playlist-item:hover .playlist-service-hover-container {
     -webkit-transform: translateY(0);
+    opacity: 1;
+    background: rgba(24, 28, 37, 0.8);
+    padding-left: 8px;
 }
-.playlist-item.selected .playlist-service-hover-container {
+.playlist-item.selected .playlist-service-hover-container,
+.playlist-item.selected:hover .playlist-service-hover-container {
     background: #0F578A;
+    -webkit-transform: translateY(0);
+    opacity: 1;
+    background: rgba(24, 28, 37, 0.8);
+    padding-left: 8px;
+    background: #101319;
 }
 .playlist-service-hover-container {
-    background: rgba(16, 19, 25, 0.98);
-    -webkit-transform: translateY(100%);
-    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
-    padding-left: 10px;
+    -webkit-transform: translateY(20%);
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1), opacity 0.2s linear;
+    opacity: 0;
 }
 .playlist-item-services {
     position: absolute;
-    height: 30px;
-    left: 0px;
+    height: 28px;
     bottom: 0;
     z-index: 100;
-    /*display: none;*/
     overflow: hidden;
-    margin-left: -15px;
     right: 0;
     -webkit-transform: translateY(0);
     -webkit-transition: -webkit-transform 0.1s cubic-bezier(0, 1, 0.71, 1);
 }
 .playlist-item:hover .playlist-item-services {
-    /*display: block;*/
-    -webkit-transform: translateY(12px);
-    margin-left: 0;
+
 }
 .playlist-item.selected .playlist-item-services {
-    margin-left: 0;
+
 }
 
 
@@ -224,21 +239,21 @@ html, body {
     display: none;
     font-family: services;
     width: auto;
-    height: 30px;
-    font-size: 36px;
-    line-height: 30px;
+    height: 25px;
+    font-size: 30px;
+    line-height: 25px;
     border-radius: 0;
     box-shadow: none;
-    margin: 0 4px;
+    margin: 0 3px;
 }
 .playlist-item .service-icon.tumblr {
-    font-size: 17px;
+    font-size: 16px;
 }
 .playlist-item .service-icon.rdio {
-    font-size: 23px;
+    font-size: 20px;
 }
 .playlist-item .service-icon.spotify {
-    font-size: 24px;
+    font-size: 22px;
 }
 
 .playlist-item-services.tumblr .service-icon.tumblr,
@@ -246,7 +261,8 @@ html, body {
 .playlist-item-services.bandcamp .service-icon.bandcamp,
 .playlist-item-services.rdio .service-icon.rdio,
 .playlist-item-services.spotify .service-icon.spotify {
-    display: inline-block;
+    float: right;
+    display: block;
 }
 
 .current-song {
@@ -339,23 +355,6 @@ html, body {
     margin-left: -150px;
 }
 
-
-.artwork:before {
-    /*width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.2);
-    content: '';
-    display: block;
-    -webkit-filter: blur(4px);
-    -webkit-transform-origin: 50% 50%;
-    position: relative;*/
-}
-.show .artwork {
-
-}
-.show .artwork:before {
-
-}
 .current-song-info {
     line-height: 15px;
     overflow: hidden;
@@ -384,9 +383,7 @@ html, body {
     text-overflow: ellipsis;
     overflow: hidden;
 }
-.artist {
 
-}
 .album {
     font-style: italic;
 }
@@ -456,7 +453,7 @@ html, body {
 
 .control.prev:after { content: 'a'; }
 .control.play-pause:after { content: 'c'; font-size: 50px;}
-.control.play-pause.paused:after { content: 'b'; width: 50px; height: 40px; position: absolute; left: 50%; top: 50%; margin-left: -23px; margin-top: -20px; line-height: 40px; text-align: center; font-size: 50px;}
+.control.play-pause.paused:after { content: 'b'; margin-left: -23px; font-size: 50px;}
 .control.next:after { content: 'd'; }
 
 .first-song .control.prev,
@@ -485,7 +482,6 @@ html, body {
     width: 100%;
     background: #0DA6F2;
     -webkit-transform: translateX(-101%);
-    /* -webkit-transition: -webkit-transform 0.1s; */
 }
 .current-time {
     position: absolute;
@@ -657,7 +653,6 @@ html, body {
 .service-link {
     padding: 0 8px;
     display: inline-block;
-    /* box-shadow: 1px 0 rgba(255, 255, 255, 0.3); */
     -webkit-user-select: none;
     cursor: pointer;
     -webkit-transform: translateY(-100%);
