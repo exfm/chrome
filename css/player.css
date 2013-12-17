@@ -398,6 +398,18 @@ html, body {
 .album {
     font-style: italic;
 }
+
+/*.resize-handle {
+    width: 20px;
+    height: 20px;
+    cursor: sw-resize;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: red;
+    z-index: 10000;
+}*/
+
 .current-song-ui {
     position: absolute;
     left: 50%;

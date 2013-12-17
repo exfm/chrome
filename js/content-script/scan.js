@@ -349,7 +349,6 @@ function onMessage(e, sender, responseCallback){
             scan.confirmAuth(e.service, e.url);
         break;
         case 'minimizeEnd':
-            console.log('minimizeEnd', e);
             var width = e.width || '300px';
             var height = e.height || '300px';
             scan.minimizePlayer(width, height);
