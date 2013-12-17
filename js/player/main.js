@@ -646,6 +646,42 @@ Main.prototype.serviceAction = function(success, message, action, network){
     }
 }
 
+// Clean url for display
+Main.prototype.cleanUrl = function(href){
+    var r = href;
+    if (href){
+        if(href === 'null' || href === 'undefined' || href === 'None'){
+            return '';
+        }
+        if (href.indexOf('http://') !== -1){
+            r = href.replace("http://", "");
+        }
+        if (href.indexOf('https://') !== -1){
+            r = href.replace("https://", "");
+        }
+        var withLastSlash = r;
+        var i = r.indexOf("/");
+        if (i !== -1 && i !== 0){
+            r = r.substr(0, i);
+
+        }
+        var www = r.indexOf('www.');
+        if (www !== -1 && www === 0){
+            r = r.substr(4);
+            withLastSlash = withLastSlash.substr(4);
+        }
+        r = r.replace(".tumblr.com", "");
+        r = r.replace("tumblr.com", "");
+        if (withLastSlash.indexOf("soundcloud.com") !== -1){
+            var scSplits = withLastSlash.split("/");
+            return scSplits[0]+"/"+scSplits[1];
+        }
+        return r;
+    } else {
+        return '';
+    }
+};
+
 var main;
 $(document).ready(
     function(){
