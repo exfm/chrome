@@ -574,14 +574,27 @@ html, body {
 
 .service-hover-group {
     display: none;
-    background: #29A5FF;
     white-space: nowrap;
+    -webkit-transform: translateY(-100%);
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
 }
+.open .service-hover-group {
+    -webkit-transition: none;
+}
+
 .service-hover-group.layout {
     display: block;
     position: absolute;
     visibility: hidden;
     white-space: nowrap;
+}
+
+.show.tumblr .service-hover-group.tumblr,
+.show.soundcloud .service-hover-group.soundcloud,
+.show.bandcamp .service-hover-group.bandcamp,
+.show.rdio .service-hover-group.rdio,
+.show.spotify .service-hover-group.spotify{
+    -webkit-transform: translateY(0);
 }
 
 .service-hover.tumblr .service-hover-group.tumblr,
@@ -597,7 +610,6 @@ html, body {
 .service-hover-container {
      display: inline-block;
     -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
-    -webkit-transform: translateY(-100%);
     overflow: hidden;
     height: 30px;
     text-align: left;
@@ -609,6 +621,7 @@ html, body {
 }
 .service-hover.show .service-hover-container{
     -webkit-transform: translateY(5px);
+    box-shadow: 0 -1px rgba(255,255,255,0.3);
 }
 
 
@@ -616,9 +629,9 @@ html, body {
     width: 0px;
     height: 0px;
     position: absolute;
-    top: -5px;
-    border: 5px solid rgba(0, 0, 0, 0);
-    border-bottom-color: #29A5FF;
+    top: -4px;
+    border: 4px solid rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(255,255,255,0.25);
     left: 0;
     margin-left: -2px;
     opacity: 0;
@@ -634,7 +647,6 @@ html, body {
 .service-name {
     display: inline-block;
     padding: 0 8px;
-    background: rgba(0,0,0,0.1);
 }
 .service-links {
     display: inline-block;
@@ -645,7 +657,7 @@ html, body {
 .service-link {
     padding: 0 8px;
     display: inline-block;
-    box-shadow: 1px 0 rgba(255, 255, 255, 0.3);
+    /* box-shadow: 1px 0 rgba(255, 255, 255, 0.3); */
     -webkit-user-select: none;
     cursor: pointer;
     -webkit-transform: translateY(-100%);
