@@ -143,8 +143,6 @@ html, body {
     border-bottom: 1px solid rgba(0, 0, 0, 0.4);
     cursor: pointer;
     position: relative;
-    /* background: rgba(29, 35, 47, 0.9); */
-    /* margin-bottom: 1px; */
 }
 .playlist-item:hover {
     background: rgba(0, 0, 0, 0.25);
@@ -202,8 +200,6 @@ html, body {
 .playlist-item-services {
     position: absolute;
     height: 30px;
-    /* width: 100%; */
-    /* background: rgba(16, 19, 25, 0.5); */
     left: 0px;
     bottom: 0;
     z-index: 100;
@@ -217,8 +213,6 @@ html, body {
 .playlist-item:hover .playlist-item-services {
     /*display: block;*/
     -webkit-transform: translateY(12px);
-    /* -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1); */
-    /* left: 0; */
     margin-left: 0;
 }
 .playlist-item.selected .playlist-item-services {
@@ -284,8 +278,6 @@ html, body {
     width: 300px;
     height: 300px;
     background-color: rgba(0,0,0, 0.1);
-    /* float: left; */
-    /* margin-right: 30px; */
     position: absolute;
     overflow: hidden;
     left: 50%;
@@ -399,17 +391,6 @@ html, body {
     font-style: italic;
 }
 
-/*.resize-handle {
-    width: 20px;
-    height: 20px;
-    cursor: sw-resize;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    background: red;
-    z-index: 10000;
-}*/
-
 .current-song-ui {
     position: absolute;
     left: 50%;
@@ -428,10 +409,8 @@ html, body {
 .control {
     width: 240px;
     height: 240px;
-    /* line-height: 240px; */
     text-align: center;
     cursor: pointer;
-    /* font-size: 60px; */
     font-family: exfm-icons;
     position: absolute;
     left: 50%;
@@ -495,6 +474,7 @@ html, body {
     background: rgba(255,255,255, 0.1);
     border-radius: 1px;
     overflow: hidden;
+    cursor: pointer;
 }
 .progress {
     position: absolute;
@@ -505,6 +485,7 @@ html, body {
     width: 100%;
     background: #0DA6F2;
     -webkit-transform: translateX(-101%);
+    /* -webkit-transition: -webkit-transform 0.1s; */
 }
 .current-time {
     position: absolute;
@@ -522,8 +503,6 @@ html, body {
 }
 .time-duration {
     position: absolute;
-    /* right: 0; */
-    /* text-align: right; */
     left: 100%;
     margin-left: -25px;
 }
@@ -586,7 +565,6 @@ html, body {
     height: 35px;
     line-height: 30px;
     position: absolute;
-    /* width: 100%; */
     overflow: hidden;
     bottom: 30px;
     font-weight: bold;
@@ -707,11 +685,12 @@ html, body {
 // ================================================== */
 
 .container.minimized {
-    /* width: 300px; */
-    /* width: 250px; */
     width: 100%;
 }
-
+.minimized .minimize {
+    top: 5px;
+    right: 0;
+}
 .minimized .left,
 .minimized .captured-tab {
     display: none;
@@ -725,6 +704,29 @@ html, body {
     min-height: 0;
     margin: 0;
 }
+/* Vignette */
+.minimized .current-song:after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: block;
+    background: #000;
+    content: '';
+    z-index: 99;
+    background: radial-gradient(125% 60% at 50% 50%,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0) 60%,
+        rgba(0, 0, 0, 0.65) 125%);
+    opacity: 0;
+    -webkit-transition: opacity 0.5s;
+    pointer-events: none;
+}
+.minimized:hover .current-song:after {
+    opacity: 1;
+}
+
 .minimized .artworks {
     top: 0;
     margin: 0;
@@ -739,9 +741,10 @@ html, body {
     left: 0;
     height: 105px;
     -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
-     padding: 0 10px;
-    /* margin: 0 -20px 0 0; */
+
+    padding: 0 10px;
     right: 0;
+    /* opacity: 0.5; */
 }
 
 .minimized .now-playing {
@@ -749,32 +752,35 @@ html, body {
 }
 
 .minimized .song-title {
-    font-size: 18px;
+    font-size: 16px;
+    line-height: 30px;
+    margin-top: 6px;
 }
 
 .minimized .current-song-ui {
     left: 0;
     width: 100%;
     margin: 0;
-    top: 0;
+    top: 0px;
     bottom: auto;
     z-index: 100;
-    height: 3px;
+    height: 6px;
     -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
 }
 .minimized .current-time {
     display: none;
 }
 .minimized .progress-back {
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 3px;
+    left: 1px;
+    right: 1px;
+    top: 0px;
+    height: 6px;
     background: rgba(0,0,0,.4);
 }
 .minimized .progress {
-    height: 100%;
+    height: 4px;
     border-radius: 0;
+    top: 1px;
 }
 
 .minimized .control {
@@ -785,6 +791,15 @@ html, body {
     margin-left: -50px;
     margin-top: -50px;
     top: 40%;
+    opacity: 0;
+    -webkit-transition: opacity 0.2s;
+}
+
+.minimized:hover .control{
+    opacity: 0.5;
+}
+.minimized:hover .control:hover {
+    opacity: 1;
 }
 .minimized .control.prev {
     left: 0;
@@ -797,11 +812,15 @@ html, body {
     margin-left: 0;
 }
 
+
 .minimized .artwork {
-    height: 215px;
+    height: 294px;
     z-index: 20;
     box-shadow: none;
-    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
+    /* -webkit-transition: height 0.1s cubic-bezier(0, 1, 0.71, 1); */
+}
+.minimized:hover .artwork {
+    height: 195px;
 }
 .blurred-artwork-container {
     display: none;
@@ -819,11 +838,10 @@ html, body {
 }
 
 .blurred-artwork-container .artwork-item{
-     /* -webkit-filter: blur(12px); */
      background-repeat: repeat;
-     /* -webkit-transform: scale(1.1); */
      width: 300px; height: 300px;
-     /* background-repeat: no-repeat; */ background-size: cover; position: absolute;
+     background-size: cover;
+     position: absolute;
      -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1) 0.05s;
 }
 
@@ -849,7 +867,6 @@ html, body {
     background: rgba(0, 0, 0, 0.35);
     height: 44px;
     -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
-    /* -webkit-transform: translateY(14px); */
     height: 40px;
     line-height: 40px;
 }
@@ -908,19 +925,19 @@ html, body {
     height: 40px;
     line-height: 40px;*/
 }
-.minimized .current-song.hover .artwork {
-    -webkit-transform: translateY(-20px);
-}
 
-.minimized .current-song-info-container:hover {
-    -webkit-transform: translateY(-20px);
+
+.minimized:hover .current-song-info-container {
+    -webkit-transform: translateY(20px);
+    bottom: 20px;
 }
 .minimized .current-song-info-container {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: -20px;
+    bottom: -40px;
     height: 105px;
     -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
     z-index: 100;
+    -webkit-transform: translateY(59px);
 }
