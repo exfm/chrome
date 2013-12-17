@@ -58,7 +58,7 @@ Main.prototype.cacheElements = function(){
 
     // service elements
     this.services = $('#services');
-    this.serviceIcons = this.services.find('.service-icon');
+    this.serviceIcons = this.services.find('.js-service-icon');
     this.serviceHover = $('#service-hover');
     this.serviceHoverPointer = $('#service-hover-pointer');
     this.serviceHoverContainer = $('#service-hover-container');
@@ -120,13 +120,13 @@ Main.prototype.addListeners = function(){
         this.ga.event('button', 'click', 'playlist item', 1);
     }.bind(this))
 
-    $('.service-icon').on('click', this.onServiceIconClick.bind(this));
+    $('.js-service-link').on('click', this.onServiceIconClick.bind(this));
 
     $(document).on('keyup', this.onKeyup.bind(this));
 
     // add hover events for service icons
     this.serviceIcons.on('mouseover', this.serviceIconHover.bind(this));
-    $('#services').on('mouseleave', this.servicesMouseLeave.bind(this));
+    this.services.on('mouseleave', this.servicesMouseLeave.bind(this));
 
     // hover events for minimized state
     $('.current-song-info-container').on('mouseover', function(e){
@@ -513,36 +513,47 @@ Main.prototype.capturedTab = function(dataUrl) {
 };
 
 Main.prototype.onServiceIconClick = function(e){
-    $(e.target).addClass('selected');
-    var service = e.target.dataset.service;
+    var service = e.target.parentNode.dataset.service;
     var song = this.playQueue.getSong();
-    console.log(service, song);
     switch(service){
         case 'tumblr':
-            chrome.runtime.sendMessage(null,
-                {
-                    "type": 'tumblrLike',
-                    "id": song.serviceId,
-                    "reblogKey": song.reblogKey
-                }
-            )
-        break;
-        case 'soundcloud':
-            if(song.type === 'soundcloud'){
+            var action = e.target.dataset.action;
+            console.log(service, song, action);
+            if(action === 'view'){
+                window.open(song.link);     
+            }
+            if(action === 'like'){
                 chrome.runtime.sendMessage(null,
                     {
-                        "type": 'soundcloudFavorite',
-                        "id": song.serviceId
+                        "type": 'tumblrLike',
+                        "id": song.serviceId,
+                        "reblogKey": song.reblogKey
                     }
                 )
             }
-            if(song.type === 'tumblr'){
-                chrome.runtime.sendMessage(null,
-                    {
-                        "type": 'soundcloudResolveThenFavorite',
-                        "url": song.originalSource
-                    }
-                )
+        break;
+        case 'soundcloud':
+            var action = e.target.dataset.action;
+            if(action === 'view'){
+                window.open(song.originalSource);     
+            }
+            if(action === 'like'){
+                if(song.type === 'soundcloud'){
+                    chrome.runtime.sendMessage(null,
+                        {
+                            "type": 'soundcloudFavorite',
+                            "id": song.serviceId
+                        }
+                    )
+                }
+                if(song.type === 'tumblr'){
+                    chrome.runtime.sendMessage(null,
+                        {
+                            "type": 'soundcloudResolveThenFavorite',
+                            "url": song.originalSource
+                        }
+                    )
+                }
             }
         break;
         case 'rdio':

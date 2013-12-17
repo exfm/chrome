@@ -53,43 +53,45 @@
                         </div>
 
                         <div id="services" class="services">
-                            <div class="service-icon tumblr" data-service="tumblr" id="service-icon-tumblr">t</div>
-                            <div class="service-icon soundcloud" data-service="soundcloud" id="service-icon-soundcloud">s</div>
-                            <div class="service-icon bandcamp" data-service="bandcamp" id="service-icon-bandcamp">b</div>
-                            <div class="service-icon rdio" data-service="rdio" id="service-icon-rdio">r</div>
-                            <div class="service-icon spotify" data-service="spotify" id="service-icon-spotify">S</div>
+                            <div class="service-icon js-service-icon tumblr" data-service="tumblr" id="service-icon-tumblr">t</div>
+                            <div class="service-icon js-service-icon soundcloud" data-service="soundcloud" id="service-icon-soundcloud">s</div>
+                            <div class="service-icon js-service-icon bandcamp" data-service="bandcamp" id="service-icon-bandcamp">b</div>
+                            <div class="service-icon js-service-icon rdio" data-service="rdio" id="service-icon-rdio">r</div>
+                            <div class="service-icon js-service-icon spotify" data-service="spotify" id="service-icon-spotify">S</div>
 
                             <div id="service-hover" class="service-hover">
                                 <div id="service-hover-pointer" class="service-hover-pointer"></div>
                                 <div id="service-hover-container" class="service-hover-container">
                                     <div class="service-hover-group tumblr">
                                         <div class="service-name">Tumblr</div>
-                                        <div class="service-links">
-                                            <span class="service-link">View Post</span><span class="service-link">Like Post</span>
+                                        <div class="service-links" data-service="tumblr">
+                                            <span class="service-link js-service-link" data-action="view">View Post</span>
+                                            <span class="service-link js-service-link" data-action="like">Like Post</span>
                                         </div>
                                     </div>
                                     <div class="service-hover-group soundcloud">
                                         <div class="service-name">Soundcloud</div>
-                                        <div class="service-links">
-                                            <span class="service-link">View Song</span><span class="service-link">Like Song</span>
+                                        <div class="service-links" data-service="soundcloud">
+                                            <span class="service-link js-service-link" data-action="view">View Song</span>
+                                            <span class="service-link js-service-link" data-action="like">Like Song</span>
                                         </div>
                                     </div>
                                     <div class="service-hover-group bandcamp">
                                         <div class="service-name">Bandcamp</div>
-                                        <div class="service-links">
-                                            <span class="service-link">Buy Song</span>
+                                        <div class="service-links" data-service="bandcamp">
+                                            <span class="service-link js-service-link">Buy Song</span>
                                         </div>
                                     </div>
                                     <div class="service-hover-group rdio">
                                         <div class="service-name">Rdio</div>
-                                        <div class="service-links">
-                                            <span class="service-link">Save to Playlist</span>
+                                        <div class="service-links" data-service="rdio">
+                                            <span class="service-link js-service-link">Save to Playlist</span>
                                         </div>
                                     </div>
                                     <div class="service-hover-group spotify">
                                         <div class="service-name">Spotify</div>
-                                        <div class="service-links">
-                                            <span class="service-link">Open in Spotify</span>
+                                        <div class="service-links" data-service="spotify">
+                                            <span class="service-link js-service-link">Open in Spotify</span>
                                         </div>
                                     </div>
 
