@@ -57,6 +57,9 @@ Main.prototype.cacheElements = function(){
     this.playlistEl = $('#playlist');
 
     // service elements
+    this.services = $('#services');
+    this.serviceIcons = this.services.find('.service-icon');
+    this.serviceHover = $('#service-hover');
     this.serviceHoverPointer = $('#service-hover-pointer');
     this.serviceHoverContainer = $('#service-hover-container');
 }
@@ -122,17 +125,31 @@ Main.prototype.addListeners = function(){
     $(document).on('keyup', this.onKeyup.bind(this));
 
     // add hover events for service icons
-    $('.service-icon').on('mouseover', function(e){
-        var serviceIcon = $(this);
-        var serviceName = serviceIcon.data('service');
+    this.serviceIcons.on('mouseover', this.serviceIconHover.bind(this));
+    $('#services').on('mouseleave', this.servicesMouseLeave.bind(this));
 
-        // make current icon active
-        $('.service-icon').removeClass('active');
-        serviceIcon.addClass('active');
+    // hover events for minimized state
+    $('.current-song-info-container').on('mouseover', function(e){
+        if($('#container').hasClass('minimized') === true){
+            $('.current-song').addClass('hover');
+        }
+    })
+    .on('mouseleave', function(){
+        $('.current-song').removeClass('hover');
+    });
+}
 
+Main.prototype.serviceIconHover = function(e){
+    var serviceIcon = $(e.target);
+    var serviceName = serviceIcon.data('service');
 
-        // get width of service options;
-        var serviceOptionsEl = $('#service-hover-container').find('.'+serviceName);
+    // make current icon active
+    this.serviceIcons.removeClass('active');
+    serviceIcon.addClass('active');
+
+    // get width of service options if not minimized
+    var serviceOptionsEl = $('#service-hover-container').find('.'+serviceName);
+    if(this.containerEl.hasClass('minimized') !== true){
         serviceOptionsEl.addClass('layout');
         var width = serviceOptionsEl.outerWidth();
         var hoverContainerCss = {
@@ -140,8 +157,9 @@ Main.prototype.addListeners = function(){
             '-webkit-transform': ''
         };
 
-        // position of service pointer (26 is half width of icon)
-        var left = serviceIcon.position().left + 26;
+        // position of service pointer (26 is half width of icon);
+        var halfIconWidth = 26;
+        var left = serviceIcon.position().left + halfIconWidth;
 
         // adjust width if pointer is too far right or left
         if(left > width/2 + 250 - 5){
@@ -153,29 +171,29 @@ Main.prototype.addListeners = function(){
         }
 
         serviceOptionsEl.removeClass('layout');
-        $('#service-hover-container').css(hoverContainerCss);
-        $('#service-hover').attr('class', 'service-hover show '+serviceName);
+        this.serviceHoverContainer.css(hoverContainerCss);
+    }
 
-        // if service links aren't already displayed
-        if($('#services').hasClass('open') === false){
-            // move pointer to correct position before open
-            $('#service-hover-pointer').css('-webkit-transform', 'translate('+left+'px, 5px)');
-            $('#service-hover-container').one('webkitTransitionEnd', function(){
-                $('#services').addClass('open');
-                $('#service-hover-pointer').css('-webkit-transform', 'translateX('+left+'px)');
-            });
-        }else{
-            $('#service-hover-pointer').css('-webkit-transform', 'translateX('+left+'px)');
-        }
-    });
-    $('#services').on('mouseleave', function(){
-        $('#service-hover').removeClass('show');
-        $('#services').removeClass('open');
-        $('.service-icon').removeClass('active');
-        $('#service-hover-container').css('-webkit-transform', '');
-    });
+    this.serviceHover.attr('class', 'service-hover show '+serviceName);
 
+    // if service links aren't already displayed
+    if(this.services.hasClass('open') === false){
+        // move pointer to correct position before open
+        this.serviceHoverPointer.css('-webkit-transform', 'translate('+left+'px, 5px)');
+        this.serviceHoverContainer.one('webkitTransitionEnd', function(){
+            this.services.addClass('open');
+            this.serviceHoverPointer.css('-webkit-transform', 'translateX('+left+'px)');
+        }.bind(this));
+    }else{
+        this.serviceHoverPointer.css('-webkit-transform', 'translateX('+left+'px)');
+    }
+}
 
+Main.prototype.servicesMouseLeave = function(e){
+    this.serviceHover.removeClass('show');
+    this.services.removeClass('open');
+    this.serviceIcons.removeClass('active');
+    this.serviceHoverContainer.css('-webkit-transform', '');
 }
 
 Main.prototype.toggleControlState = function(e) {
@@ -254,6 +272,16 @@ Main.prototype.updateArtwork = function(song, queueNumber) {
         .addClass('artwork-current');
     this.currentSongArtworkEl.addClass('artwork-previous');
 
+    // if(this.containerEl.hasClass('minimized')){
+        $('#blurred-artwork-next').css(
+                'background-image',
+                'url(' + currentArtwork + ')'
+            )
+            .removeClass('artwork-next')
+            .addClass('artwork-current');
+        $('#blurred-artwork-current').addClass('artwork-previous');
+    // }
+
     // next & previous artwork
     var nextSong = this.playQueue.getList()[queueNumber + 1];
     var prevSong = this.playQueue.getList()[queueNumber - 1];
@@ -272,7 +300,9 @@ Main.prototype.updateArtwork = function(song, queueNumber) {
         $('#artworks').addClass('last-song');
     }
     if(prevSong !== undefined){
-        lastTransitionEl = $('#prev-artwork-next');
+            if(this.containerEl.hasClass('minimized') !== true){
+                lastTransitionEl = $('#prev-artwork-next');
+            }
         prevArtwork = prevSong.artwork || '';
         $('#prev-artwork-current').addClass('artwork-previous');
         $('#prev-artwork-next').css(
@@ -284,6 +314,7 @@ Main.prototype.updateArtwork = function(song, queueNumber) {
     }else{
         $('#artworks').addClass('first-song');
     }
+
 
     // reset artwork classes when last transition finishes
     lastTransitionEl.one('webkitTransitionEnd', this.resetArtwork.bind(this, currentArtwork, prevArtwork, nextArtwork));
@@ -304,6 +335,20 @@ Main.prototype.resetArtwork = function(currentArtwork, prevArtwork, nextArtwork)
     this.nextSongArtworkEl
         .removeClass('artwork-current')
         .addClass('artwork-next');
+
+    if(this.containerEl.hasClass('minimized')){
+        console.log('reset blurred')
+        $('#blurred-artwork-current').css(
+                'background-image',
+                'url(' + currentArtwork + ')'
+            )
+            .removeClass('artwork-previous')
+            .addClass('artwork-current');
+        $('#blurred-artwork-next')
+            .removeClass('artwork-current')
+            .addClass('artwork-next');
+    }
+
 
     // reset next artwork element
     $('#next-artwork-current').css(
@@ -434,26 +479,20 @@ Main.prototype.gotPlaylist = function(list){
 // Toggle minimize state
 Main.prototype.toggleMinimize = function(){
     if(this.containerEl.hasClass('minimized')){
-        this.containerEl
-            .one('webkitTransitionEnd', function(e){
-                chrome.runtime.sendMessage(null,
-                    {
-                        "type": 'maximizeEnd'
-                    }
-                )
-            }.bind(this))
-            .removeClass('minimized');
+        this.containerEl.removeClass('minimized');
+        chrome.runtime.sendMessage(null,
+            {
+                "type": 'maximizeEnd'
+            }
+        );
     }
     else{
-        this.containerEl
-            .one('webkitTransitionEnd', function(e){
-                chrome.runtime.sendMessage(null,
-                    {
-                        "type": 'minimizeEnd'
-                    }
-                )
-            }.bind(this))
-            .addClass('minimized');
+        this.containerEl.addClass('minimized');
+        chrome.runtime.sendMessage(null,
+            {
+                "type": 'minimizeEnd'
+            }
+        );
     }
 }
 

@@ -7,7 +7,7 @@ html, body {
 }
 @font-face {
     font-family: 'exfm-icons';
-    src:url('../fonts/ex-icons.ttf') format('truetype');
+    src:url('../fonts/extension-symbols.ttf') format('truetype');
 }
 @font-face {
     font-family:'services';
@@ -25,9 +25,7 @@ html, body {
     -webkit-perspective: 1500px;
     visibility: hidden;
 }
-.container.minimized {
-    -webkit-transform: scale(.2);
-}
+
 
 .captured-tab {
     position: absolute;
@@ -44,10 +42,19 @@ html, body {
     visibility: visible;
 }
 
-.show .playlist {
+.show .left {
     -webkit-transform: translate3d(0, 0, 0);
 }
 
+.exfm-header {
+    height: 56px;
+    width: 300px;
+    background: rgba(29, 35, 47, 0.96);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 200;
+}
 
 
 .show .captured-tab {
@@ -60,25 +67,44 @@ html, body {
     position: absolute;
     top: 15px;
     right: 15px;
-    height: 30px;
-    width: 30px;
-    border-radius: 50%;
-    background-color: white;
+    height: 32px;
+    width: 50px;
     line-height: 30px;
     text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: black;
+    font-size: 50px;
+    color: #fff;
     cursor: pointer;
+    font-family: exfm-icons;
+    z-index: 500;
+    opacity: 0.75;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.25);
 }
-.playlist {
+.minimize:hover {
+    opacity: 1;
+}
+.minimize-toggle-small,
+.minimize-toggle-big {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0.5;
+}
+.minimize:hover .minimize-toggle-small {
+    opacity: 1;
+}
+.minimized .minimize:hover .minimize-toggle-small {
+    opacity: 0.5;
+}
+.minimized .minimize:hover .minimize-toggle-big {
+    opacity: 1;
+}
+
+.left {
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
     width: 300px;
-    overflow-y: auto;
-    overflow-x: hidden;
     -webkit-transition: -webkit-transform 0.3s cubic-bezier(0, 1, 0.71, 1) 0.1s;
     -webkit-transform: translate3d(-100%, 0, 0);
     background: rgba(29, 35, 47, 0.9);
@@ -86,6 +112,20 @@ html, body {
     -webkit-transform-style: preserve-3d;
     white-space: nowrap;
     z-index: 100;
+    box-shadow: 3px 0 rgba(0, 0, 0, 0.25);
+}
+
+.playlist {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    white-space: nowrap;
+    z-index: 100;
+    padding: 56px 0 10px 0;
 }
 
 .right {
@@ -100,9 +140,11 @@ html, body {
     line-height: 18px;
     padding: 12px 0;
     margin-left: 20px;
-    border-bottom: 1px solid rgba(0,0,0, 0.4);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
     cursor: pointer;
     position: relative;
+    /* background: rgba(29, 35, 47, 0.9); */
+    /* margin-bottom: 1px; */
 }
 .playlist-item:hover {
     background: rgba(0, 0, 0, 0.25);
@@ -271,7 +313,7 @@ html, body {
 .no-transition .artwork-current,
 .no-transition .artwork-next,
 .no-transition .artwork-previous{
-    -webkit-transition: none !important;
+     -webkit-transition: none !important;
 }
 
 
@@ -356,6 +398,18 @@ html, body {
 .album {
     font-style: italic;
 }
+
+/*.resize-handle {
+    width: 20px;
+    height: 20px;
+    cursor: sw-resize;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: red;
+    z-index: 10000;
+}*/
+
 .current-song-ui {
     position: absolute;
     left: 50%;
@@ -374,10 +428,10 @@ html, body {
 .control {
     width: 240px;
     height: 240px;
-    line-height: 240px;
+    /* line-height: 240px; */
     text-align: center;
     cursor: pointer;
-    font-size: 60px;
+    /* font-size: 60px; */
     font-family: exfm-icons;
     position: absolute;
     left: 50%;
@@ -395,9 +449,35 @@ html, body {
     left: 75%;
 }
 
+.control:before {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -20px;
+    margin-top: -20px;
+    box-shadow: 0 0 0 2px;
+    background: rgba(0,0,0,0.4);
+}
+.control:after {
+    width: 50px;
+    height: 40px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -25px;
+    margin-top: -20px;
+    line-height: 37px;
+    text-align: center;
+    font-size: 51px;
+}
+
 .control.prev:after { content: 'a'; }
-.control.play-pause:after { content: 'c'; }
-.control.play-pause.paused:after { content: 'b'; }
+.control.play-pause:after { content: 'c'; font-size: 50px;}
+.control.play-pause.paused:after { content: 'b'; width: 50px; height: 40px; position: absolute; left: 50%; top: 50%; margin-left: -23px; margin-top: -20px; line-height: 40px; text-align: center; font-size: 50px;}
 .control.next:after { content: 'd'; }
 
 .first-song .control.prev,
@@ -483,6 +563,11 @@ html, body {
 .service-icon:hover {
     opacity: 1;
 }
+.current-song .service-icon:hover {
+    background: #fff;
+    color: hsl(221, 30%, 20%);
+    box-shadow: 0 0 0 #fff;
+}
 .service-icon.selected,
 .service-icon.active  {
     opacity: 1;
@@ -501,10 +586,12 @@ html, body {
     height: 35px;
     line-height: 30px;
     position: absolute;
-    width: 100%;
+    /* width: 100%; */
     overflow: hidden;
     bottom: 30px;
     font-weight: bold;
+    left: 0;
+    right: 0;
 }
 
 .service-hover-group {
@@ -613,4 +700,227 @@ html, body {
 }
 .service-link:nth-of-type(4) {
     -webkit-transition-delay: 0.2s;
+}
+
+/* ==================================================
+// Minimized
+// ================================================== */
+
+.container.minimized {
+    /* width: 300px; */
+    /* width: 250px; */
+    width: 100%;
+}
+
+.minimized .left,
+.minimized .captured-tab {
+    display: none;
+}
+.minimized .right {
+    left: 0;
+}
+
+.minimized .current-song {
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+}
+.minimized .artworks {
+    top: 0;
+    margin: 0;
+}
+.minimized .current-song-info {
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.25);
+    bottom: 0;
+    top: auto;
+    width: auto;
+    margin: 0;
+    left: 0;
+    height: 105px;
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
+     padding: 0 10px;
+    /* margin: 0 -20px 0 0; */
+    right: 0;
+}
+
+.minimized .now-playing {
+    display: none;
+}
+
+.minimized .song-title {
+    font-size: 18px;
+}
+
+.minimized .current-song-ui {
+    left: 0;
+    width: 100%;
+    margin: 0;
+    top: 0;
+    bottom: auto;
+    z-index: 100;
+    height: 3px;
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
+}
+.minimized .current-time {
+    display: none;
+}
+.minimized .progress-back {
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 3px;
+    background: rgba(0,0,0,.4);
+}
+.minimized .progress {
+    height: 100%;
+    border-radius: 0;
+}
+
+.minimized .control {
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    z-index: 100;
+    margin-left: -50px;
+    margin-top: -50px;
+    top: 40%;
+}
+.minimized .control.prev {
+    left: 0;
+    margin-left: 0;
+}
+.minimized .control.play-pause {}
+.minimized .control.next {
+    left: auto;
+    right: 0;
+    margin-left: 0;
+}
+
+.minimized .artwork {
+    height: 215px;
+    z-index: 20;
+    box-shadow: none;
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
+}
+.blurred-artwork-container {
+    display: none;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    left: 50%;
+    z-index: 10;
+    margin-left: -150px;
+    -webkit-transform: scale(1.1);
+    -webkit-filter: blur(12px);
+}
+.minimized .blurred-artwork-container {
+    display: block;
+}
+
+.blurred-artwork-container .artwork-item{
+     /* -webkit-filter: blur(12px); */
+     background-repeat: repeat;
+     /* -webkit-transform: scale(1.1); */
+     width: 300px; height: 300px;
+     /* background-repeat: no-repeat; */ background-size: cover; position: absolute;
+     -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1) 0.05s;
+}
+
+.blurred-artwork-container .artwork-next {
+    -webkit-transform: translateX(300px);
+}
+.blurred-artwork-container .artwork-previous {
+    -webkit-transform: translateX(-300px);
+}
+
+.minimized .next-artwork-container,
+.minimized .previous-artwork-container {
+    display: none;
+}
+
+.minimized .services {
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    top: auto;
+    margin: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.35);
+    height: 44px;
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
+    /* -webkit-transform: translateY(14px); */
+    height: 40px;
+    line-height: 40px;
+}
+.minimized .service-icon {
+    border-radius: 0;
+    box-shadow: none;
+    width: auto;
+    font-size: 25px;
+    line-height: inherit;
+}
+.minimized .service-icon.tumblr {
+    font-size: 19px;
+}
+.minimized .service-icon.soundcloud {
+    font-size: 35px;
+}
+.minimized .service-icon.bandcamp {
+    font-size: 35px;
+}
+
+.minimized .current-song .service-icon:hover {
+    opacity: 1;
+    background: transparent;
+    color: #fff;
+    box-shadow: none;
+}
+
+.minimized .services:hover {
+    -webkit-transform: translateY(-30px);
+    background: #000;
+}
+
+.minimized .service-hover {
+    bottom: -30px;
+}
+.minimized .service-hover-container {
+    display: block;
+    width: 100% !important;
+    -webkit-transform: translateY(5px);
+}
+.minimized .service-hover.show .service-hover-container {
+    -webkit-transform: translate(0, 5px) !important;
+}
+.minimized .service-hover-pointer {
+    display: none;
+}
+
+.minimized .current-song:hover .current-song-ui {
+    /*-webkit-transform: translateY(-20px);*/
+}
+.minimized .current-song:hover .current-song-info {
+    /*-webkit-transform: translateY(-20px);*/
+}
+.minimized .current-song:hover .services {
+    /*-webkit-transform: translateY(0);
+    height: 40px;
+    line-height: 40px;*/
+}
+.minimized .current-song.hover .artwork {
+    -webkit-transform: translateY(-20px);
+}
+
+.minimized .current-song-info-container:hover {
+    -webkit-transform: translateY(-20px);
+}
+.minimized .current-song-info-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -20px;
+    height: 105px;
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
+    z-index: 100;
 }

@@ -25,21 +25,21 @@ function onMessage(e, sender, responseCallback){
                 tab.deepScan();
             });
         break;
-        case 'toggleMinimize': 
+        case 'toggleMinimize':
             chrome.tabs.sendMessage(sender.tab.id,
                 {
                     "type": "toggleMinimize"
                 }
             );
         break;
-        case 'minimizeEnd': 
+        case 'minimizeEnd':
             chrome.tabs.sendMessage(sender.tab.id,
                 {
                     "type": "minimizeEnd"
                 }
             );
         break;
-        case 'maximizeEnd': 
+        case 'maximizeEnd':
             chrome.tabs.sendMessage(sender.tab.id,
                 {
                     "type": "maximizeEnd"

@@ -4,9 +4,20 @@
     </head>
     <body>
         <div id="container" class="container">
-            <div class="minimize" id="minimize">X</div>
-            <div class="playlist" id="playlist">
+            <div class="minimize" id="minimize">
+                <span class="minimize-toggle-big">g</span>
+                <span class="minimize-toggle-small">h</span>
+            </div>
+            <div class="resize-handle">
+            </div>
+            <div id="left" class="left">
+                <div class="exfm-header">
 
+                </div>
+                <div class="playlist" id="playlist">
+
+
+                </div>
             </div>
             <div id="right" class="right">
                 <div class="current-song clearfix">
@@ -23,70 +34,76 @@
                             <div id="artwork-current" class="artwork-item artwork-current"></div>
                             <div id="artwork-next" class="artwork-item artwork-next"></div>
                         </div>
+                        <div id="artwork-blurred" class="blurred-artwork-container">
+                            <div id="blurred-artwork-current" class="artwork-item artwork-current"></div>
+                            <div id="blurred-artwork-next" class="artwork-item artwork-next"></div>
+                        </div>
 
                         <div id="prev" class="prev control"></div>
                         <div id="play-pause" class="play-pause control paused"></div>
                         <div id="next" class="next control"></div>
                     </div>
 
-                    <div class="current-song-info">
-                        <div class="now-playing">Now Playing</div>
-                        <div id="song-title" class="song-title"></div>
-                        <div id="artist" class="artist"></div>
-                        <div id="album" class="album"></div>
-                    </div>
+                    <div class="current-song-info-container">
+                        <div class="current-song-info">
+                            <div class="now-playing">Now Playing</div>
+                            <div id="song-title" class="song-title"></div>
+                            <div id="artist" class="artist"></div>
+                            <div id="album" class="album"></div>
+                        </div>
 
-                    <div id="services" class="services">
-                        <div class="service-icon tumblr" data-service="tumblr" id="service-icon-tumblr">t</div>
-                        <div class="service-icon soundcloud" data-service="soundcloud" id="service-icon-soundcloud">s</div>
-                        <div class="service-icon bandcamp" data-service="bandcamp" id="service-icon-bandcamp">b</div>
-                        <div class="service-icon rdio" data-service="rdio" id="service-icon-rdio">r</div>
-                        <div class="service-icon spotify" data-service="spotify" id="service-icon-spotify">S</div>
+                        <div id="services" class="services">
+                            <div class="service-icon tumblr" data-service="tumblr" id="service-icon-tumblr">t</div>
+                            <div class="service-icon soundcloud" data-service="soundcloud" id="service-icon-soundcloud">s</div>
+                            <div class="service-icon bandcamp" data-service="bandcamp" id="service-icon-bandcamp">b</div>
+                            <div class="service-icon rdio" data-service="rdio" id="service-icon-rdio">r</div>
+                            <div class="service-icon spotify" data-service="spotify" id="service-icon-spotify">S</div>
 
-                        <div id="service-hover" class="service-hover">
-                            <div id="service-hover-pointer" class="service-hover-pointer"></div>
-                            <div id="service-hover-container" class="service-hover-container">
-                                <div class="service-hover-group tumblr">
-                                    <div class="service-name">Tumblr</div>
-                                    <div class="service-links">
-                                        <span class="service-link">View Post</span><span class="service-link">Like Post</span>
+                            <div id="service-hover" class="service-hover">
+                                <div id="service-hover-pointer" class="service-hover-pointer"></div>
+                                <div id="service-hover-container" class="service-hover-container">
+                                    <div class="service-hover-group tumblr">
+                                        <div class="service-name">Tumblr</div>
+                                        <div class="service-links">
+                                            <span class="service-link">View Post</span><span class="service-link">Like Post</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="service-hover-group soundcloud">
-                                    <div class="service-name">Soundcloud</div>
-                                    <div class="service-links">
-                                        <span class="service-link">View Song</span><span class="service-link">Like Song</span>
+                                    <div class="service-hover-group soundcloud">
+                                        <div class="service-name">Soundcloud</div>
+                                        <div class="service-links">
+                                            <span class="service-link">View Song</span><span class="service-link">Like Song</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="service-hover-group bandcamp">
-                                    <div class="service-name">Bandcamp</div>
-                                    <div class="service-links">
-                                        <span class="service-link">Buy Song</span>
+                                    <div class="service-hover-group bandcamp">
+                                        <div class="service-name">Bandcamp</div>
+                                        <div class="service-links">
+                                            <span class="service-link">Buy Song</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="service-hover-group rdio">
-                                    <div class="service-name">Rdio</div>
-                                    <div class="service-links">
-                                        <span class="service-link">Save to Playlist</span>
+                                    <div class="service-hover-group rdio">
+                                        <div class="service-name">Rdio</div>
+                                        <div class="service-links">
+                                            <span class="service-link">Save to Playlist</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="service-hover-group spotify">
-                                    <div class="service-name">Spotify</div>
-                                    <div class="service-links">
-                                        <span class="service-link">Open in Spotify</span>
+                                    <div class="service-hover-group spotify">
+                                        <div class="service-name">Spotify</div>
+                                        <div class="service-links">
+                                            <span class="service-link">Open in Spotify</span>
+                                        </div>
                                     </div>
-                                </div>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="current-song-ui">
-                        <div class="progress-back" id="progress-back">
-                            <div class="progress" id="progress"></div>
-                        </div>
-                        <div class="current-time" id="current-time">
-                            <span class="time-count" id="time-count">0:00</span>
-                            <span class="time-duration" id="time-duration">0:00</span>
+                        <div class="current-song-ui">
+                            <div class="progress-back" id="progress-back">
+                                <div class="progress" id="progress"></div>
+                            </div>
+                            <div class="current-time" id="current-time">
+                                <span class="time-count" id="time-count">0:00</span>
+                                <span class="time-duration" id="time-duration">0:00</span>
+                            </div>
                         </div>
                     </div>
                 </div>
