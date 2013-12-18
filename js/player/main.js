@@ -62,6 +62,9 @@ Main.prototype.cacheElements = function(){
     this.serviceHover = $('#service-hover');
     this.serviceHoverPointer = $('#service-hover-pointer');
     this.serviceHoverContainer = $('#service-hover-container');
+    
+    this.serviceStatus = $('#service-status');
+    this.serviceStatusMessage = $('#service-status-message');
 }
 
 // add listeners
@@ -643,7 +646,19 @@ Main.prototype.serviceAction = function(success, message, action, network){
         var song = this.playQueue.getSong();
         console.log('social', action, network, song.type);
         this.ga.social(action, network, song.type, 1);
+        this.serviceStatusMessage.text(message);
+        this.serviceStatus.addClass('success show');
     }
+    else{
+        this.serviceStatusMessage.text(message);
+        this.serviceStatus.addClass('error show');
+    }
+    setTimeout(
+        function(){
+            this.serviceStatus.removeClass('success error show');
+        }.bind(this),
+        3000
+    );
 }
 
 // Clean url for display
