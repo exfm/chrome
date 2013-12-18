@@ -281,12 +281,16 @@ html, body {
 .playlist-item .service-icon.spotify {
     font-size: 22px;
 }
+.playlist-item .service-icon.tomahawk {
+    font-size: 22px;
+}
 
 .playlist-item-services.tumblr .service-icon.tumblr,
 .playlist-item-services.soundcloud .service-icon.soundcloud,
 .playlist-item-services.bandcamp .service-icon.bandcamp,
 .playlist-item-services.rdio .service-icon.rdio,
-.playlist-item-services.spotify .service-icon.spotify {
+.playlist-item-services.spotify .service-icon.spotify,
+.playlist-item-services.tomahawk .service-icon.tomahawk {
     float: right;
     display: block;
 }
@@ -626,7 +630,8 @@ html, body {
 .show.soundcloud .service-hover-group.soundcloud,
 .show.bandcamp .service-hover-group.bandcamp,
 .show.rdio .service-hover-group.rdio,
-.show.spotify .service-hover-group.spotify{
+.show.spotify .service-hover-group.spotify,
+.show.tomahawk .service-hover-group.tomahawk{
     -webkit-transform: translateY(0);
 }
 
@@ -634,7 +639,8 @@ html, body {
 .service-hover.soundcloud .service-hover-group.soundcloud,
 .service-hover.bandcamp .service-hover-group.bandcamp,
 .service-hover.rdio .service-hover-group.rdio,
-.service-hover.spotify .service-hover-group.spotify {
+.service-hover.spotify .service-hover-group.spotify,
+.service-hover.tomahawk .service-hover-group.tomahawk {
     display: block;
     margin: auto;
     position: relative;
@@ -704,7 +710,8 @@ html, body {
 .service-hover.soundcloud .service-hover-group.soundcloud .service-link,
 .service-hover.bandcamp .service-hover-group.bandcamp .service-link,
 .service-hover.rdio .service-hover-group.rdio .service-link,
-.service-hover.spotify .service-hover-group.spotify .service-link{
+.service-hover.spotify .service-hover-group.spotify .service-link,
+.service-hover.tomahawk .service-hover-group.tomahawk .service-link{
     -webkit-transform: translateY(0);
 }
 
