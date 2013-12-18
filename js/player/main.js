@@ -495,10 +495,9 @@ Main.prototype.gotPlaylist = function(list){
         clone.querySelector('.playlist-item-services').className += ' ' + services;
         items.push(clone);
     }
-    this.playlistEl.html(items);
     this.playQueue.add(list);
-    this.newSong(list[0], 0);
-    // this.playQueue.play(0);
+    this.newSong(this.playQueue.getList()[0], 0);
+    this.playlistEl.append(items);
 }
 
 // Toggle minimize state
