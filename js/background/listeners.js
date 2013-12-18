@@ -104,6 +104,23 @@ function onMessage(e, sender, responseCallback){
                 responseCallback(null)
             }
         break;
+        case 'checkTomahawk':
+            var tomahawk = new Tomahawk();
+            tomahawk.stat().then(
+                function(hasTomahawk){
+                    responseCallback(hasTomahawk);
+                },
+                function(){
+                    responseCallback(false);
+                }
+            );
+            return true;
+        break;
+        case 'tomahawkOpen':
+            var tab = new Tab(sender, null, false);
+            var tomahawk = new Tomahawk(tab);
+            tomahawk.open(e.title, e.artist, e.url, e.album);
+        break;
         default:
         break
     }

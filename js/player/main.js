@@ -32,6 +32,13 @@ function Main(){
         },
         this.gotGA.bind(this)
     );
+    this.hasTomahawk = false;
+    chrome.runtime.sendMessage(null,
+        {
+            "type": 'checkTomahawk'
+        },
+        this.onCheckTomahawk.bind(this)
+    )
     chrome.runtime.sendMessage(null,
         {
             "type": 'deepScan'
@@ -425,6 +432,9 @@ Main.prototype.updateCurrentServiceButtons = function(song){
         if(song.title && song.artist){
             $('#service-icon-rdio').addClass('show');
             $('#service-icon-spotify').addClass('show');
+            if(this.hasTomahawk === true){
+                $('#service-icon-tomahawk').addClass('show');
+            }
         }
     }
 }
@@ -452,6 +462,9 @@ Main.prototype.gotId3 = function(queueNumber, tags){
         if(tags.title && tags.artist){
             $('#service-icon-rdio').addClass('show');
             $('#service-icon-spotify').addClass('show');
+            if(this.hasTomahawk === true){
+                $('#service-icon-tomahawk').addClass('show');
+            }
         }
     }
 }
@@ -471,6 +484,9 @@ Main.prototype.gotPlaylist = function(list){
         if(song.hasMeta === true){
             if(song.title && song.artist){
                 services += ' rdio spotify'
+            }
+            if(this.hasTomahawk === true){
+                services += ' tomahawk'
             }
         }
 
@@ -579,6 +595,17 @@ Main.prototype.onServiceIconClick = function(e){
                     "title": song.title,
                     "artist": song.artist,
                     "album": song.album
+                }
+            )
+        break;
+        case 'tomahawk':
+            chrome.runtime.sendMessage(null,
+                {
+                    "type": 'tomahawkOpen',
+                    "title": song.title,
+                    "artist": song.artist,
+                    "album": song.album,
+                    "url": song.url
                 }
             )
         break;
@@ -700,6 +727,10 @@ Main.prototype.cleanUrl = function(href){
         return '';
     }
 };
+
+Main.prototype.onCheckTomahawk = function(hasTomahawk){
+    this.hasTomahawk = hasTomahawk;
+}
 
 var main;
 $(document).ready(
