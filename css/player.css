@@ -282,7 +282,10 @@ html, body {
     font-size: 22px;
 }
 .playlist-item .service-icon.tomahawk {
-    font-size: 22px;
+    line-height: 24px;
+    font-size: 30px;
+    text-indent: 0;
+    width: 25px;
 }
 
 .playlist-item-services.tumblr .service-icon.tumblr,
@@ -593,6 +596,11 @@ html, body {
 }
 .service-icon.tumblr {
     font-size: 24px;
+}
+.service-icon.tomahawk {
+    font-size: 53px;
+    text-indent: -2px;
+    line-height: 53px;
 }
 
 
@@ -963,6 +971,12 @@ html, body {
 }
 .minimized .service-icon.bandcamp {
     font-size: 35px;
+}
+.minimized .service-icon.tomahawk {
+    font-size: 35px;
+    line-height: 44px;
+    width: 25px;
+    text-indent: -10px;
 }
 
 .minimized .current-song .service-icon:hover {
