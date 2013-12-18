@@ -23,7 +23,7 @@ Tomahawk.prototype.stat = function(){
 Tomahawk.prototype.open = function(title, artist, songUrl, album){
     var url = 'tomahawk://open/track/?artist=' + encodeURIComponent(artist);
     url += '&title=' + encodeURIComponent(title);
-    url += '&url=' + encodeURIComponent(songUrl);
+    //url += '&url=' + encodeURIComponent(songUrl);
     if(album){
         url += '&album=' + encodeURIComponent(album);
     }
