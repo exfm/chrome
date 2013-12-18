@@ -51,6 +51,7 @@ Main.prototype.cacheElements = function(){
     this.currentSongTitleEl = $('#song-title');
     this.currentArtistEl = $('#artist');
     this.currentAlbumEl = $('#album');
+    this.currentLinkEl = $('#link');
     this.rightContainerEl = $('#right');
     this.currentSongArtworkEl = $('#artwork-current');
     this.nextSongArtworkEl = $('#artwork-next');
@@ -254,6 +255,9 @@ Main.prototype.updateCurrentSong = function(song, queueNumber){
     this.currentSongTitleEl.text(song.title || 'Unknown Title');
     this.currentArtistEl.text(song.artist || '');
     this.currentAlbumEl.text(song.album || '');
+    this.currentLinkEl
+        .text(this.cleanUrl(song.link))
+        .attr('href', song.link);
 
     this.updateArtwork(song, queueNumber);
 

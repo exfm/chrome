@@ -387,6 +387,13 @@ html, body {
 .album {
     font-style: italic;
 }
+.link {
+    font-size: 10px;
+    color: white;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    /* text-decoration: none; */
+}
 
 .current-song-ui {
     position: absolute;
@@ -695,7 +702,8 @@ html, body {
     line-height: 30px;
     padding: 0 12px;
     font-weight: bold;
-    display: none;
+    opacity: 0;
+    -webkit-transition: opacity .3s linear;
 }
 .service-status-message {
     display: inline-block;
@@ -709,7 +717,7 @@ html, body {
     box-shadow: 0 0 0 1px rgba(255, 50, 50, 0.5);
 }
 .service-status.show {
-    display: block;
+    opacity: 1;
 }
 
 
