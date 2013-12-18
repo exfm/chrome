@@ -51,6 +51,7 @@ Main.prototype.cacheElements = function(){
     this.currentSongTitleEl = $('#song-title');
     this.currentArtistEl = $('#artist');
     this.currentAlbumEl = $('#album');
+    this.currentLinkEl = $('#link');
     this.rightContainerEl = $('#right');
     this.currentSongArtworkEl = $('#artwork-current');
     this.nextSongArtworkEl = $('#artwork-next');
@@ -58,10 +59,13 @@ Main.prototype.cacheElements = function(){
 
     // service elements
     this.services = $('#services');
-    this.serviceIcons = this.services.find('.service-icon');
+    this.serviceIcons = this.services.find('.js-service-icon');
     this.serviceHover = $('#service-hover');
     this.serviceHoverPointer = $('#service-hover-pointer');
     this.serviceHoverContainer = $('#service-hover-container');
+    
+    this.serviceStatus = $('#service-status');
+    this.serviceStatusMessage = $('#service-status-message');
 }
 
 // add listeners
@@ -120,13 +124,13 @@ Main.prototype.addListeners = function(){
         this.ga.event('button', 'click', 'playlist item', 1);
     }.bind(this))
 
-    $('.service-icon').on('click', this.onServiceIconClick.bind(this));
+    $('.js-service-link').on('click', this.onServiceIconClick.bind(this));
 
     $(document).on('keyup', this.onKeyup.bind(this));
 
     // add hover events for service icons
     this.serviceIcons.on('mouseover', this.serviceIconHover.bind(this));
-    $('#services').on('mouseleave', this.servicesMouseLeave.bind(this));
+    this.services.on('mouseleave', this.servicesMouseLeave.bind(this));
 
     // hover events for minimized state
     $('.current-song-info-container').on('mouseover', function(e){
@@ -251,6 +255,9 @@ Main.prototype.updateCurrentSong = function(song, queueNumber){
     this.currentSongTitleEl.text(song.title || 'Unknown Title');
     this.currentArtistEl.text(song.artist || '');
     this.currentAlbumEl.text(song.album || '');
+    this.currentLinkEl
+        .text(this.cleanUrl(song.link))
+        .attr('href', song.link);
 
     this.updateArtwork(song, queueNumber);
 
@@ -513,36 +520,47 @@ Main.prototype.capturedTab = function(dataUrl) {
 };
 
 Main.prototype.onServiceIconClick = function(e){
-    $(e.target).addClass('selected');
-    var service = e.target.dataset.service;
+    var service = e.target.parentNode.dataset.service;
     var song = this.playQueue.getSong();
-    console.log(service, song);
     switch(service){
         case 'tumblr':
-            chrome.runtime.sendMessage(null,
-                {
-                    "type": 'tumblrLike',
-                    "id": song.serviceId,
-                    "reblogKey": song.reblogKey
-                }
-            )
-        break;
-        case 'soundcloud':
-            if(song.type === 'soundcloud'){
+            var action = e.target.dataset.action;
+            console.log(service, song, action);
+            if(action === 'view'){
+                window.open(song.link);     
+            }
+            if(action === 'like'){
                 chrome.runtime.sendMessage(null,
                     {
-                        "type": 'soundcloudFavorite',
-                        "id": song.serviceId
+                        "type": 'tumblrLike',
+                        "id": song.serviceId,
+                        "reblogKey": song.reblogKey
                     }
                 )
             }
-            if(song.type === 'tumblr'){
-                chrome.runtime.sendMessage(null,
-                    {
-                        "type": 'soundcloudResolveThenFavorite',
-                        "url": song.originalSource
-                    }
-                )
+        break;
+        case 'soundcloud':
+            var action = e.target.dataset.action;
+            if(action === 'view'){
+                window.open(song.originalSource);     
+            }
+            if(action === 'like'){
+                if(song.type === 'soundcloud'){
+                    chrome.runtime.sendMessage(null,
+                        {
+                            "type": 'soundcloudFavorite',
+                            "id": song.serviceId
+                        }
+                    )
+                }
+                if(song.type === 'tumblr'){
+                    chrome.runtime.sendMessage(null,
+                        {
+                            "type": 'soundcloudResolveThenFavorite',
+                            "url": song.originalSource
+                        }
+                    )
+                }
             }
         break;
         case 'rdio':
@@ -632,8 +650,56 @@ Main.prototype.serviceAction = function(success, message, action, network){
         var song = this.playQueue.getSong();
         console.log('social', action, network, song.type);
         this.ga.social(action, network, song.type, 1);
+        this.serviceStatusMessage.text(message);
+        this.serviceStatus.addClass('success show');
     }
+    else{
+        this.serviceStatusMessage.text(message);
+        this.serviceStatus.addClass('error show');
+    }
+    setTimeout(
+        function(){
+            this.serviceStatus.removeClass('success error show');
+        }.bind(this),
+        3000
+    );
 }
+
+// Clean url for display
+Main.prototype.cleanUrl = function(href){
+    var r = href;
+    if (href){
+        if(href === 'null' || href === 'undefined' || href === 'None'){
+            return '';
+        }
+        if (href.indexOf('http://') !== -1){
+            r = href.replace("http://", "");
+        }
+        if (href.indexOf('https://') !== -1){
+            r = href.replace("https://", "");
+        }
+        var withLastSlash = r;
+        var i = r.indexOf("/");
+        if (i !== -1 && i !== 0){
+            r = r.substr(0, i);
+
+        }
+        var www = r.indexOf('www.');
+        if (www !== -1 && www === 0){
+            r = r.substr(4);
+            withLastSlash = withLastSlash.substr(4);
+        }
+        r = r.replace(".tumblr.com", "");
+        r = r.replace("tumblr.com", "");
+        if (withLastSlash.indexOf("soundcloud.com") !== -1){
+            var scSplits = withLastSlash.split("/");
+            return scSplits[0]+"/"+scSplits[1];
+        }
+        return r;
+    } else {
+        return '';
+    }
+};
 
 var main;
 $(document).ready(
