@@ -27,9 +27,10 @@ html, body {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 320px;
+    width: 280px;
     background-color: #FAFAFA;
     box-shadow: -4px 0 #e3e4e4 inset;
+    padding-left: 40px;
 }
 .right {
     position: absolute;
@@ -45,6 +46,19 @@ html, body {
 .logo {
     margin: 15px;
     font-size: 20px;
+}
+.logo {
+    margin: 15px 0;
+    font-size: 20px;
+    background: url(../images/exfm-logo-options.png) no-repeat 0 0;
+    width: 105px;
+    height: 34px;
+    overflow: hidden;
+    text-indent: -100%;
+}
+.header {
+    margin: 30px 0;
+    min-height: 54px;
 }
 .title {
     font-size: 28px;
