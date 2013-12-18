@@ -36,5 +36,9 @@ var constants = {
     'SPOTIFY':
         {
             'SEARCH': "http://ws.spotify.com/search/1/track.json"
+        },
+    'TOMAHAWK':
+        {
+            'STAT': "http://localhost:60210/api/?method=stat"
         }
 }
