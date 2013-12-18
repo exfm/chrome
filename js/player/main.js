@@ -148,6 +148,8 @@ Main.prototype.addListeners = function(){
     .on('mouseleave', function(){
         $('.current-song').removeClass('hover');
     });
+    
+    $('#options-link').on('click', this.onOptionsClick);
 }
 
 Main.prototype.serviceIconHover = function(e){
@@ -728,8 +730,22 @@ Main.prototype.cleanUrl = function(href){
     }
 };
 
+
+// check if user has Tomahawk running
 Main.prototype.onCheckTomahawk = function(hasTomahawk){
     this.hasTomahawk = hasTomahawk;
+}
+
+// clicked on options icon
+// open options page
+Main.prototype.onOptionsClick = function(){
+    var url = chrome.extension.getURL('html/options.html');
+    chrome.runtime.sendMessage(null,
+        {
+            "type": 'openTab',
+            "url": url
+        }
+    )
 }
 
 var main;
