@@ -52,15 +52,41 @@ html, body {
 }
 
 .exfm-header {
-    height: 56px;
+    height: 65px;
     width: 300px;
     background: rgba(29, 35, 47, 0.96);
     position: absolute;
     top: 0;
     left: 0;
     z-index: 200;
+    box-shadow: 0 2px rgba(0,0,0, 0.3);
 }
-
+.logo {
+    background: url(../images/exfm-logo.png) no-repeat 0 0;
+    width: 79px;
+    height: 26px;
+    overflow: hidden;
+    text-indent: -100%;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    margin-top: -13px;
+}
+.options {
+    font-family: exfm-icons;
+    font-size: 50px;
+    position: absolute;
+    width: 50px;
+    height: 40px;
+    right: 0;
+    top: 50%;
+    margin-top: -20px;
+    opacity: 0.3;
+    cursor: pointer;
+}
+.options:hover {
+    opacity: 1;
+}
 
 .show .captured-tab {
     opacity: 0.15;
@@ -138,7 +164,7 @@ html, body {
     overflow-x: hidden;
     white-space: nowrap;
     z-index: 100;
-    padding: 56px 0 10px 0;
+    padding: 65px 0 10px 0;
 }
 
 
