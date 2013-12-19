@@ -160,3 +160,12 @@ Tab.prototype.sendServiceAction = function(success, message, action, network){
         }
     );
 }
+
+Tab.prototype.windowLocation = function(url){
+    chrome.tabs.sendMessage(this.id,
+        {
+            "type": "windowLocation",
+            "url": url
+        }
+    );
+}

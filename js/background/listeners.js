@@ -145,16 +145,3 @@ function onTabRemoved(tabId){
     chrome.storage.local.remove("tab" + tabId);
 }
 chrome.tabs.onRemoved.addListener(this.onTabRemoved);
-
-// listen for keyboard commands
-chrome.commands.onCommand.addListener(function(command) {
-    if(command === 'minimize-player'){
-        chrome.tabs.getSelected(null, function(tab){
-            chrome.tabs.sendMessage(tab.id,
-                {
-                    "type": "toggleMinimize"
-                }
-            );
-        })
-    }
-});

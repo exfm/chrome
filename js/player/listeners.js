@@ -23,6 +23,9 @@ function onMessage(e, sender, responseCallback){
                 e.network
             );
         break;
+        case 'windowLocation':
+            window.location = e.url;
+        break;
         default:
         break
     }

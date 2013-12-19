@@ -589,16 +589,13 @@ Main.prototype.onServiceIconClick = function(e){
             )
         break;
         case 'tomahawk':
-            this.updateServiceMessage('Opening on Tomahawk...');
-            chrome.runtime.sendMessage(null,
-                {
-                    "type": 'tomahawkOpen',
-                    "title": song.title,
-                    "artist": song.artist,
-                    "album": song.album,
-                    "url": song.url
-                }
-            )
+            var url = 'tomahawk://open/track/?artist=' + encodeURIComponent(song.artist);
+            url += '&title=' + encodeURIComponent(song.title);
+            url += '&url=' + encodeURIComponent(song.url);
+            if(album){
+                url += '&album=' + encodeURIComponent(song.album);
+            }
+            window.location = url;
         break;
         default:
         break;
