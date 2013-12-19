@@ -973,8 +973,8 @@ html, body {
     background: rgba(0, 0, 0, 0.35);
     height: 44px;
     -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
-    height: 40px;
-    line-height: 40px;
+    height: 32px;
+    line-height: 32px;
 }
 .minimized .service-icon {
     border-radius: 0;
@@ -1008,7 +1008,7 @@ html, body {
 
 .minimized .services:hover {
     -webkit-transform: translateY(-30px);
-    background: #000;
+    background: rgba(0,0,0, 0.75);
 }
 
 .minimized .service-hover {
@@ -1018,9 +1018,12 @@ html, body {
     display: block;
     width: 100% !important;
     -webkit-transform: translateY(5px);
+    text-align: center;
+    background: rgba(0, 0, 0, 0.85);
 }
 .minimized .service-hover.show .service-hover-container {
     -webkit-transform: translate(0, 5px) !important;
+    box-shadow: none;
 }
 .minimized .service-hover-pointer {
     display: none;
