@@ -600,10 +600,10 @@ Main.prototype.onServiceIconClick = function(e){
             var url = 'tomahawk://open/track/?artist=' + encodeURIComponent(song.artist);
             url += '&title=' + encodeURIComponent(song.title);
             url += '&url=' + encodeURIComponent(song.url);
-            if(album){
+            if(song.album){
                 url += '&album=' + encodeURIComponent(song.album);
             }
-            window.location = url;
+            window.location = url;  
         break;
         default:
         break;
