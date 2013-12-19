@@ -148,6 +148,8 @@ Main.prototype.addListeners = function(){
     .on('mouseleave', function(){
         $('.current-song').removeClass('hover');
     });
+    
+    $('#options-link').on('click', this.onOptionsClick);
 }
 
 Main.prototype.serviceIconHover = function(e){
@@ -251,10 +253,13 @@ Main.prototype.onSongHalf = function(e){
 // new song loading/playing
 // update UI
 Main.prototype.newSong = function(song, queueNumber){
-    this.updateCurrentSong(song, queueNumber);
-    this.updatePlaylistUI(queueNumber);
-    this.checkMeta(song, queueNumber);
-    this.updateCurrentServiceButtons(song);
+    if(queueNumber !== this.lastQueueNumber){
+        this.updateCurrentSong(song, queueNumber);
+        this.updatePlaylistUI(queueNumber);
+        this.checkMeta(song, queueNumber);
+        this.updateCurrentServiceButtons(song);
+        this.lastQueueNumber = queueNumber;
+    }
 }
 
 // update the current song UI with metadata
@@ -478,25 +483,11 @@ Main.prototype.gotPlaylist = function(list){
         var clone = playlistItem.cloneNode(true);
         clone.querySelector('.playlist-item-song').innerText = song.title || 'Unknow Title';
         clone.querySelector('.playlist-item-artist').innerText = song.artist || '';
-
-        var services = song.type;
-        services += ' '+song.originalType;
-        if(song.hasMeta === true){
-            if(song.title && song.artist){
-                services += ' rdio spotify'
-            }
-            if(this.hasTomahawk === true){
-                services += ' tomahawk'
-            }
-        }
-
-        clone.querySelector('.playlist-item-services').className += ' ' + services;
         items.push(clone);
     }
-    this.playlistEl.html(items);
     this.playQueue.add(list);
-    this.newSong(list[0], 0);
-    // this.playQueue.play(0);
+    this.newSong(this.playQueue.getList()[0], 0);
+    this.playlistEl.append(items);
 }
 
 // Toggle minimize state
@@ -546,6 +537,7 @@ Main.prototype.onServiceIconClick = function(e){
                 window.open(song.link);     
             }
             if(action === 'like'){
+                this.updateServiceMessage('Liking on Tumblr...');
                 chrome.runtime.sendMessage(null,
                     {
                         "type": 'tumblrLike',
@@ -561,6 +553,7 @@ Main.prototype.onServiceIconClick = function(e){
                 window.open(song.originalSource);     
             }
             if(action === 'like'){
+                this.updateServiceMessage('Liking on Soundcloud...');
                 if(song.type === 'soundcloud'){
                     chrome.runtime.sendMessage(null,
                         {
@@ -580,6 +573,7 @@ Main.prototype.onServiceIconClick = function(e){
             }
         break;
         case 'rdio':
+            this.updateServiceMessage('Saving on Rdio...');
             chrome.runtime.sendMessage(null,
                 {
                     "type": 'rdioSave',
@@ -589,6 +583,7 @@ Main.prototype.onServiceIconClick = function(e){
             )
         break;
         case 'spotify':
+            this.updateServiceMessage('Opening on Spotify...');
             chrome.runtime.sendMessage(null,
                 {
                     "type": 'spotifyOpen',
@@ -599,6 +594,7 @@ Main.prototype.onServiceIconClick = function(e){
             )
         break;
         case 'tomahawk':
+            this.updateServiceMessage('Opening on Tomahawk...');
             chrome.runtime.sendMessage(null,
                 {
                     "type": 'tomahawkOpen',
@@ -677,12 +673,10 @@ Main.prototype.serviceAction = function(success, message, action, network){
         var song = this.playQueue.getSong();
         console.log('social', action, network, song.type);
         this.ga.social(action, network, song.type, 1);
-        this.serviceStatusMessage.text(message);
-        this.serviceStatus.addClass('success show');
+        this.updateServiceMessage(message, 'success');
     }
     else{
-        this.serviceStatusMessage.text(message);
-        this.serviceStatus.addClass('error show');
+        this.updateServiceMessage(message, 'error');
     }
     setTimeout(
         function(){
@@ -728,8 +722,30 @@ Main.prototype.cleanUrl = function(href){
     }
 };
 
+
+// check if user has Tomahawk running
 Main.prototype.onCheckTomahawk = function(hasTomahawk){
     this.hasTomahawk = hasTomahawk;
+}
+
+// clicked on options icon
+// open options page
+Main.prototype.onOptionsClick = function(){
+    var url = chrome.extension.getURL('html/options.html');
+    chrome.runtime.sendMessage(null,
+        {
+            "type": 'openTab',
+            "url": url
+        }
+    )
+}
+
+// update service status message
+Main.prototype.updateServiceMessage = function(message, className){
+    this.serviceStatusMessage.text(message);
+    this.serviceStatus
+        .removeClass('success error')
+        .addClass( 'show ' + className);
 }
 
 var main;
