@@ -69,7 +69,9 @@ Tumblr.prototype.parse = function(json){
                     }
                 }
                 song.album = post.album;
-                song.artwork = post.album_art;
+                if(post.album_art){
+                    song.artwork = post.album_art;
+                }
                 song.url = post.audio_url;
                 song.link = post.post_url;
                 song.serviceId = post.id;
