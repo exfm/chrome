@@ -70,7 +70,7 @@ Main.prototype.cacheElements = function(){
     this.serviceHover = $('#service-hover');
     this.serviceHoverPointer = $('#service-hover-pointer');
     this.serviceHoverContainer = $('#service-hover-container');
-    
+
     this.serviceStatus = $('#service-status');
     this.serviceStatusMessage = $('#service-status-message');
 }
@@ -148,7 +148,7 @@ Main.prototype.addListeners = function(){
     .on('mouseleave', function(){
         $('.current-song').removeClass('hover');
     });
-    
+
     $('#options-link').on('click', this.onOptionsClick);
 }
 
@@ -271,7 +271,15 @@ Main.prototype.updateCurrentSong = function(song, queueNumber){
         .text(this.cleanUrl(song.link))
         .attr('href', song.link);
 
-    this.updateArtwork(song, queueNumber);
+    this.rightContainerEl.removeClass('to-next to-previous');
+    if(queueNumber >= this.lastQueueNumber){
+        this.rightContainerEl.addClass('to-next');
+    }else {
+        this.rightContainerEl.addClass('to-previous');
+    }
+    setTimeout(function(){
+        this.updateArtwork(song, queueNumber);
+    }.bind(this), 10)
 
 }
 
@@ -291,15 +299,15 @@ Main.prototype.updateArtwork = function(song, queueNumber) {
         .addClass('artwork-current');
     this.currentSongArtworkEl.addClass('artwork-previous');
 
-    // if(this.containerEl.hasClass('minimized')){
-        $('#blurred-artwork-next').css(
-                'background-image',
-                'url(' + currentArtwork + ')'
-            )
-            .removeClass('artwork-next')
-            .addClass('artwork-current');
-        $('#blurred-artwork-current').addClass('artwork-previous');
-    // }
+
+    $('#blurred-artwork-next').css(
+            'background-image',
+            'url(' + currentArtwork + ')'
+        )
+        .removeClass('artwork-next')
+        .addClass('artwork-current');
+    $('#blurred-artwork-current').addClass('artwork-previous');
+
 
     // next & previous artwork
     var nextSong = this.playQueue.getList()[queueNumber + 1];
@@ -534,7 +542,7 @@ Main.prototype.onServiceIconClick = function(e){
             var action = e.target.dataset.action;
             console.log(service, song, action);
             if(action === 'view'){
-                window.open(song.link);     
+                window.open(song.link);
             }
             if(action === 'like'){
                 this.updateServiceMessage('Liking on Tumblr...');
@@ -550,7 +558,7 @@ Main.prototype.onServiceIconClick = function(e){
         case 'soundcloud':
             var action = e.target.dataset.action;
             if(action === 'view'){
-                window.open(song.originalSource);     
+                window.open(song.originalSource);
             }
             if(action === 'like'){
                 this.updateServiceMessage('Liking on Soundcloud...');
