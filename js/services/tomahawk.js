@@ -8,11 +8,9 @@ Tomahawk.prototype.stat = function(){
     var promise = new $.Deferred();
     $.get(constants.TOMAHAWK.STAT).then(
         function(json){
-            console.log(json);
             promise.resolve(true);
         },
         function(err){
-            console.log(err);
             promise.resolve(false);
         }
     )

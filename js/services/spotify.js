@@ -35,7 +35,6 @@ Spotify.prototype.search = function(title, artist, album){
 // does the search result match what we provided it?
 // If so open Spotify app
 Spotify.prototype.determineSearch = function(json){
-    console.log(json);
     if(json.tracks.length > 0){
         chrome.tabs.create(
             {

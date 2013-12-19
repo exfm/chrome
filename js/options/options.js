@@ -35,7 +35,6 @@ Options.prototype.getAuthStatus = function(){
 // got auth status for services
 // update UI accordingly
 Options.prototype.gotAuthStatus = function(service, oAuthObj){
-    console.log(service, oAuthObj);
     if(oAuthObj[service + 'Auth']){
         $('#' + service + '-auth-button')
             .removeClass('connect')
@@ -105,7 +104,6 @@ Options.prototype.connect = function(service, oAuthVersion){
 // oauth flow done
 // If successfull save credentials in stoarge
 Options.prototype.authDone = function(success, oAuthObj, service){
-    console.log('authDone', oAuthObj, service);
     if(success === true){
         var obj = {};
         obj[service + 'Auth'] = oAuthObj;

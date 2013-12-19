@@ -118,7 +118,6 @@ Tab.prototype.deepScan = function(){
 
 // Show playlist on tab
 Tab.prototype.showPlaylist = function(){
-    console.log('showPlaylist', this.playlist);
     chrome.tabs.sendMessage(this.id,
         {
             "type": "playlist",
@@ -131,7 +130,6 @@ Tab.prototype.showPlaylist = function(){
 // No songs found on page
 // after deep scan
 Tab.prototype.noSongs = function(){
-    console.log('sending noSongs', this);
     chrome.tabs.sendMessage(this.id,
         {
             "type": "noSongs"
@@ -141,7 +139,6 @@ Tab.prototype.noSongs = function(){
 
 // tell tab we need auth
 Tab.prototype.sendAuthDialog = function(serviceName){
-    console.log('sending', serviceName);
     chrome.tabs.sendMessage(this.id,
         {
             "type": "needAuth",

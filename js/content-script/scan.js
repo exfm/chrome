@@ -323,7 +323,6 @@ var scan = new Scan();
 
 // Messages received from background script
 function onMessage(e, sender, responseCallback){
-    //console.log('onMessage', e, e.type);
     var type = e.type;
     switch(type){
         case 'insertPlayer':
