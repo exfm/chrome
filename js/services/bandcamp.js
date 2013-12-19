@@ -24,7 +24,7 @@ Bandcamp.prototype.response = function(json){
                 this.json.artist,
                 this.json.current.title,
                 this.json.artFullsizeUrl,
-                this.json.url,
+                this.json.url.split('/album')[0],
                 this.json.album_release_date
             );
         }
