@@ -50,8 +50,8 @@
             "default_title": "Listen to page with Exfm",
             "default_icon":
                 {
-                    "19": "images/icon19.png",
-                    "38": "images/icon38.png"
+                    "19": "images/chrome-icon-19px-inactive.png",
+                    "38": "images/chrome-icon-38px-inactive.png"
                 }
         },
     "homepage_url": "http://ex.fm",

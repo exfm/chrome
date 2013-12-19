@@ -22,6 +22,16 @@ Tab.prototype.showPageActionIcon = function(){
 // Page action icon on this
 // tab was clicked
 Tab.prototype.onPageActionClicked = function(){
+    chrome.pageAction.setIcon(
+        {
+            'tabId': this.id,
+            'path': 
+                {
+                    '19': "images/chrome-icon-19px-active.png",
+                    '38': "images/chrome-icon-38px-active.png"  
+                }
+        }
+    )
     this.captureVisibleTab();
 }
 
