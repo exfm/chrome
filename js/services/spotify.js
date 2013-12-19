@@ -36,7 +36,7 @@ Spotify.prototype.search = function(title, artist, album){
 // If so open Spotify app
 Spotify.prototype.determineSearch = function(json){
     if(json.tracks.length > 0){
-        this.tab.windowLocation(json.tracks[0].href);
+        this.tab.openThenClose(json.tracks[0].href);
         this.tab.sendServiceAction(
             true,
             'Song opened on Spotify',

@@ -50,8 +50,8 @@
             "default_title": "Listen to page with Exfm",
             "default_icon":
                 {
-                    "19": "images/icon19.png",
-                    "38": "images/icon38.png"
+                    "19": "images/chrome-icon-19px-inactive.png",
+                    "38": "images/chrome-icon-38px-inactive.png"
                 }
         },
     "homepage_url": "http://ex.fm",
@@ -74,7 +74,12 @@
         "js/player/playqueue.js",
         "js/player/progress-bar.js",
         "js/player/listeners.js",
-        "js/analytics/ga.js"
+        "js/analytics/ga.js",
+        "images/albumart-default-1.jpg",
+        "images/albumart-default-2.jpg",
+        "images/albumart-default-3.jpg",
+        "images/albumart-default-4.jpg",
+        "images/albumart-default-5.jpg"
       ],
     "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'"
 }

@@ -158,6 +158,11 @@ html, body {
     box-shadow: 0 -1px #E3E4E4 inset;
     padding: 20px 50px 20px 0;
 }
+.exports.option {
+    text-decoration: none;
+    display: block;
+    color: #39404E;
+}
 .exports.option.active {
     box-shadow: -4px 0 #29A5FF inset, 0 -1px #E3E4E4 inset;
     color: #39404E;

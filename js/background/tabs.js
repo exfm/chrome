@@ -22,6 +22,16 @@ Tab.prototype.showPageActionIcon = function(){
 // Page action icon on this
 // tab was clicked
 Tab.prototype.onPageActionClicked = function(){
+    chrome.pageAction.setIcon(
+        {
+            'tabId': this.id,
+            'path': 
+                {
+                    '19': "images/chrome-icon-19px-active.png",
+                    '38': "images/chrome-icon-38px-active.png"  
+                }
+        }
+    )
     this.captureVisibleTab();
 }
 
@@ -161,11 +171,27 @@ Tab.prototype.sendServiceAction = function(success, message, action, network){
     );
 }
 
-Tab.prototype.windowLocation = function(url){
-    chrome.tabs.sendMessage(this.id,
+// open a tab to a url
+// then close it after 1 second
+Tab.prototype.openThenClose = function(url){
+    chrome.tabs.create(
         {
-            "type": "windowLocation",
-            "url": url
-        }
+            'url': url,
+            'active': false
+        }, 
+        function(tab){
+            chrome.tabs.update(
+               this.id, 
+        	   {
+        	       'highlighted': true
+        	   }
+            );
+            setTimeout(
+                function(){
+                    chrome.tabs.remove(tab.id);
+                },
+                1000
+            )
+        }.bind(this)
     );
 }

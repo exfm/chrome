@@ -15,6 +15,7 @@ function Main(){
         'serviceId', 'postAuthor', 'hasMeta',
         'reblogKey'
     ];
+    this.playQueue.smart_previous = false;
     this.progressBar = new ProgressBar(
         {
             'playQueue': this.playQueue,
@@ -597,13 +598,16 @@ Main.prototype.onServiceIconClick = function(e){
             )
         break;
         case 'tomahawk':
-            var url = 'tomahawk://open/track/?artist=' + encodeURIComponent(song.artist);
-            url += '&title=' + encodeURIComponent(song.title);
-            url += '&url=' + encodeURIComponent(song.url);
-            if(album){
-                url += '&album=' + encodeURIComponent(song.album);
-            }
-            window.location = url;
+            this.updateServiceMessage('Opening on Tomahawk...');
+            chrome.runtime.sendMessage(null,
+                {
+                    "type": 'tomahawkOpen',
+                    "title": song.title,
+                    "artist": song.artist,
+                    "url": song.url,
+                    "album": song.album
+                }
+            )  
         break;
         default:
         break;
@@ -672,6 +676,9 @@ Main.prototype.serviceAction = function(success, message, action, network){
         var song = this.playQueue.getSong();
         this.ga.social(action, network, song.type, 1);
         this.updateServiceMessage(message, 'success');
+        if(network === 'Spotify' || network === 'Tomahawk'){
+            this.playQueue.pause();
+        }
     }
     else{
         this.updateServiceMessage(message, 'error');

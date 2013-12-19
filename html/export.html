@@ -2,6 +2,7 @@
     <head>
         <title>Exfm Export</title>
         <link rel="stylesheet" href="../css/options.css" type="text/css" media="screen" />
+        <link rel="shortcut icon" href="../images/favicon.png" />
     </head>
     <body>
         <div class="container">
@@ -10,14 +11,14 @@
                     <div class="logo">Exfm</div>
                 </div>
                 <div class="options">
-                    <div class="exports option">
+                    <a class="exports option" href="options.html">
                         <div class="export-title">
                             Connect
                         </div>
                         <div class="export-description">
                             Link other music services to exfm
                         </div>
-                    </div>
+                    </a>
                     <div class="exports option active">
                         <div class="export-title">
                             Export your data
@@ -41,7 +42,7 @@
                                 <div class="service-title">Export Service</div>
                                 <div class="service-description">Head over to our export page to download an XSPF Playlist file of your loved songs, bookmarks of your followed sites, and more.</div>
                                 <div class="button-group">
-                                    <a id="service-xspf-download" class="button download">Continue</a>
+                                    <a id="service-xspf-download" class="button download" href="https://exfm.parseapp.com/export" target="_blank">Continue</a>
                                 </div>
                             </div>
                         </div>
@@ -53,13 +54,7 @@
         <script type="text/javascript" src="../js/libs/jquery-2.0.3.js"></script>
         <script type="text/javascript" src="../js/vars/keys.js"></script>
         <script type="text/javascript" src="../js/vars/constants.js"></script>
-        <script type="text/javascript" src="../js/oauth/sha1.js"></script>
-        <script type="text/javascript" src="../js/oauth/md5.js"></script>
-        <script type="text/javascript" src="../js/oauth/oauth.js"></script>
-        <script type="text/javascript" src="../js/oauth/jquery.oauth.js"></script>
-        <script type="text/javascript" src="../js/oauth/authorize.js"></script>
-        <script type="text/javascript" src="../js/services/rdio.js"></script>
         <script type="text/javascript" src="../js/analytics/ga.js"></script>
-        <script type="text/javascript" src="../js/options/options.js"></script>
+        <script type="text/javascript" src="../js/options/export.js"></script>
     </body>
 </html>
