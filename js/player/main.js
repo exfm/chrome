@@ -537,6 +537,7 @@ Main.prototype.onServiceIconClick = function(e){
                 window.open(song.link);     
             }
             if(action === 'like'){
+                this.updateServiceMessage('Liking on Tumblr...');
                 chrome.runtime.sendMessage(null,
                     {
                         "type": 'tumblrLike',
@@ -552,6 +553,7 @@ Main.prototype.onServiceIconClick = function(e){
                 window.open(song.originalSource);     
             }
             if(action === 'like'){
+                this.updateServiceMessage('Liking on Soundcloud...');
                 if(song.type === 'soundcloud'){
                     chrome.runtime.sendMessage(null,
                         {
@@ -571,6 +573,7 @@ Main.prototype.onServiceIconClick = function(e){
             }
         break;
         case 'rdio':
+            this.updateServiceMessage('Saving on Rdio...');
             chrome.runtime.sendMessage(null,
                 {
                     "type": 'rdioSave',
@@ -580,6 +583,7 @@ Main.prototype.onServiceIconClick = function(e){
             )
         break;
         case 'spotify':
+            this.updateServiceMessage('Opening on Spotify...');
             chrome.runtime.sendMessage(null,
                 {
                     "type": 'spotifyOpen',
@@ -590,6 +594,7 @@ Main.prototype.onServiceIconClick = function(e){
             )
         break;
         case 'tomahawk':
+            this.updateServiceMessage('Opening on Tomahawk...');
             chrome.runtime.sendMessage(null,
                 {
                     "type": 'tomahawkOpen',
@@ -668,12 +673,10 @@ Main.prototype.serviceAction = function(success, message, action, network){
         var song = this.playQueue.getSong();
         console.log('social', action, network, song.type);
         this.ga.social(action, network, song.type, 1);
-        this.serviceStatusMessage.text(message);
-        this.serviceStatus.addClass('success show');
+        this.updateServiceMessage(message, 'success');
     }
     else{
-        this.serviceStatusMessage.text(message);
-        this.serviceStatus.addClass('error show');
+        this.updateServiceMessage(message, 'error');
     }
     setTimeout(
         function(){
@@ -735,6 +738,14 @@ Main.prototype.onOptionsClick = function(){
             "url": url
         }
     )
+}
+
+// update service status message
+Main.prototype.updateServiceMessage = function(message, className){
+    this.serviceStatusMessage.text(message);
+    this.serviceStatus
+        .removeClass('success error')
+        .addClass( 'show ' + className);
 }
 
 var main;
