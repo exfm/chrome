@@ -182,7 +182,6 @@ Soundcloud.prototype.favorite = function(id){
                 }
             ).then(
                 function(json){
-                    console.log('like', json);
                     this.tab.sendServiceAction(
                         true,
                         'Song liked on Soundcloud',

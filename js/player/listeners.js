@@ -1,6 +1,5 @@
 // Recieve message from extension
 function onMessage(e, sender, responseCallback){
-    console.log('player got message:', e, e.type);
     var type = e.type;
     switch(type){
         case 'playlist':
@@ -23,6 +22,9 @@ function onMessage(e, sender, responseCallback){
                 e.action,
                 e.network
             );
+        break;
+        case 'windowLocation':
+            window.location = e.url;
         break;
         default:
         break

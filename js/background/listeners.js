@@ -3,7 +3,6 @@
 // We've got possible songs on page
 // Create a new Tab object
 function onMessage(e, sender, responseCallback){
-    console.log('onMessage', e, sender);
     var type = e.type;
     switch(type){
         case 'scanDone':
@@ -146,17 +145,3 @@ function onTabRemoved(tabId){
     chrome.storage.local.remove("tab" + tabId);
 }
 chrome.tabs.onRemoved.addListener(this.onTabRemoved);
-
-// listen for keyboard commands
-chrome.commands.onCommand.addListener(function(command) {
-    console.log('Command:', command);
-    if(command === 'minimize-player'){
-        chrome.tabs.getSelected(null, function(tab){
-            chrome.tabs.sendMessage(tab.id,
-                {
-                    "type": "toggleMinimize"
-                }
-            );
-        })
-    }
-});

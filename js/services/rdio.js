@@ -17,15 +17,12 @@ Rdio.prototype.save = function(title, artist){
                     // Does the song match what Rdio gave us?
                     this.determineSearch(json, title, artist).then(
                         function(trackId){
-                            console.log('trackId', trackId);
                             // Do we have the playlistId in storage?
                             this.getPlaylistId().then(
                                 function(playlistId){
-                                    console.log('playlistId', playlistId);
                                     // Add the song to the playlist
                                     this.addToPlaylist(oAuthObject, playlistId, trackId).then(
                                         function(json){
-                                            console.log('addToPlaylist json', json);
                                             if(json.status === 'ok'){
                                                 this.tab.sendServiceAction(
                                                     true,
@@ -43,7 +40,6 @@ Rdio.prototype.save = function(title, artist){
                                             }
                                         }.bind(this),
                                         function(error){
-                                            console.log('errrr', error);
                                             this.tab.sendServiceAction(
                                                 false,
                                                 'Error saving song on Rdio',
@@ -54,14 +50,12 @@ Rdio.prototype.save = function(title, artist){
                                     )
                                 }.bind(this),
                                 function(){
-                                    console.log('no id');
                                     // Get or create a new playlist
                                     this.getOrCreatePlaylist(oAuthObject, trackId);
                                 }.bind(this)
                             )
                         }.bind(this),
                         function(){
-                            console.log('no key found');
                             // No match on Rdio
                             this.tab.sendServiceAction(
                                 false,
@@ -73,7 +67,6 @@ Rdio.prototype.save = function(title, artist){
                     )
                 }.bind(this),
                 function(error){
-                    console.log('rdio search error');
                     // Search error
                     this.tab.sendServiceAction(
                         false,
@@ -95,11 +88,9 @@ Rdio.prototype.getOrCreatePlaylist = function(oAuthObject, trackId){
     // Get playlists from Rdio
     this.getPlaylists(oAuthObject).then(
         function(json){
-            console.log('playlists', json);
             // Is there a playlist called 'Exfm'?
             this.determinePlaylists(json).then(
                 function(playlistId){
-                    console.log('got playlistId', playlistId);
                     // Got the playlist. Add the song
                     this.addToPlaylist(oAuthObject, playlistId, trackId);
                     // Save the playlistId to storage
@@ -113,14 +104,14 @@ Rdio.prototype.getOrCreatePlaylist = function(oAuthObject, trackId){
                             this.savePlaylistId(json);
                         }.bind(this),
                         function(){
-                            console.log('error creating playlist on rdio');
+                            
                         }
                     )
                 }.bind(this)
             )
         }.bind(this),
         function(){
-            console.log('error getting rdio playlists');
+            
         }
     )
 }
@@ -131,11 +122,9 @@ Rdio.prototype.determineSearch = function(json, title, artist){
     if(json.status === 'ok'){
         if(json.result.results.length > 0){
             var result = json.result.results[0];
-            console.log('result', result);
             if(result.name.toLowerCase() === title.toLowerCase() && 
                result.artist.toLowerCase() === artist.toLowerCase())
             {
-                console.log('we have it', result.key);
                 promise.resolve(result.key);
             }
             else{
@@ -241,7 +230,6 @@ Rdio.prototype.getPlaylistId = function(){
 
 // Save playlist id to storage
 Rdio.prototype.savePlaylistId = function(arg){
-    console.log('savePlaylistId', arg);
     var key = arg;
     if(typeof(arg) === 'object'){
         key = arg.result.key;
@@ -249,7 +237,6 @@ Rdio.prototype.savePlaylistId = function(arg){
             return;
         }
     }
-    console.log('playlist key', key);
     var obj = {
         'rdioPlaylistId': key
     }
