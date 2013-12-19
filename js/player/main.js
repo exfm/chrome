@@ -15,6 +15,7 @@ function Main(){
         'serviceId', 'postAuthor', 'hasMeta',
         'reblogKey'
     ];
+    this.playQueue.smart_previous = false;
     this.progressBar = new ProgressBar(
         {
             'playQueue': this.playQueue,
