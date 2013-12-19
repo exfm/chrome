@@ -445,6 +445,9 @@ Main.prototype.updateCurrentServiceButtons = function(song){
         case 'soundcloud':
             $('#service-icon-soundcloud').addClass('show');
         break;
+        case 'bandcamp':
+            $('#service-icon-bandcamp').addClass('show');
+        break;
         default:
         break;
     }
@@ -618,6 +621,16 @@ Main.prototype.onServiceIconClick = function(e){
                     "album": song.album
                 }
             )
+        break;
+        case 'bandcamp':
+            var url = song.purchaseUrl;
+            if(song.purchaseUrl.indexOf('?') === -1){
+                url = song.purchaseUrl + '?from=exfm';
+            }
+            else{
+                url = song.purchaseUrl + '&from=exfm';
+            }
+            window.open(url);
         break;
         default:
         break;

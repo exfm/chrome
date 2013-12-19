@@ -86,6 +86,9 @@ Tumblr.prototype.parse = function(json){
                 if(post.audio_type === 'tumblr' && post.audio_url.indexOf('tumblr.com') !== -1){
                     song.url += '?plead=please-dont-download-this-or-our-lawyers-wont-let-us-host-audio';
                 }
+                if(post.audio_type === 'bandcamp'){
+                    song.purchaseUrl = post.source_url;
+                }
                 playlist.push(song);
             }
         }
