@@ -171,11 +171,27 @@ Tab.prototype.sendServiceAction = function(success, message, action, network){
     );
 }
 
-Tab.prototype.windowLocation = function(url){
-    chrome.tabs.sendMessage(this.id,
+// open a tab to a url
+// then close it after 1 second
+Tab.prototype.openThenClose = function(url){
+    chrome.tabs.create(
         {
-            "type": "windowLocation",
-            "url": url
-        }
+            'url': url,
+            'active': false
+        }, 
+        function(tab){
+            chrome.tabs.update(
+               this.id, 
+        	   {
+        	       'highlighted': true
+        	   }
+            );
+            setTimeout(
+                function(){
+                    chrome.tabs.remove(tab.id);
+                },
+                1000
+            )
+        }.bind(this)
     );
 }

@@ -25,29 +25,11 @@ Tomahawk.prototype.open = function(title, artist, songUrl, album){
     if(album){
         url += '&album=' + encodeURIComponent(album);
     }
-    chrome.tabs.create(
-            {
-                'url': url,
-                'active': false
-            }, 
-            function(tab){
-                chrome.tabs.update(this.tab.id, 
-        	       {
-        	           'highlighted': true
-        	       }
-        	    )
-                setTimeout(
-                    function(){
-                        chrome.tabs.remove(tab.id);
-                    },
-                    2000
-                )
-            }.bind(this)
-        );
-        this.tab.sendServiceAction(
-            true,
-            'Song opened on Tomahawk',
-            'open',
-            'Tomahawk'
-        );
+    this.tab.openThenClose(url);
+    this.tab.sendServiceAction(
+        true,
+        'Song opened on Tomahawk',
+        'open',
+        'Tomahawk'
+    );
 }
