@@ -306,7 +306,6 @@ Main.prototype.updateArtwork = function(song, queueNumber) {
         .addClass('artwork-current');
     $('#blurred-artwork-current').addClass('artwork-previous');
 
-
     // next & previous artwork
     var nextSong = this.playQueue.getList()[queueNumber + 1];
     var prevSong = this.playQueue.getList()[queueNumber - 1];
@@ -354,49 +353,60 @@ Main.prototype.resetArtwork = function(currentArtwork, prevArtwork, nextArtwork)
     this.currentSongArtworkEl.css(
             'background-image',
             'url(' + currentArtwork + ')'
-        )
-        .removeClass('artwork-previous')
-        .addClass('artwork-current');
-    this.nextSongArtworkEl
-        .removeClass('artwork-current')
-        .addClass('artwork-next');
+        );
 
     if(this.containerEl.hasClass('minimized')){
         $('#blurred-artwork-current').css(
                 'background-image',
                 'url(' + currentArtwork + ')'
-            )
-            .removeClass('artwork-previous')
-            .addClass('artwork-current');
-        $('#blurred-artwork-next')
-            .removeClass('artwork-current')
-            .addClass('artwork-next');
+            );
     }
-
 
     // reset next artwork element
     $('#next-artwork-current').css(
             'background-image',
             'url(' + nextArtwork + ')'
-        )
-        .removeClass('artwork-previous')
-        .addClass('artwork-current');
-
-    $('#next-artwork-next')
-        .removeClass('artwork-current')
-        .addClass('artwork-next');
+        );
 
     // reset previous artwork element
     $('#prev-artwork-current').css(
             'background-image',
             'url(' + prevArtwork + ')'
         )
-        .removeClass('artwork-previous')
-        .addClass('artwork-current');
 
-    $('#prev-artwork-next')
-        .removeClass('artwork-current')
-        .addClass('artwork-next');
+
+    setTimeout(function(){
+        this.currentSongArtworkEl
+            .removeClass('artwork-previous')
+            .addClass('artwork-current');
+        this.nextSongArtworkEl
+            .removeClass('artwork-current')
+            .addClass('artwork-next');
+
+        $('#next-artwork-current')
+            .removeClass('artwork-previous')
+            .addClass('artwork-current');
+        $('#next-artwork-next')
+            .removeClass('artwork-current')
+            .addClass('artwork-next');
+
+        $('#prev-artwork-current')
+           .removeClass('artwork-previous')
+            .addClass('artwork-current');
+        $('#prev-artwork-next')
+            .removeClass('artwork-current')
+            .addClass('artwork-next');
+
+        if(this.containerEl.hasClass('minimized')){
+            $('#blurred-artwork-current')
+                .removeClass('artwork-previous')
+                .addClass('artwork-current');
+            $('#blurred-artwork-next')
+                .removeClass('artwork-current')
+                .addClass('artwork-next');
+        }
+
+    }.bind(this), 10);
 }
 
 
@@ -607,7 +617,7 @@ Main.prototype.onServiceIconClick = function(e){
                     "url": song.url,
                     "album": song.album
                 }
-            )  
+            )
         break;
         default:
         break;
