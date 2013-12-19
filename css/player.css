@@ -831,18 +831,18 @@ html, body {
 }
 .minimized .current-song-info {
     z-index: 100;
-    background: rgba(0, 0, 0, 0.25);
-    bottom: 0;
-    top: auto;
     width: auto;
     margin: 0;
     left: 0;
-    height: 105px;
-    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
-
     padding: 0 10px;
     right: 0;
-    /* opacity: 0.5; */
+    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
+    display: flex;
+    flex-flow: column;
+    height: 75px;
+    bottom: auto;
+    top: 6px;
+    justify-content: center;
 }
 
 .minimized .now-playing {
@@ -851,8 +851,23 @@ html, body {
 
 .minimized .song-title {
     font-size: 16px;
-    line-height: 30px;
-    margin-top: 6px;
+    line-height: 20px;
+}
+
+.artist-album {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 20px;
+}
+.minimized .artist {
+    margin-right: 5px;
+}
+.minimized .artist,
+.minimized .album {
+    display: inline;
+    line-height: 15px;
+    font-size: 13px;
 }
 
 .minimized .current-song-ui {
@@ -918,7 +933,7 @@ html, body {
     /* -webkit-transition: height 0.1s cubic-bezier(0, 1, 0.71, 1); */
 }
 .minimized:hover .artwork {
-    height: 195px;
+    height: 180px;
 }
 .blurred-artwork-container {
     display: none;
@@ -942,13 +957,6 @@ html, body {
      position: absolute;
      -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1) 0.05s;
 }
-
-/*.blurred-artwork-container .artwork-next {
-    -webkit-transform: translateX(300px);
-}
-.blurred-artwork-container .artwork-previous {
-    -webkit-transform: translateX(-300px);
-}*/
 
 .minimized .next-artwork-container,
 .minimized .previous-artwork-container {
@@ -1039,9 +1047,10 @@ html, body {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: -40px;
-    height: 105px;
+    bottom: -55px;
+    height: 120px;
     -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1);
     z-index: 100;
     -webkit-transform: translateY(59px);
+    background: rgba(0, 0, 0, 0.25);
 }
