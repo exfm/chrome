@@ -483,19 +483,6 @@ Main.prototype.gotPlaylist = function(list){
         var clone = playlistItem.cloneNode(true);
         clone.querySelector('.playlist-item-song').innerText = song.title || 'Unknow Title';
         clone.querySelector('.playlist-item-artist').innerText = song.artist || '';
-
-        var services = song.type;
-        services += ' '+song.originalType;
-        if(song.hasMeta === true){
-            if(song.title && song.artist){
-                services += ' rdio spotify'
-            }
-            if(this.hasTomahawk === true){
-                services += ' tomahawk'
-            }
-        }
-
-        clone.querySelector('.playlist-item-services').className += ' ' + services;
         items.push(clone);
     }
     this.playQueue.add(list);
