@@ -2,7 +2,7 @@
     "name": "Exfm",
     "manifest_version": 2,
     "version": "4.0.0",
-    "description": "The best way to find and share new music",
+    "description": "Still the best way to find and share new music",
     "icons": 
         {
             "128": "images/icon128.png"
@@ -76,13 +76,5 @@
         "js/player/listeners.js",
         "js/analytics/ga.js"
       ],
-    "commands": {
-        "minimize-player": {
-          "suggested_key": {
-            "default": "Alt+P"
-          },
-          "description": "Toggle minimize player"
-        }
-    },
     "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'"
 }

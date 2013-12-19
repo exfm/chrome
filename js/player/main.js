@@ -219,13 +219,11 @@ Main.prototype.toggleControlState = function(e) {
 
 // new song loading
 Main.prototype.songLoading = function(e){
-    console.log(e);
     this.newSong(e.target.song, e.target.queueNumber);
 }
 
 // new song playing
 Main.prototype.songPlaying = function(e){
-    console.log('songPlaying', e);
     if(e.target.song.hasMeta === true){
         chrome.runtime.sendMessage(null,
             {
@@ -239,7 +237,6 @@ Main.prototype.songPlaying = function(e){
 
 // song half way through
 Main.prototype.onSongHalf = function(e){
-    console.log('songHalf', e);
     if(e.target.song.hasMeta === true){
         chrome.runtime.sendMessage(null,
             {
@@ -356,7 +353,6 @@ Main.prototype.resetArtwork = function(currentArtwork, prevArtwork, nextArtwork)
         .addClass('artwork-next');
 
     if(this.containerEl.hasClass('minimized')){
-        console.log('reset blurred')
         $('#blurred-artwork-current').css(
                 'background-image',
                 'url(' + currentArtwork + ')'
@@ -532,7 +528,6 @@ Main.prototype.onServiceIconClick = function(e){
     switch(service){
         case 'tumblr':
             var action = e.target.dataset.action;
-            console.log(service, song, action);
             if(action === 'view'){
                 window.open(song.link);     
             }
@@ -668,10 +663,8 @@ Main.prototype.gotGA = function(obj){
 // Service action feedback
 // eg. after clicking a button
 Main.prototype.serviceAction = function(success, message, action, network){
-    console.log('serviceAction', success, message);
     if(success === true){
         var song = this.playQueue.getSong();
-        console.log('social', action, network, song.type);
         this.ga.social(action, network, song.type, 1);
         this.updateServiceMessage(message, 'success');
     }
