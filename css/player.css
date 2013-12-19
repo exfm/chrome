@@ -357,7 +357,6 @@ html, body {
      -webkit-transition: none !important;
 }
 
-
 .next-artwork-container,
 .previous-artwork-container {
     width: 300px;
@@ -386,6 +385,19 @@ html, body {
 .previous-artwork-container {
     left: 25%;
     margin-left: -150px;
+}
+
+.to-previous .artwork-next {
+    -webkit-transform: translateX(-300px);
+}
+.to-previous .artwork-previous {
+    -webkit-transform: translateX(300px);
+}
+.to-previous .next-artwork-container .artwork-item{
+    -webkit-transition-delay: 0.1s;
+}
+.to-previous .previous-artwork-container .artwork-item {
+    -webkit-transition-delay: 0s;
 }
 
 .current-song-info {
@@ -931,12 +943,12 @@ html, body {
      -webkit-transition: -webkit-transform 0.2s cubic-bezier(0, 1, 0.71, 1) 0.05s;
 }
 
-.blurred-artwork-container .artwork-next {
+/*.blurred-artwork-container .artwork-next {
     -webkit-transform: translateX(300px);
 }
 .blurred-artwork-container .artwork-previous {
     -webkit-transform: translateX(-300px);
-}
+}*/
 
 .minimized .next-artwork-container,
 .minimized .previous-artwork-container {
