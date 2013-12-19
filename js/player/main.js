@@ -253,10 +253,13 @@ Main.prototype.onSongHalf = function(e){
 // new song loading/playing
 // update UI
 Main.prototype.newSong = function(song, queueNumber){
-    this.updateCurrentSong(song, queueNumber);
-    this.updatePlaylistUI(queueNumber);
-    this.checkMeta(song, queueNumber);
-    this.updateCurrentServiceButtons(song);
+    if(queueNumber !== this.lastQueueNumber){
+        this.updateCurrentSong(song, queueNumber);
+        this.updatePlaylistUI(queueNumber);
+        this.checkMeta(song, queueNumber);
+        this.updateCurrentServiceButtons(song);
+        this.lastQueueNumber = queueNumber;
+    }
 }
 
 // update the current song UI with metadata
