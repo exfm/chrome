@@ -8,7 +8,7 @@ Download the source and have a look at the [Chrome extension docs](http://develo
     
 ## Keys
 
-You'll need to add a keys.js file to the vars dir with your own oAuth keys. This file should look like this:
+You'll need to add a keys.js file to the js/vars dir with your own oAuth keys. This file should look like this:
 ```javascript
         var keys = {
             'TUMBLR':
