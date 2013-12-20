@@ -4,6 +4,7 @@ function Tab(sender, response, save){
     this.id = sender.tab.id;
     this.sender = sender;
     this.response = response;
+    this.pageType = '';
     this.showPageActionIcon();
     if(save === true){
         var obj = {};
@@ -15,13 +16,41 @@ function Tab(sender, response, save){
 // Show page action icon
 // We may have songs on page
 Tab.prototype.showPageActionIcon = function(){
-    chrome.pageAction.show(this.id);   
+    chrome.pageAction.show(this.id);
 }
 
 // Page action icon on this
 // tab was clicked
 Tab.prototype.onPageActionClicked = function(){
-    this.insertCSS();
+    chrome.pageAction.setIcon(
+        {
+            'tabId': this.id,
+            'path': 
+                {
+                    '19': "images/chrome-icon-19px-active.png",
+                    '38': "images/chrome-icon-38px-active.png"  
+                }
+        }
+    )
+    this.captureVisibleTab();
+}
+
+// capture screenshot 
+Tab.prototype.captureVisibleTab = function(){
+    chrome.tabs.captureVisibleTab(null,
+        {
+            'format': 'png'
+        },
+        this.onCaptureVisibleTab.bind(this)
+    );
+}
+
+// got screen capture
+// set dataUrl in a global var
+var dataUrlObj = {};
+Tab.prototype.onCaptureVisibleTab = function(dataUrl){
+	dataUrlObj[this.id] = dataUrl;
+	this.insertCSS();
 }
 
 // Insert player css into page
@@ -29,97 +58,68 @@ Tab.prototype.insertCSS = function(){
     chrome.tabs.insertCSS(
         this.id,
         {
-            file: "css/player.css"
+            file: "css/content-script.css"
         },
-        this.insertPlayqueue.bind(this)
-    );
-}
-
-
-// Insert playqueue script into page
-Tab.prototype.insertPlayqueue = function(){
-    chrome.tabs.executeScript(
-        this.id,
-        {
-            file: "js/content-script/playqueue.js"
-        },
-        this.insertMain.bind(this)
+        this.insertPlayer.bind(this)
     );
 }
 
 // Insert main script into page
-Tab.prototype.insertMain = function(){
-    chrome.tabs.executeScript(
-        this.id,
-        {
-            file: "js/content-script/main.js"
-        },
-        this.captureVisibleTab.bind(this)
-    );
-}
-
-Tab.prototype.captureVisibleTab = function(){
-    setTimeout(function(){
-        chrome.tabs.captureVisibleTab(null, 
-        {
-            'format': 'png'
-        }, 
-        this.onCaptureVisibleTab.bind(this)
-    );
-    }.bind(this), 1000)
-    
-}
-
-Tab.prototype.onCaptureVisibleTab = function(dataUrl){
-	console.log('captured', this);
+Tab.prototype.insertPlayer = function(){
     chrome.tabs.sendMessage(this.id,
         {
-            "type": "blur",
-            "dataUrl": dataUrl
+            "type": "insertPlayer",
+            "url": chrome.extension.getURL('html/player.html')
         }
     );
-    this.deepScan();
 }
-
 
 // Page action was clicked
 // Deep scan page to get actual songs
 // determined by what type of page scan gave us
 Tab.prototype.deepScan = function(){
     if(this.response.isTumblr === true){
+        this.pageType = 'tumblr';
         var tumblr = new Tumblr(this);
         tumblr.getPosts();
         return;
     }
     if(this.response.isTumblrDashboard === true){
+        this.pageType = 'tumblrDashboard';
         var tumblr = new Tumblr(this);
         tumblr.getDashboard();
         return;
     }
     if(this.response.isSoundcloud === true){
+        this.pageType = 'soundcloud';
         var soundcloud = new Soundcloud(this);
-        soundcloud.resolve(this.response.url);
+        soundcloud.getPage(this.response.url);
         return;
     }
     if(this.response.isBandcamp === true){
+        this.pageType = 'bandcamp';
         var bandcamp = new Bandcamp(this);
         bandcamp.getPageVar();
         return;
     }
     if(this.response.isLiveMusicArchive === true){
+        this.pageType = 'liveMusicArchive';
         var liveMusicArchive = new LiveMusicArchive(this);
         return;
     }
     if(this.response.hasMp3Links === true){
+        this.pageType = 'mp3Links';
         var mp3Links = new Mp3Links(this);
         return;
     }
     if(this.response.hasSoundcloudEmbeds === true){
+        this.pageType = 'soundcloudEmbeds';
         var soundcloud = new Soundcloud(this);
         soundcloud.hasEmbeds();
         return;
     }
     if(this.response.hasBandcampEmbeds === true){
+        this.pageType = 'bandcampEmbeds';
         var bandcamp = new Bandcamp(this);
         bandcamp.hasEmbeds();
         return;
@@ -128,11 +128,11 @@ Tab.prototype.deepScan = function(){
 
 // Show playlist on tab
 Tab.prototype.showPlaylist = function(){
-    console.log('showPlaylist', this.playlist);
     chrome.tabs.sendMessage(this.id,
         {
             "type": "playlist",
-            "playlist": this.playlist
+            "playlist": this.playlist,
+            "pageType": this.pageType
         }
     );
 }
@@ -144,5 +144,54 @@ Tab.prototype.noSongs = function(){
         {
             "type": "noSongs"
         }
+    );
+}
+
+// tell tab we need auth
+Tab.prototype.sendAuthDialog = function(serviceName){
+    chrome.tabs.sendMessage(this.id,
+        {
+            "type": "needAuth",
+            "service": serviceName,
+            "url": chrome.extension.getURL("html/options.html")
+        }
+    );
+}
+
+// Tell tab feedback on service action
+Tab.prototype.sendServiceAction = function(success, message, action, network){
+    chrome.tabs.sendMessage(this.id,
+        {
+            "type": "serviceAction",
+            "success": success,
+            "message": message,
+            "action": action,
+            "network": network
+        }
+    );
+}
+
+// open a tab to a url
+// then close it after 1 second
+Tab.prototype.openThenClose = function(url){
+    chrome.tabs.create(
+        {
+            'url': url,
+            'active': false
+        }, 
+        function(tab){
+            chrome.tabs.update(
+               this.id, 
+        	   {
+        	       'highlighted': true
+        	   }
+            );
+            setTimeout(
+                function(){
+                    chrome.tabs.remove(tab.id);
+                },
+                1000
+            )
+        }.bind(this)
     );
 }

@@ -1,8 +1,22 @@
 function Options(){
+    this.ga = new ExtGA(
+        {
+            'trackingId': keys.GOOGLE_ANALYTICS.ACCOUNT,
+            'trackingDns': keys.GOOGLE_ANALYTICS.DOMAIN,
+            'appVersion': keys.GOOGLE_ANALYTICS.VERSION,
+            'appName': keys.GOOGLE_ANALYTICS.NAME
+        },
+        function(){
+            this.ga.pageview('options', 'Options');
+        }.bind(this)
+    );
     this.services = [
         'tumblr',
-        'rdio'
+        'rdio',
+        'soundcloud',
+        'lastfm'
     ]
+    $('.auth-button').on('click', this.onServiceClick.bind(this));
     this.getAuthStatus();
 }
 
@@ -16,22 +30,24 @@ Options.prototype.getAuthStatus = function(){
             this.gotAuthStatus.bind(this, service)
         );
     }
-    $('.auth-button').on('click', this.onServiceClick.bind(this));
 }
 
 // got auth status for services
 // update UI accordingly
 Options.prototype.gotAuthStatus = function(service, oAuthObj){
-    console.log(service, oAuthObj);
     if(oAuthObj[service + 'Auth']){
-        console.log('we got it');
         $('#' + service + '-auth-button')
-            .text('Disconnect')
+            .removeClass('connect')
+            .text('Disconnect');
+        $('#service-logo-' + service)
+            .addClass('connected');
     }
     else{
         $('#' + service + '-auth-button')
             .addClass('connect')
-            .text('Connect')
+            .text('Connect');
+        $('#service-logo-' + service)
+            .removeClass('connected');
     }
 }
 
@@ -44,9 +60,17 @@ Options.prototype.onServiceClick = function(e){
     if($(e.target).hasClass('connect')){
         var oAuthVersion = e.target.dataset.oauth_version;
         this.connect(service, oAuthVersion);
+        this.ga.event('button', 'connect', service, 1);
     }
     else{
-        console.log('disconnect')
+        chrome.storage.sync.remove(
+            service + 'Auth',
+            this.getAuthStatus.bind(this)
+        );
+        if(service === 'rdio'){
+            chrome.storage.sync.remove('rdioPlaylistId');
+        }
+        this.ga.event('button', 'disconnect', service, 1);
     }
 }
 
@@ -58,11 +82,12 @@ Options.prototype.connect = function(service, oAuthVersion){
             'key': keys[capitalService].KEY,
             'secret': keys[capitalService].SECRET,
             'requestTokenUrl': constants[capitalService].REQUEST_URL,
-            'userAuthorizationURL': constants[capitalService].AUTHORIZE_URL,
-            'accessTokenURL': constants[capitalService].ACCESS_URL,
+            'userAuthorizationUrl': constants[capitalService].AUTHORIZE_URL,
+            'accessTokenUrl': constants[capitalService].ACCESS_URL,
             'callbackUrl': keys[capitalService].OAUTH_CALLBACK,
-            'callback': this.authDone,
-            'service': service
+            'callback': this.authDone.bind(this),
+            'service': service,
+            'authorizeParams': constants[capitalService].AUTHORIZE_PARAMS
         }
     );
     if(oAuthVersion === "1"){
@@ -71,19 +96,40 @@ Options.prototype.connect = function(service, oAuthVersion){
     if(oAuthVersion === "2"){
         authorize.openAuthDialog();
     }
+    if(oAuthVersion === "lastfm"){
+        authorize.openLastFMAuthDialog();
+    }
 }
 
 // oauth flow done
 // If successfull save credentials in stoarge
 Options.prototype.authDone = function(success, oAuthObj, service){
-    console.log('authDone', oAuthObj, service);
     if(success === true){
         var obj = {};
         obj[service + 'Auth'] = oAuthObj;
-        chrome.storage.sync.set(obj);
+        chrome.storage.sync.set(
+            obj,
+            this.getAuthStatus.bind(this)
+        );
+        this.authConnected(service, oAuthObj);
     }
     else{
         alert("There was a problem. Please try again.");
+    }
+    var capitalService = service.charAt(0).toUpperCase() + service.slice(1);
+    this.ga.social('connect', capitalService, 'connect', 1);
+}
+
+// auth was successfull
+// do service specific stuff
+Options.prototype.authConnected = function(service, oAuthObj){
+    switch(service){
+        case 'rdio':
+            var rdio = new Rdio();
+            rdio.getPlaylists(oAuthObj);
+        break
+        default:
+        break;
     }
 }
    

@@ -1,6 +1,28 @@
 html, body {
     margin: 0;
     padding: 0;
+    font-family: sans-serif;
+    color: #39404e;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+}
+@font-face {
+    font-family:'services';
+    src:url('../fonts/services.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'exfm-icons';
+    src:url('../fonts/extension-symbols.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'DINBold';
+    src: url('../fonts/din-bold-webfont.eot');
+    src: url('../fonts/din-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/din-bold-webfont.woff') format('woff'),
+         url('../fonts/din-bold-webfont.ttf') format('truetype'),
+         url('../fonts/din-bold-webfont.svg#DINBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 .clearfix:after {
     clear: both;
@@ -19,61 +41,190 @@ html, body {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 250px;
+    width: 280px;
     background-color: #FAFAFA;
+    box-shadow: -4px 0 #e3e4e4 inset;
+    padding-left: 40px;
 }
 .right {
     position: absolute;
     top: 0;
-    left: 250px;
+    left: 320px;
     right: 0;
     bottom: 0;
+    padding: 0 0 0 45px;
+}
+.right-container {
+    width: 480px;
 }
 .logo {
-    margin: 15px;
+    margin: 0;
     font-size: 20px;
+    background: url(../images/exfm-logo-options.png) no-repeat 0 0;
+    width: 105px;
+    height: 34px;
+    overflow: hidden;
+    text-indent: -100%;
+}
+.header {
+    padding: 30px 0;
+    min-height: 54px;
+    box-shadow: 0 -1px #E3E4E4 inset;
 }
 .title {
     font-size: 28px;
-    margin: 30px 0 10px 30px;
+    margin: 30px 0 0 0;
     font-weight: bold;
+    font-size: 24px;
 }
 .description {
-    font-size: 20px;
-    margin: 0 0 20px 30px;
+    font-size: 18px;
+    margin: 0 0 30px 0;
+    line-height: 26px;
+}
+.services {
+    border-top: 1px solid #e3e4e4;
 }
 .service {
-    width: 500px;
-    margin-bottom: 20px;
+    padding-top: 20px;
+}
+.service-info {
+    border-bottom: 1px solid #e3e4e4;
+    padding-bottom: 15px;
+    float: left;
+    width: 400px;
+    min-height: 75px;
+}
+.service-logo.connected  {
+    background: #29a5ff;
 }
 .service-logo {
     float: left;
-    margin: 0 20px 10px 30px;
+    margin: 0 20px 10px 0;
     width: 60px;
     height: 60px;
-    background-color: gray;
+    background-color: #ccc;
     border-radius: 50%;
+    font-family: services;
+    text-align: center;
+    line-height: 60px;
+    font-size: 30px;
+    color: #fff;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
 }
-.auth-button {
+.service-bandcamp {
+    font-size: 48px;
+}
+.service-spotify {
+    font-size: 45px;
+}
+
+.auth-button.button {
     float: right;
     background-color: #FFFFFF;
-    border: 1px solid #38A5FA;
-    width: 100px;
-    height: 30px;
-    line-height: 30px;
+    box-shadow: 0 0 0 1px #38A5FA inset, 0 2px #38A5FA;
+    height: 36px;
+    line-height: 37px;
     text-align: center;
     color: #38A5FA;
     cursor: pointer;
     -webkit-user-select: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 12px;
+    min-width: 89px;
+    font-size: 12px;
+    font-family: DINBold;
 }
 .auth-button.connect {
     background-color: #38A5FA;
     color: #FFFFFF;
+    box-shadow: 0 2px #007CD6
 }
-.service-title {
+.service-title,
+.export-title {
     font-size: 18px;
     font-weight: bold;
 }
-.service-description {
+.service-description,
+.export-description {
     margin-top: 5px;
+    line-height: 20px;
+    font-size: 14px;
+}
+
+.left .option {
+    box-shadow: 0 -1px #E3E4E4 inset;
+    padding: 20px 50px 20px 0;
+}
+.exports.option {
+    text-decoration: none;
+    display: block;
+    color: #39404E;
+}
+.exports.option.active {
+    box-shadow: -4px 0 #29A5FF inset, 0 -1px #E3E4E4 inset;
+    color: #39404E;
+}
+.exports.option:hover {
+    box-shadow: -4px 0 #999 inset, 0 -1px #E3E4E4 inset;
+}
+
+.button {
+    background: #29a5ff;
+    color: #fff;
+    box-shadow: 0 2px #007cd6;
+    border-radius: 2px;
+    height: 40px;
+    padding: 0 12px;
+    display: inline-block;
+    line-height: 40px;
+}
+a.button {
+    text-decoration: none;
+    font-size: 12px;
+    font-family: DINBold;
+    text-transform: uppercase;
+    margin-right: 5px;
+    position: relative;
+    line-height: 44px;
+    letter-spacing: 1px;
+    padding: 0 15px 0 45px;
+}
+a.button:before {
+    font-family: exfm-icons;
+    text-transform: lowercase;
+    font-size: 50px;
+    width: 40px;
+    position: absolute;
+    left: 0;
+    line-height: 40px;
+}
+a.button:hover {
+    background: #52B7FF;
+    box-shadow: 0 3px #007cd6;
+    -webkit-transform: translateY(-1px);
+}
+a.button:active {
+    background: #0F9BFF;
+    box-shadow: 0 2px #0083E0 inset;
+    -webkit-transform: translateY(2px);
+}
+.button.download:before {
+    content: 'k';
+}
+.button.view:before {
+    content: 'j';
+}
+
+.button-group {
+    margin-top: 20px;
+}
+.icon-xspf {
+    background-image: url(../images/xspf.png);
+
+}
+.icon-bookmarks {
+    background-image: url(../images/bookmarks.png);
 }

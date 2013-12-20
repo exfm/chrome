@@ -584,6 +584,11 @@ PlayQueue.prototype.playPause = function(){
     }
 }
 
+// This will pause the current audio
+PlayQueue.prototype.pause = function(){
+    this.audio.pause();
+}
+
 // Fires 'playing' event when 'canplay' audio event is fired. 
 // Adds some useful data
 PlayQueue.prototype.canPlay = function(){

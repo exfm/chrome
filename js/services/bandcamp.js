@@ -24,7 +24,7 @@ Bandcamp.prototype.response = function(json){
                 this.json.artist,
                 this.json.current.title,
                 this.json.artFullsizeUrl,
-                this.json.url,
+                this.json.url.split('/album')[0],
                 this.json.album_release_date
             );
         }
@@ -88,6 +88,7 @@ Bandcamp.prototype.buildPlaylist = function(list, artist, album, artwork, url, t
         song.serviceId = track.id || track.track_id;
         song.timestamp = new Date(timestamp).getTime();
         song.duration = track.duration;
+        song.hasMeta = true;
         playlist.push(song);
     }
     this.tab.playlist = playlist;

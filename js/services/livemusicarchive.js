@@ -18,7 +18,6 @@ LiveMusicArchive.prototype.request = function(){
 LiveMusicArchive.prototype.response = function(e){
     if(e.target.readyState === 4){
         if(e.target.status === 200){
-            console.log(e.target);
             var json = JSON.parse(e.target.response);
             this.parse(json);
         }
@@ -28,7 +27,6 @@ LiveMusicArchive.prototype.response = function(e){
 // parse response from API
 // Build playlist of Song objects
 LiveMusicArchive.prototype.parse = function(json){
-    console.log(json);
     var files = json.files;
     var playlist = [];
     for(var i in files){
@@ -47,6 +45,7 @@ LiveMusicArchive.prototype.parse = function(json){
             try{
                 song.artwork = json.misc.image;
             }catch(e){}
+            song.hasMeta = true;
             playlist.push(song);
         }
     }

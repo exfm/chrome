@@ -2,7 +2,7 @@
     "name": "Exfm",
     "manifest_version": 2,
     "version": "4.0.0",
-    "description": "The best way to find and share new music",
+    "description": "Still the best way to find and share new music",
     "icons": 
         {
             "128": "images/icon128.png"
@@ -11,18 +11,26 @@
         {
             "persistent": false,
             "scripts": [
-                "js/background/constants.js",
-                "js/background/keys.js",
+                "js/vars/constants.js",
+                "js/vars/keys.js",
+                "js/libs/jquery-2.0.3.js",
                 "js/background/listeners.js",
                 "js/background/tabs.js",
                 "js/background/song.js",
-                "js/background/tumblr.js",
-                "js/background/soundcloud.js",
-                "js/background/bandcamp.js",
-                "js/background/livemusicarchive.js",
-                "js/background/mp3links.js",
+                "js/services/tumblr.js",
+                "js/services/soundcloud.js",
+                "js/services/bandcamp.js",
+                "js/services/livemusicarchive.js",
+                "js/services/mp3links.js",
+                "js/services/lastfm.js",
+                "js/services/rdio.js",
+                "js/services/spotify.js",
+                "js/services/tomahawk.js",
+                "js/oauth/sha1.js",
+                "js/oauth/md5.js",
+                "js/oauth/jquery.oauth.js",
                 "js/oauth/oauth.js",
-                "js/oauth/sha1.js"
+                "js/libs/id3.js"
             ]
         },
     "permissions": 
@@ -42,8 +50,8 @@
             "default_title": "Listen to page with Exfm",
             "default_icon":
                 {
-                    "19": "images/icon19.png",
-                    "38": "images/icon38.png"
+                    "19": "images/chrome-icon-19px-inactive.png",
+                    "38": "images/chrome-icon-38px-inactive.png"
                 }
         },
     "homepage_url": "http://ex.fm",
@@ -58,5 +66,20 @@
             "run_at": "document_end"
         }
     ],
-    "options_page": "html/options.html"
+    "options_page": "html/options.html",
+    "web_accessible_resources": [
+        "html/player.html",
+        "js/libs/jquery-2.0.3.js",
+        "js/player/main.js",
+        "js/player/playqueue.js",
+        "js/player/progress-bar.js",
+        "js/player/listeners.js",
+        "js/analytics/ga.js",
+        "images/albumart-default-1.jpg",
+        "images/albumart-default-2.jpg",
+        "images/albumart-default-3.jpg",
+        "images/albumart-default-4.jpg",
+        "images/albumart-default-5.jpg"
+      ],
+    "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'"
 }

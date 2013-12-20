@@ -1,79 +1,51 @@
 function Authorize(opts){
-    this.callback = opts.callback;
-    this.service = opts.service;
-    this.consumer = 
-        {
-            'consumerKey': opts.key,
-            'consumerSecret': opts.secret,
-            'serviceProvider': 
-                {
-                    'signatureMethod': "HMAC-SHA1",
-                    'requestTokenURL': opts.requestTokenUrl,
-    				'userAuthorizationURL': opts.userAuthorizationURL,
-    				'accessTokenURL': opts.accessTokenURL,
-    				'echoURL': opts.callbackUrl
-    			}
-        }
+    this.opts = opts;
 }
-
 
 // Get a request token
 Authorize.prototype.requestToken = function(){
-    console.log('echo', this.consumer.serviceProvider.echoURL);
-    var message = 
-        {
-            'method': "post", 
-            'action': this.consumer.serviceProvider.requestTokenURL, 
-    		'parameters': [["oauth_callback", this.consumer.serviceProvider.echoURL]]
-        }
-    var requestBody = OAuth.formEncode(message.parameters);
-    OAuth.completeRequest(message, this.consumer);
-    var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters);
-	$.ajax(
+    $.oauth(
 	    {
-	        'url': message.action,
-	        'type': message.method,
-	        'beforeSend': function(x){ 
-	            x.setRequestHeader("Authorization", authorizationHeader);
-            },
-            'complete': this.gotRequestToken.bind(this),
-            'cache': false, 
-            'data': requestBody
+	        'url': this.opts.requestTokenUrl,
+	        'type': 'POST',
+            'data': {
+				'oauth_callback': this.opts.callbackUrl
+			 },
+			'consumerKey': this.opts.key, 
+			'consumerSecret': this.opts.secret
         }
-    );
+    ).then(
+        this.gotRequestToken.bind(this),
+        this.callbackError.bind(this)
+    )
 }
 
 // Got the request token
-Authorize.prototype.gotRequestToken = function(xhr){
-    console.log('gotRequestToken', xhr);
-    if(xhr.status === 200){
-        var results = OAuth.decodeForm(xhr.responseText);
-        this.oauthToken = OAuth.getParameter(results, "oauth_token");
-        this.oauthTokenSecret = OAuth.getParameter(results, "oauth_token_secret");
-        this.bindedTabListener = this.tabListener.bind(this);
-        chrome.tabs.onUpdated.addListener(this.bindedTabListener);
-        chrome.tabs.create(
-            {
-                'url': this.consumer.serviceProvider.userAuthorizationURL+"?oauth_token="+this.oauthToken
-            }
-        );
-    }
-    else{
-        this.callback(false);
-    }
+Authorize.prototype.gotRequestToken = function(responseText){
+    var results = OAuth.decodeForm(responseText);
+    this.oauthToken = OAuth.getParameter(results, "oauth_token");
+    this.oauthTokenSecret = OAuth.getParameter(results, "oauth_token_secret");
+    this.bindedTabListener = this.tabListener.bind(this);
+    chrome.tabs.onUpdated.addListener(this.bindedTabListener);
+    chrome.tabs.create(
+        {
+            'url': this.opts.userAuthorizationUrl+"?oauth_token="+this.oauthToken
+        }
+    );
 }
 
 // listen for tab changes 
 // so we can figure out when 
 // user authed 
 Authorize.prototype.tabListener = function(tabId, obj, tab){
-    var indexOf = tab.url.indexOf(this.consumer.serviceProvider.echoURL);
+    var indexOf = tab.url.indexOf(this.opts.callbackUrl);
 	if (indexOf !== -1 && obj.status === "complete"){
-		chrome.tabs.onUpdated.removeListener(this.bindedListener);
+		chrome.tabs.onUpdated.removeListener(this.bindedTabListener);
 		var results = OAuth.decodeForm(tab.url.split("?")[1]);
         this.oauthToken = OAuth.getParameter(results, "oauth_token");
         this.oauthVerifier = OAuth.getParameter(results, "oauth_verifier"),
         this.oauthVerifier = this.oauthVerifier.split('#_=_')[0];
+        this.highlightTab();
 		chrome.tabs.remove(tabId);
 		this.requestAccessToken();
 	}    
@@ -81,64 +53,142 @@ Authorize.prototype.tabListener = function(tabId, obj, tab){
 
 // Get an access token
 Authorize.prototype.requestAccessToken = function(){
-    console.log('this.oauthVerifier', this.oauthVerifier);
-    var message = 
-        {
-		    'method': "post", 
-            'action': this.consumer.serviceProvider.accessTokenURL, 
-            'parameters': [["oauth_verifier", this.oauthVerifier]]
-        }
-    var requestBody = OAuth.formEncode(message.parameters);
-    OAuth.completeRequest(
-        message,
-        {
-            'consumerKey': this.consumer.consumerKey, 
-			'consumerSecret': this.consumer.consumerSecret, 
+    $.oauth(
+	    {
+	        'url': this.opts.accessTokenUrl,
+	        'type': 'POST',
+	        'data': {
+				'oauth_verifier': this.oauthVerifier
+			 },
+			'consumerKey': this.opts.key, 
+			'consumerSecret': this.opts.secret,
 			'token': this.oauthToken,
             'tokenSecret': this.oauthTokenSecret
         }
-    );
-    var authorizationHeader = OAuth.getAuthorizationHeader("", message.parameters);
-    $.ajax(
-        {
-            'url': message.action,
-            'type': message.method,
-            'beforeSend': function(x){ 
-                x.setRequestHeader("Authorization", authorizationHeader); 
-            }, 
-            'complete': this.gotAccessToken.bind(this),
-            'cache': false, 
-            'data': requestBody
-        }
-    );
+    ).then(
+        this.gotAccessToken.bind(this),
+        this.callbackError.bind(this)
+    )
 }
 
 // Got the access token
-Authorize.prototype.gotAccessToken = function(xhr){
-    console.log(xhr);
-    if (xhr.status == 200){
-        var results = OAuth.decodeForm(xhr.responseText);
-        var obj = {
-            "oauth_token" : OAuth.getParameter(results, "oauth_token"),
-            "oauth_token_secret" : OAuth.getParameter(results, "oauth_token_secret")
-            }
-        this.callback(true, obj, this.service);
-    } else {
-        this.callback(false);
-    }
+Authorize.prototype.gotAccessToken = function(responseText){
+    var results = OAuth.decodeForm(responseText);
+    var obj = {
+        "oauth_token" : OAuth.getParameter(results, "oauth_token"),
+        "oauth_token_secret" : OAuth.getParameter(results, "oauth_token_secret")
+        }
+    this.opts.callback(true, obj, this.opts.service);
 }
 
 // Oauth 2 
 // Open the auth dialog
 Authorize.prototype.openAuthDialog = function(){
-    var url = this.consumer.serviceProvider.userAuthorizationURL;
-    url += "?client_id="+this.consumer.consumerKey;
-    url += "&redirect_uri="+this.consumer.serviceProvider.echoURL;
-    url += "&response_type=code_and_token&scope=non-expiring";
+    var url = this.opts.userAuthorizationUrl;
+    url += "?client_id="+this.opts.key;
+    url += "&redirect_uri="+this.opts.callbackUrl;
+    url += this.opts.authorizeParams;
+    this.bindedTabListener = this.oauth2TabListener.bind(this);
+    chrome.tabs.onUpdated.addListener(this.bindedTabListener);
     chrome.tabs.create(
         {
             'url': url
         }
     );
-    //https://soundcloud.com/connect?state=SoundCloud_Dialog_7dfac&client_id=leL50hzZ1H8tAdKCLSCnw&redirect_uri=http://oauth.extension.fm/soundcloud&response_type=code_and_token&scope=non-expiring
+}
+
+// Oauth 2 
+// Listen for callback tab
+Authorize.prototype.oauth2TabListener = function(tabId, obj, tab){
+    var indexOf = tab.url.indexOf(this.opts.callbackUrl);
+    if (indexOf === 0 && obj.status === "complete"){
+	    chrome.tabs.onUpdated.removeListener(this.bindedTabListener);
+		var results = OAuth.decodeForm(tab.url.split("?")[1]);
+        var split = results[0][1].split('#');
+        var code = split[0];
+        var accessToken = split[1].split('=')[1];
+        var obj = {
+            "code" : code,
+            "accessToken" : accessToken
+            }
+        this.opts.callback(true, obj, this.opts.service);
+        this.highlightTab();
+		chrome.tabs.remove(tabId);
+	}
+}
+
+// Lastfm Auth
+// Opne the auth dialog
+Authorize.prototype.openLastFMAuthDialog = function(){
+    var url = this.opts.userAuthorizationUrl;
+    url += "?api_key="+this.opts.key;
+    url += "&cb="+this.opts.callbackUrl;
+    this.bindedTabListener = this.lastFMTabListener.bind(this);
+    chrome.tabs.onUpdated.addListener(this.bindedTabListener);
+    chrome.tabs.create(
+        {
+            'url': url
+        }
+    );
+}
+
+// lastfm 
+// Listen for callback tab
+Authorize.prototype.lastFMTabListener = function(tabId, obj, tab){
+    var indexOf = tab.url.indexOf(this.opts.callbackUrl);
+    if (indexOf === 0 && obj.status === "complete"){
+        chrome.tabs.onUpdated.removeListener(this.bindedTabListener);
+		var results = OAuth.decodeForm(tab.url);
+		var token = results[0][1];
+		this.highlightTab();
+        chrome.tabs.remove(tabId);
+        this.getLastFMSession(token);
+	}
+}
+
+// lastfm getSession
+Authorize.prototype.getLastFMSession = function(token){
+    $.oauthLastfm(
+        {
+	        'url': this.opts.accessTokenUrl,
+	        'type': 'POST',
+            'cache': false,
+            'data': {
+        		'token': token,
+        		'api_key': this.opts.key,
+        		'method': 'auth.getSession'
+    		},
+    		consumerSecret: this.opts.secret
+        }
+    ).then(
+        this.gotLastFMSession.bind(this),
+        this.callbackError.bind(this)
+    )
+}
+
+// got lastfm session
+Authorize.prototype.gotLastFMSession = function(responseJSON){
+    if(responseJSON.session){
+        this.opts.callback(true, responseJSON, this.opts.service);
+    }
+    else{
+        this.callbackError();
+    }
+}
+
+
+// callback with failure
+Authorize.prototype.callbackError = function(){
+    this.opts.callback(false);
+}
+
+// highlight this tab after we close other tabs
+Authorize.prototype.highlightTab = function(){
+    chrome.tabs.getCurrent(function(tab){
+	   chrome.tabs.update(tab.id, 
+	       {
+	           'highlighted': true
+	       }
+	   )
+	});
 }
