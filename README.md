@@ -4,7 +4,7 @@ An extension for Chrome that inserts a music player on [Tumblr](http://tumblr.co
 
 ## Installation
 
-    Download the source and have a look at the [Chrome extension docs](http://developer.chrome.com/extensions/api_index.html)
+Download the source and have a look at the [Chrome extension docs](http://developer.chrome.com/extensions/api_index.html)
     
 ## Keys
 
