@@ -47,6 +47,9 @@ var constants = {
             'AUTHORIZE_URL': "https://api.rhapsody.com/oauth/authorize",
             'ACCESS_URL': "https://api.rhapsody.com/oauth/access_token",
             'AUTHORIZE_PARAMS': "&response_type=code",
-            'AUTHORIZE_CALLBACK_TYPE': "param"
+            'AUTHORIZE_CALLBACK_TYPE': "param",
+            'API_URL': "http://api.rhapsody.com/v1/",
+            'SECURE_API_URL': "https://api.rhapsody.com/v1/",
+            'PLAYLIST_NAME': "Exfm"
         }
 }

@@ -251,7 +251,7 @@ Rdio.prototype.createPlaylist = function(oAuthObject, trackId){
 	        'type': 'POST',
             'data': {
 				'method': 'createPlaylist',
-				'name': 'Exfm',
+				'name': constants.RDIO.PLAYLIST_NAME,
 				'description': 'Songs discovered with Exfm http://ex.fm',
 				'tracks': trackId
 			 },

@@ -120,6 +120,11 @@ function onMessage(e, sender, responseCallback){
             var tomahawk = new Tomahawk(tab);
             tomahawk.open(e.title, e.artist, e.url, e.album);
         break;
+        case 'rhapsodySave':
+            var tab = new Tab(sender, null, false);
+            var rhapsody = new Rhapsody(tab);
+            rhapsody.save(e.title, e.artist);
+        break;
         default:
         break
     }
