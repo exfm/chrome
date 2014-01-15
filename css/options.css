@@ -119,6 +119,11 @@ html, body {
 .service-spotify {
     font-size: 45px;
 }
+.service-rhapsody,
+.service-napster,
+.service-soundcloud {
+    font-size: 50px;
+}
 
 .auth-button.button {
     float: right;

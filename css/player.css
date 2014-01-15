@@ -585,7 +585,7 @@ html, body {
     cursor: pointer;
     opacity: 0.3;
     -webkit-transition: opacity 0.1s linear;
-    display: none;
+    display: inline-block;
     vertical-align: middle;
 }
 .service-icon.show {
