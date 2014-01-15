@@ -81,7 +81,7 @@ Rhapsody.prototype.search = function(title){
             'data': {
 				'q': title,
 				'type': 'track',
-				'limit': 5,
+				'limit': 10,
 				'apikey': keys.RHAPSODY.KEY
 			}
         }
