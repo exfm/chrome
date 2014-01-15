@@ -71,6 +71,9 @@ Options.prototype.onServiceClick = function(e){
         if(service === 'rdio'){
             chrome.storage.sync.remove('rdioPlaylistId');
         }
+        if(service === 'rhapsody'){
+            chrome.storage.sync.remove('rhapsodyPlaylistId');
+        }
         this.ga.event('button', 'disconnect', service, 1);
     }
 }
@@ -125,14 +128,7 @@ Options.prototype.authDone = function(success, oAuthObj, service){
 // auth was successfull
 // do service specific stuff
 Options.prototype.authConnected = function(service, oAuthObj){
-    switch(service){
-        case 'rdio':
-            var rdio = new Rdio();
-            rdio.getPlaylists(oAuthObj);
-        break
-        default:
-        break;
-    }
+    
 }
    
 function init(){

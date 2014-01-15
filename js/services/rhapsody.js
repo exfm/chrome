@@ -9,7 +9,6 @@ function Rhapsody(tab){
 // if we dont have a playlist id search for Exfm playlist on rhapsody
 // if we dont have an Exfm playlist on rhapsody create on
 Rhapsody.prototype.save = function(title, artist){
-    console.log(title, artist);
     this.getAuth().then(
         function(oAuthObject){
             // Search for song
@@ -91,7 +90,6 @@ Rhapsody.prototype.search = function(title){
 
 // does the search result match what we provided it?
 Rhapsody.prototype.determineSearch = function(json, title, artist){
-    console.log(json);
     var promise = $.Deferred(); 
     var len = json.length;
     for(var i = 0; i < len; i++){
@@ -131,15 +129,12 @@ Rhapsody.prototype.getOrCreatePlaylist = function(oAuthObject, trackId){
     // Get playlists from Rhapsody
     this.getPlaylists(oAuthObject).then(
         function(json){
-            console.log(json);
             // Is there a playlist called 'Exfm'?
             this.determinePlaylists(json).then(
                 function(playlistId){
-                    console.log('playlistId', playlistId);
                     // Got the playlist. Add the song
                     this.addToPlaylist(oAuthObject, playlistId, trackId).then(
                         function(json){
-                            console.log('addToPlaylist');
                             this.tab.sendServiceAction(
                                 true,
                                 'Song saved on Rhapsody',
@@ -163,13 +158,36 @@ Rhapsody.prototype.getOrCreatePlaylist = function(oAuthObject, trackId){
                     // Create the playlist on Rhapsody
                     this.createPlaylist(oAuthObject).then(
                         function(json){
-                            console.log('createPlaylist', json);
+                            // Got the playlist. Add the song
+                            this.addToPlaylist(oAuthObject, json.id, trackId).then(
+                                function(json){
+                                    this.tab.sendServiceAction(
+                                        true,
+                                        'Song saved on Rhapsody',
+                                        'save',
+                                        'Rhapsody'
+                                    );
+                                }.bind(this),
+                                function(error){
+                                    this.tab.sendServiceAction(
+                                        false,
+                                        'Error saving song on Rhapsody',
+                                        'save',
+                                        'Rhapsody'
+                                    );
+                                }.bind(this)
+                            )
                             // Save the playlistId to storage
                             this.savePlaylistId(json.id);
                         }.bind(this),
                         function(){
-                            
-                        }
+                            this.tab.sendServiceAction(
+                                false,
+                                'Error saving song on Rhapsody',
+                                'save',
+                                'Rhapsody'
+                            );
+                        }.bind(this)
                     )
                 }.bind(this)
             )
