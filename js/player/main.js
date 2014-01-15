@@ -156,6 +156,7 @@ Main.prototype.addListeners = function(){
 Main.prototype.serviceIconHover = function(e){
     var serviceIcon = $(e.target);
     var serviceName = serviceIcon.data('service');
+    
 
     // make current icon active
     this.serviceIcons.removeClass('active');
@@ -453,6 +454,7 @@ Main.prototype.updateCurrentServiceButtons = function(song){
     }
     if(song.hasMeta === true){
         if(song.title && song.artist){
+            $('#service-icon-rhapsody').addClass('show');
             $('#service-icon-rdio').addClass('show');
             $('#service-icon-spotify').addClass('show');
             if(this.hasTomahawk === true){
@@ -483,6 +485,7 @@ Main.prototype.gotId3 = function(queueNumber, tags){
             song.album = tags.album;
         }
         if(tags.title && tags.artist){
+            $('#service-icon-rhapsody').addClass('show');
             $('#service-icon-rdio').addClass('show');
             $('#service-icon-spotify').addClass('show');
             if(this.hasTomahawk === true){
@@ -631,6 +634,16 @@ Main.prototype.onServiceIconClick = function(e){
                 url = song.purchaseUrl + '&from=exfm';
             }
             window.open(url);
+        break;
+        case 'rhapsody':
+            this.updateServiceMessage('Saving on Rhapsody...');
+            chrome.runtime.sendMessage(null,
+                {
+                    "type": 'rhapsodySave',
+                    "title": song.title,
+                    "artist": song.artist
+                }
+            )
         break;
         default:
         break;
