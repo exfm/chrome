@@ -12,6 +12,7 @@ function Options(){
     );
     this.services = [
         'tumblr',
+        'rhapsody',
         'rdio',
         'soundcloud',
         'lastfm'
@@ -70,6 +71,9 @@ Options.prototype.onServiceClick = function(e){
         if(service === 'rdio'){
             chrome.storage.sync.remove('rdioPlaylistId');
         }
+        if(service === 'rhapsody'){
+            chrome.storage.sync.remove('rhapsodyPlaylistId');
+        }
         this.ga.event('button', 'disconnect', service, 1);
     }
 }
@@ -87,7 +91,8 @@ Options.prototype.connect = function(service, oAuthVersion){
             'callbackUrl': keys[capitalService].OAUTH_CALLBACK,
             'callback': this.authDone.bind(this),
             'service': service,
-            'authorizeParams': constants[capitalService].AUTHORIZE_PARAMS
+            'authorizeParams': constants[capitalService].AUTHORIZE_PARAMS,
+            'authorizeCallbackType': constants[capitalService].AUTHORIZE_CALLBACK_TYPE
         }
     );
     if(oAuthVersion === "1"){
@@ -123,14 +128,7 @@ Options.prototype.authDone = function(success, oAuthObj, service){
 // auth was successfull
 // do service specific stuff
 Options.prototype.authConnected = function(service, oAuthObj){
-    switch(service){
-        case 'rdio':
-            var rdio = new Rdio();
-            rdio.getPlaylists(oAuthObj);
-        break
-        default:
-        break;
-    }
+    
 }
    
 function init(){

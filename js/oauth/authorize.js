@@ -104,17 +104,50 @@ Authorize.prototype.oauth2TabListener = function(tabId, obj, tab){
     if (indexOf === 0 && obj.status === "complete"){
 	    chrome.tabs.onUpdated.removeListener(this.bindedTabListener);
 		var results = OAuth.decodeForm(tab.url.split("?")[1]);
-        var split = results[0][1].split('#');
-        var code = split[0];
-        var accessToken = split[1].split('=')[1];
-        var obj = {
-            "code" : code,
-            "accessToken" : accessToken
+		if(this.opts.authorizeCallbackType === 'hash'){
+            var split = results[0][1].split('#');
+            var obj = 
+            {
+                "code" : split[0],
+                "accessToken" : split[1].split('=')[1]
             }
-        this.opts.callback(true, obj, this.opts.service);
+            this.opts.callback(true, obj, this.opts.service);
+        }
+        if(this.opts.authorizeCallbackType === 'param'){
+            var code = OAuth.getParameter(results, "code");
+            this.getOauth2AccessToken(code);
+        }
         this.highlightTab();
-		chrome.tabs.remove(tabId);
+        chrome.tabs.remove(tabId);
 	}
+}
+
+// Oauth 2
+// Exchange code for access token
+Authorize.prototype.getOauth2AccessToken = function(code){
+    $.ajax(
+	    {
+	        'url': this.opts.accessTokenUrl,
+	        'type': 'POST',
+	        'data': {
+				'client_id': this.opts.key,
+				'client_secret': this.opts.secret,
+				'response_type': 'code',
+				'grant_type': 'authorization_code',
+				'redirect_uri': this.opts.callbackUrl,
+				'code': code
+			 }
+        }
+    ).then(
+        this.gotOauth2AccessToken.bind(this),
+        this.callbackError.bind(this)
+    )
+}
+
+// Oauth2
+// Got access token from code
+Authorize.prototype.gotOauth2AccessToken = function(json){
+    this.opts.callback(true, json, this.opts.service);
 }
 
 // Lastfm Auth

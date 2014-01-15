@@ -1,7 +1,7 @@
 {
     "name": "Exfm",
     "manifest_version": 2,
-    "version": "4.0.0",
+    "version": "4.1.0",
     "description": "Still the best way to find and share new music",
     "icons": 
         {
@@ -26,6 +26,7 @@
                 "js/services/rdio.js",
                 "js/services/spotify.js",
                 "js/services/tomahawk.js",
+                "js/services/rhapsody.js",
                 "js/oauth/sha1.js",
                 "js/oauth/md5.js",
                 "js/oauth/jquery.oauth.js",
@@ -43,7 +44,8 @@
             "http://*/",
             "https://soundcloud.com/*",
             "https://archive.org/*",
-            "https://www.rdio.com/*"
+            "https://www.rdio.com/*",
+            "https://api.rhapsody.com/*"
         ],
     "page_action": 
         {
