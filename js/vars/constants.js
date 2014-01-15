@@ -15,7 +15,8 @@ var constants = {
             'USERS': "http://api.soundcloud.com/users/",
             'AUTHORIZE_URL': "https://soundcloud.com/connect",
             'AUTHORIZE_PARAMS': "&response_type=code_and_token&scope=non-expiring",
-            'FAVORITE_TRACK': "https://api.soundcloud.com/me/favorites/"
+            'FAVORITE_TRACK': "https://api.soundcloud.com/me/favorites/",
+            'AUTHORIZE_CALLBACK_TYPE': "hash"
         },
     "BANDCAMP_ALBUM": "http://api.bandcamp.com/api/album/2/info?",
     "BANDCAMP_ARTIST": "http://api.bandcamp.com/api/band/3/info?",
@@ -40,5 +41,12 @@ var constants = {
     'TOMAHAWK':
         {
             'STAT': "http://localhost:60210/api/?method=stat"
+        },
+    'RHAPSODY':
+        {
+            'AUTHORIZE_URL': "https://api.rhapsody.com/oauth/authorize",
+            'ACCESS_URL': "https://api.rhapsody.com/oauth/access_token",
+            'AUTHORIZE_PARAMS': "&response_type=code",
+            'AUTHORIZE_CALLBACK_TYPE': "param"
         }
 }

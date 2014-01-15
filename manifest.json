@@ -43,7 +43,8 @@
             "http://*/",
             "https://soundcloud.com/*",
             "https://archive.org/*",
-            "https://www.rdio.com/*"
+            "https://www.rdio.com/*",
+            "https://api.rhapsody.com/*"
         ],
     "page_action": 
         {

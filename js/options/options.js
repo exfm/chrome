@@ -12,6 +12,7 @@ function Options(){
     );
     this.services = [
         'tumblr',
+        'rhapsody',
         'rdio',
         'soundcloud',
         'lastfm'
@@ -87,7 +88,8 @@ Options.prototype.connect = function(service, oAuthVersion){
             'callbackUrl': keys[capitalService].OAUTH_CALLBACK,
             'callback': this.authDone.bind(this),
             'service': service,
-            'authorizeParams': constants[capitalService].AUTHORIZE_PARAMS
+            'authorizeParams': constants[capitalService].AUTHORIZE_PARAMS,
+            'authorizeCallbackType': constants[capitalService].AUTHORIZE_CALLBACK_TYPE
         }
     );
     if(oAuthVersion === "1"){
