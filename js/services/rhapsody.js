@@ -31,12 +31,7 @@ Rhapsody.prototype.save = function(title, artist){
                                             );
                                         }.bind(this),
                                         function(error){
-                                            this.tab.sendServiceAction(
-                                                false,
-                                                'Error saving song on Rhapsody',
-                                                'save',
-                                                'Rhapsody'
-                                            );
+                                            this.handleAPIError(error);
                                         }.bind(this)
                                     )
                                 }.bind(this),
@@ -265,20 +260,94 @@ Rhapsody.prototype.addToPlaylist = function(oAuthObject, playlistId, trackId){
     );
 }
 
+// Did our token expire?
+// If so, tell user to re-connect 
+// and remove oauth creds and playlistId 
+Rhapsody.prototype.handleAPIError = function(xhr){
+    if(xhr.responseJSON){
+        if(xhr.responseJSON.fault){
+            if(xhr.responseJSON.fault.detail.errorcode === constants.RHAPSODY.TOKEN_EXPIRED_ERROR){
+                this.disconnect();
+                this.tab.sendServiceAction(
+                    false,
+                    'There was an error. Please re-connect Rhapsody',
+                    'save',
+                    'Rhapsody'
+                );
+                return;
+            }
+        }
+    }
+    this.tab.sendServiceAction(
+        false,
+        'Error saving song on Rhapsody',
+        'save',
+        'Rhapsody'
+    );
+}
+
+// remove oauth creds
+// and paylistId from local storage
+Rhapsody.prototype.disconnect = function(){
+    chrome.storage.sync.remove('rhapsodyAuth');
+    chrome.storage.sync.remove('rhapsodyPlaylistId');
+}
+
 
 // check if user is connected to Rhapsody
+// If connected but token is expired
+// get a new token
 Rhapsody.prototype.getAuth = function(){
     var promise = $.Deferred();
     chrome.storage.sync.get(
         'rhapsodyAuth',
         function(oAuthObj){
             if(oAuthObj['rhapsodyAuth']){
-                promise.resolve(oAuthObj['rhapsodyAuth']);
+                var now = new Date().getTime();
+                if(now < oAuthObj['rhapsodyAuth'].expireTime){
+                    promise.resolve(oAuthObj['rhapsodyAuth']);
+                }
+                else{
+                    this.refreshToken(oAuthObj['rhapsodyAuth'], promise);
+                }
             }
             else{
                 promise.reject();
             }
-        }
+        }.bind(this)
     )
     return promise;
+}
+
+// refresh access token
+Rhapsody.prototype.refreshToken = function(oAuthObject, promise){
+    $.ajax(
+	    {
+	        'url': constants.RHAPSODY.ACCESS_URL,
+	        'type': 'POST',
+            'data': {
+				'client_id': keys.RHAPSODY.KEY,
+				'client_secret': keys.RHAPSODY.SECRET,
+				'response_type': 'code',
+				'grant_type': 'refresh_token',
+				'refresh_token': oAuthObject.refresh_token
+			 }
+        }
+    ).then(
+        function(json){
+            if(json.expires_in){
+                var now = new Date().getTime();
+                json.expireTime = now + (parseInt(json.expires_in) * 1000);
+            }
+            var obj = {
+                'rhapsodyAuth': json
+            };
+            chrome.storage.sync.set(obj);
+            promise.resolve(json);
+        },
+        function(error){
+            this.disconnect();
+            promise.reject();
+        }.bind(this)
+    )
 }
