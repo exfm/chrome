@@ -50,6 +50,7 @@ var constants = {
             'AUTHORIZE_CALLBACK_TYPE': "param",
             'API_URL': "http://api.rhapsody.com/v1/",
             'SECURE_API_URL': "https://api.rhapsody.com/v1/",
-            'PLAYLIST_NAME': "Exfm"
+            'PLAYLIST_NAME': "Exfm",
+            'TOKEN_EXPIRED_ERROR': "keymanagement.service.access_token_expired"
         }
 }

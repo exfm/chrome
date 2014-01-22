@@ -147,6 +147,11 @@ Authorize.prototype.getOauth2AccessToken = function(code){
 // Oauth2
 // Got access token from code
 Authorize.prototype.gotOauth2AccessToken = function(json){
+    if(json.expires_in){
+        var now = new Date().getTime();
+        json.expireTime = now + (parseInt(json.expires_in) * 1000);
+    }
+    console.log(json);
     this.opts.callback(true, json, this.opts.service);
 }
 
