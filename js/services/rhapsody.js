@@ -264,11 +264,9 @@ Rhapsody.prototype.addToPlaylist = function(oAuthObject, playlistId, trackId){
 // If so, tell user to re-connect 
 // and remove oauth creds and playlistId 
 Rhapsody.prototype.handleAPIError = function(xhr){
-    console.log(xhr);
     if(xhr.responseJSON){
         if(xhr.responseJSON.fault){
             if(xhr.responseJSON.fault.detail.errorcode === constants.RHAPSODY.TOKEN_EXPIRED_ERROR){
-                console.log('it expired');
                 this.disconnect();
                 this.tab.sendServiceAction(
                     false,
@@ -306,7 +304,6 @@ Rhapsody.prototype.getAuth = function(){
         function(oAuthObj){
             if(oAuthObj['rhapsodyAuth']){
                 var now = new Date().getTime();
-                console.log(now, oAuthObj['rhapsodyAuth'].expireTime, now < oAuthObj['rhapsodyAuth'].expireTime);
                 if(now < oAuthObj['rhapsodyAuth'].expireTime){
                     promise.resolve(oAuthObj['rhapsodyAuth']);
                 }
@@ -324,8 +321,33 @@ Rhapsody.prototype.getAuth = function(){
 
 // refresh access token
 Rhapsody.prototype.refreshToken = function(oAuthObject, promise){
-    console.log('refreshToken', oAuthObject);
-    setTimeout(function(){
-        promise.reject();
-    }, 2000);
+    $.ajax(
+	    {
+	        'url': constants.RHAPSODY.ACCESS_URL,
+	        'type': 'POST',
+            'data': {
+				'client_id': keys.RHAPSODY.KEY,
+				'client_secret': keys.RHAPSODY.SECRET,
+				'response_type': 'code',
+				'grant_type': 'refresh_token',
+				'refresh_token': oAuthObject.refresh_token
+			 }
+        }
+    ).then(
+        function(json){
+            if(json.expires_in){
+                var now = new Date().getTime();
+                json.expireTime = now + (parseInt(json.expires_in) * 1000);
+            }
+            var obj = {
+                'rhapsodyAuth': json
+            };
+            chrome.storage.sync.set(obj);
+            promise.resolve(json);
+        },
+        function(error){
+            this.disconnect();
+            promise.reject();
+        }.bind(this)
+    )
 }

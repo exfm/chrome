@@ -151,7 +151,6 @@ Authorize.prototype.gotOauth2AccessToken = function(json){
         var now = new Date().getTime();
         json.expireTime = now + (parseInt(json.expires_in) * 1000);
     }
-    console.log(json);
     this.opts.callback(true, json, this.opts.service);
 }
 
