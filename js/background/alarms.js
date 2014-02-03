@@ -12,11 +12,10 @@ var Ping = function(){};
 Ping.prototype.onAlarm = function(){
     this.getLastPing().then(
         function(){
-            console.log('yes track');
             this.track();
         }.bind(this),
         function(){
-            console.log('no track');
+            
         }
     );
 }
@@ -28,10 +27,8 @@ Ping.prototype.getLastPing = function(){
     chrome.storage.sync.get(
         'lastPing',
         function(obj){
-            console.log(obj);
             if(obj['lastPing']){
                 var now = new Date().getTime();
-                console.log(now, (now - obj['lastPing']) > 86400000);
                 if((now - obj['lastPing']) > 86400000){
                     promise.resolve();
                 }
@@ -98,11 +95,11 @@ chrome.alarms.onAlarm.addListener(onAlarm);
 
 // create alarm
 // 1 min after start
-// Every 12 hours
+// Every 6 hours
 chrome.alarms.create(
     'ping',
     {
         'delayInMinutes': 1,
-        'periodInMinutes': 720
+        'periodInMinutes': 360
     }
 );
